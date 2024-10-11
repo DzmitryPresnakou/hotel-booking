@@ -4,6 +4,8 @@ import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import lombok.Builder;
 import lombok.Value;
 
+import java.time.LocalDate;
+
 @Value
 @Builder
 public class RoomFilter {
@@ -11,4 +13,6 @@ public class RoomFilter {
     Integer occupancy;
     Integer pricePerDay;
     RoomClassEnum roomClass;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
 }

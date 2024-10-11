@@ -3,7 +3,6 @@ package com.presnakov.hotelbooking.entity;
 import com.presnakov.hotelbooking.integration.EntityTestBase;
 import com.presnakov.hotelbooking.util.TestDataImporter;
 import com.querydsl.jpa.impl.JPAQuery;
-import org.hibernate.query.criteria.JpaJoin;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -67,8 +66,8 @@ public class OrderTestIT extends EntityTestBase {
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Order.class);
         var order = criteria.from(Order.class);
-        JpaJoin<User, Order> users = order.join("user");
-        String userEmail = "vasya@gmai.com";
+        var users = order.join("user");
+        var userEmail = "vasya@gmai.com";
 
         criteria.select(order).where(
                 cb.equal(users.get("email"), userEmail)
@@ -85,9 +84,9 @@ public class OrderTestIT extends EntityTestBase {
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Order.class);
         var order = criteria.from(Order.class);
-        JpaJoin<Room, Order> room = order.join("room");
-        JpaJoin<Hotel, Room> hotel = room.join("hotel");
-        String hotelName = "Minsk";
+        var room = order.join("room");
+        var hotel = room.join("hotel");
+        var hotelName = "Minsk";
 
         criteria.select(order).where(
                 cb.equal(hotel.get("name"), hotelName)
@@ -104,7 +103,7 @@ public class OrderTestIT extends EntityTestBase {
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Order.class);
         var order = criteria.from(Order.class);
-        LocalDate checkInDate = LocalDate.of(2024, 10, 20);
+        var checkInDate = LocalDate.of(2024, 10, 20);
 
         criteria.select(order).where(
                 cb.equal(order.get("checkInDate"), checkInDate));

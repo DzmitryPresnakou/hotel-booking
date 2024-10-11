@@ -1,7 +1,10 @@
 package com.presnakov.hotelbooking.entity;
 
+import com.presnakov.hotelbooking.dao.QPredicate;
+import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.integration.EntityTestBase;
 import com.presnakov.hotelbooking.util.TestDataImporter;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.query.criteria.JpaJoin;
 import org.junit.jupiter.api.Test;
@@ -14,7 +17,6 @@ import static com.presnakov.hotelbooking.entity.QHotel.hotel;
 import static com.presnakov.hotelbooking.entity.QOrder.order;
 import static com.presnakov.hotelbooking.entity.QRoom.room;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class RoomTestIT extends EntityTestBase {
@@ -133,8 +135,8 @@ public class RoomTestIT extends EntityTestBase {
         Integer occupancy = 2;
         Integer pricePerDay = 29;
         RoomClassEnum roomClass = RoomClassEnum.ECONOMY;
-        LocalDate checkInDate = LocalDate.of(2024, 10, 25);
-        LocalDate checkOutDate = LocalDate.of(2024, 10, 30);
+        LocalDate checkInDate = LocalDate.of(2024, 10, 10);
+        LocalDate checkOutDate = LocalDate.of(2024, 10, 15);
 
         List<Room> results = new JPAQuery<Room>(session)
                 .select(room)
@@ -145,15 +147,45 @@ public class RoomTestIT extends EntityTestBase {
                         room.occupancy.eq(occupancy),
                         room.pricePerDay.eq(pricePerDay),
                         room.roomClass.eq(roomClass),
-                        order.checkOutDate.after(checkInDate)
-                                .and(order.checkOutDate.after(checkOutDate))
-                                .and(order.checkInDate.after(checkInDate))
-                                .and(order.checkInDate.after(checkOutDate)
-                                        .or(order.checkInDate.eq(checkOutDate)))
-                                .or(order.checkInDate.before(checkOutDate)
-                                        .and(order.checkInDate.before(checkInDate))
-                                        .and(order.checkOutDate.before(checkOutDate))
-                                        .and(order.checkOutDate.before(checkInDate)).or(order.checkOutDate.eq(checkInDate))))
+                        order.checkInDate.after(checkOutDate)
+                                .or(order.checkInDate.eq(checkOutDate))
+                                .or(order.checkOutDate.before(checkInDate))
+                                .or(order.checkOutDate.eq(checkInDate)))
+                .fetch();
+
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void findAllByHotelNameClassOccupancyPriceFreeDateFilter() {
+        TestDataImporter.importData(session);
+        RoomFilter filter = RoomFilter.builder()
+                .hotelName("Plaza")
+                .occupancy(2)
+                .pricePerDay(29)
+                .roomClass(RoomClassEnum.ECONOMY)
+                .checkInDate(LocalDate.of(2024, 10, 10))
+                .checkOutDate(LocalDate.of(2024, 10, 15))
+                .build();
+        Predicate predicate1 = QPredicate.builder()
+                .add(filter.getHotelName(), hotel.name::eq)
+                .add(filter.getOccupancy(), room.occupancy::eq)
+                .add(filter.getPricePerDay(), room.pricePerDay::eq)
+                .add(filter.getRoomClass(), room.roomClass::eq)
+                .buildAnd();
+        Predicate predicate2 = QPredicate.builder()
+                .add(filter.getCheckOutDate(), order.checkInDate::after)
+                .add(filter.getCheckOutDate(), order.checkInDate::eq)
+                .add(filter.getCheckInDate(), order.checkOutDate::before)
+                .add(filter.getCheckInDate(), order.checkOutDate::eq)
+                .buildOr();
+
+        List<Room> results = new JPAQuery<Room>(session)
+                .select(room)
+                .from(order)
+                .join(order.room, room)
+                .join(room.hotel, hotel)
+                .where(predicate1, predicate2)
                 .fetch();
 
         assertThat(results).hasSize(1);
