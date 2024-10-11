@@ -1,17 +1,62 @@
-package com.presnakov.hotelbooking.integration.entity;
+package com.presnakov.hotelbooking.entity;
 
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.User;
-import com.presnakov.hotelbooking.integration.integration.EntityTestBase;
+import com.presnakov.hotelbooking.integration.EntityTestBase;
+import com.presnakov.hotelbooking.util.TestDataImporter;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static com.presnakov.hotelbooking.entity.QUser.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserTestIT extends EntityTestBase {
+
+    @Test
+    void findUserByEmailHql() {
+        TestDataImporter.importData(session);
+        String userEmail = "vasya@gmai.com";
+
+        Optional<User> result = session.createQuery("select u from User u " +
+                                                    "where u.email = :email", User.class)
+                .setParameter("email", userEmail)
+                .uniqueResultOptional();
+
+        assertThat(result).isPresent();
+    }
+
+    @Test
+    void findUserByEmailCriteria() {
+        TestDataImporter.importData(session);
+        var cb = session.getCriteriaBuilder();
+        var criteria = cb.createQuery(User.class);
+        var user = criteria.from(User.class);
+        String userEmail = "vasya@gmai.com";
+
+        criteria.select(user).where(
+                cb.equal(user.get("email"), userEmail));
+        Optional<User> actualResult = session.createQuery(criteria)
+                .uniqueResultOptional();
+
+        assertThat(actualResult.isPresent()).isTrue();
+        assertThat(actualResult.get().getEmail()).isEqualTo(userEmail);
+    }
+
+    @Test
+    void findUserByEmailQueryDsl() {
+        TestDataImporter.importData(session);
+        String userEmail = "vasya@gmai.com";
+
+        Optional<User> result = Optional.ofNullable(new JPAQuery<User>(session)
+                .select(user)
+                .from(user)
+                .where(user.email.eq(userEmail))
+                .fetchOne());
+
+        assertThat(result).isPresent();
+    }
 
     @Test
     void createUser() {
