@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
+import static com.presnakov.hotelbooking.entity.QHotel.*;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -80,8 +81,8 @@ public class HotelTestIT extends EntityTestBase {
     void findAllQueryDsl() {
         TestDataImporter.importData(session);
         List<Hotel> results = new JPAQuery<Hotel>(session)
-                .select(QHotel.hotel)
-                .from(QHotel.hotel)
+                .select(hotel)
+                .from(hotel)
                 .fetch();
 
         List<String> hotelNames = results.stream()
@@ -97,13 +98,16 @@ public class HotelTestIT extends EntityTestBase {
         TestDataImporter.importData(session);
         String hotelName = "Plaza";
 
-        Hotel actualResult = new JPAQuery<Hotel>(session)
-                .select(QHotel.hotel)
-                .from(QHotel.hotel)
-                .where(QHotel.hotel.name.eq(hotelName))
-                .fetchOne();
+        Optional<Hotel> actualResult = Optional.ofNullable(new JPAQuery<Hotel>(session)
+                .select(hotel)
+                .from(hotel)
+                .where(hotel.name.eq(hotelName))
+                .fetchOne());
 
-        assertThat(actualResult.getName()).isEqualTo(hotelName);
+        assertAll(
+                () -> assertThat(actualResult).isPresent(),
+                () -> assertThat(actualResult.get().getName()).isEqualTo(hotelName)
+        );
     }
 
     @Test

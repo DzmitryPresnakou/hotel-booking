@@ -2,13 +2,19 @@ package com.presnakov.hotelbooking.entity;
 
 import com.presnakov.hotelbooking.integration.EntityTestBase;
 import com.presnakov.hotelbooking.util.TestDataImporter;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.query.criteria.JpaJoin;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.presnakov.hotelbooking.entity.QHotel.hotel;
+import static com.presnakov.hotelbooking.entity.QOrder.order;
+import static com.presnakov.hotelbooking.entity.QRoom.room;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class RoomTestIT extends EntityTestBase {
@@ -19,7 +25,7 @@ public class RoomTestIT extends EntityTestBase {
         String hotelName = "Plaza";
         Integer occupancy = 2;
         Integer pricePerDay = 29;
-        RoomClassEnum comfortClass = RoomClassEnum.ECONOMY;
+        RoomClassEnum roomClass = RoomClassEnum.ECONOMY;
 
         List<Room> results = session.createQuery("select r from Hotel h " +
                                                  "join h.rooms r " +
@@ -28,9 +34,38 @@ public class RoomTestIT extends EntityTestBase {
                                                  "and r.occupancy = :occupancy " +
                                                  "and r.pricePerDay = :pricePerDay", Room.class)
                 .setParameter("hotelName", hotelName)
-                .setParameter("comfortClass", comfortClass)
+                .setParameter("comfortClass", roomClass)
                 .setParameter("occupancy", occupancy)
                 .setParameter("pricePerDay", pricePerDay)
+                .list();
+
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void findAllByHotelNameClassOccupancyPriceFreeDateHql() {
+        TestDataImporter.importData(session);
+        String hotelName = "Plaza";
+        Integer occupancy = 2;
+        Integer pricePerDay = 29;
+        RoomClassEnum roomClass = RoomClassEnum.ECONOMY;
+        LocalDate checkInDate = LocalDate.of(2024, 10, 10);
+        LocalDate checkOutDate = LocalDate.of(2024, 10, 15);
+
+        List<Room> results = session.createQuery("select r from Order o " +
+                                                 "join o.room r " +
+                                                 "join r.hotel h " +
+                                                 "where h.name = :hotelName " +
+                                                 "and r.roomClass = :comfortClass " +
+                                                 "and r.occupancy = :occupancy " +
+                                                 "and r.pricePerDay = :pricePerDay " +
+                                                 "and not LEAST(o.checkOutDate, :checkOutDate) > GREATEST(o.checkInDate, :checkInDate)", Room.class)
+                .setParameter("hotelName", hotelName)
+                .setParameter("comfortClass", roomClass)
+                .setParameter("occupancy", occupancy)
+                .setParameter("pricePerDay", pricePerDay)
+                .setParameter("checkInDate", checkInDate)
+                .setParameter("checkOutDate", checkOutDate)
                 .list();
 
         assertThat(results).hasSize(1);
@@ -70,32 +105,59 @@ public class RoomTestIT extends EntityTestBase {
         );
     }
 
-//    @Test
-//    void findAllByHotelNameClassOccupancyQueryDsl() {
-//        TestDataImporter.importData(session);
-//        String hotelName = "Plaza";
-//        Integer occupancy = 2;
-//        Integer pricePerDay = 29;
-//        RoomClassEnum comfortClass = RoomClassEnum.ECONOMY;
-//
-//        new JPAQuery<Room>(session)
-//                .select(QRoom.user)
-//                        .from()
+    @Test
+    void findAllByHotelNameClassOccupancyPriceQueryDsl() {
+        TestDataImporter.importData(session);
+        String hotelName = "Plaza";
+        Integer occupancy = 2;
+        Integer pricePerDay = 29;
+        RoomClassEnum roomClass = RoomClassEnum.ECONOMY;
 
-//        List<Room> results = session.createQuery("select r from Hotel h " +
-//                                                 "join h.rooms r " +
-//                                                 "where h.name = :hotelName " +
-//                                                 "and r.roomClass = :comfortClass " +
-//                                                 "and r.occupancy = :occupancy " +
-//                                                 "and r.pricePerDay = :pricePerDay", Room.class)
-//                .setParameter("hotelName", hotelName)
-//                .setParameter("comfortClass", comfortClass)
-//                .setParameter("occupancy", occupancy)
-//                .setParameter("pricePerDay", pricePerDay)
-//                .list();
+        List<Room> results = new JPAQuery<Room>(session)
+                .select(room)
+                .from(hotel)
+                .join(hotel.rooms, room)
+                .where(hotel.name.eq(hotelName),
+                        room.occupancy.eq(occupancy),
+                        room.pricePerDay.eq(pricePerDay),
+                        room.roomClass.eq(roomClass))
+                .fetch();
 
-//        assertThat(results).hasSize(1);
-//    }
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void findAllByHotelNameClassOccupancyPriceFreeDateQueryDsl() {
+        TestDataImporter.importData(session);
+        String hotelName = "Plaza";
+        Integer occupancy = 2;
+        Integer pricePerDay = 29;
+        RoomClassEnum roomClass = RoomClassEnum.ECONOMY;
+        LocalDate checkInDate = LocalDate.of(2024, 10, 25);
+        LocalDate checkOutDate = LocalDate.of(2024, 10, 30);
+
+        List<Room> results = new JPAQuery<Room>(session)
+                .select(room)
+                .from(order)
+                .join(order.room, room)
+                .join(room.hotel, hotel)
+                .where(hotel.name.eq(hotelName),
+                        room.occupancy.eq(occupancy),
+                        room.pricePerDay.eq(pricePerDay),
+                        room.roomClass.eq(roomClass),
+                        order.checkOutDate.after(checkInDate)
+                                .and(order.checkOutDate.after(checkOutDate))
+                                .and(order.checkInDate.after(checkInDate))
+                                .and(order.checkInDate.after(checkOutDate)
+                                        .or(order.checkInDate.eq(checkOutDate)))
+                                .or(order.checkInDate.before(checkOutDate)
+                                        .and(order.checkInDate.before(checkInDate))
+                                        .and(order.checkOutDate.before(checkOutDate))
+                                        .and(order.checkOutDate.before(checkInDate)).or(order.checkOutDate.eq(checkInDate))))
+                .fetch();
+
+        assertThat(results).hasSize(1);
+    }
 
     @Test
     void createRoom() {

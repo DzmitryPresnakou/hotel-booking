@@ -2,6 +2,7 @@ package com.presnakov.hotelbooking.entity;
 
 import com.presnakov.hotelbooking.integration.EntityTestBase;
 import com.presnakov.hotelbooking.util.TestDataImporter;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.query.criteria.JpaJoin;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.presnakov.hotelbooking.entity.QHotel.hotel;
+import static com.presnakov.hotelbooking.entity.QOrder.order;
+import static com.presnakov.hotelbooking.entity.QRoom.room;
+import static com.presnakov.hotelbooking.entity.QUser.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -105,6 +110,51 @@ public class OrderTestIT extends EntityTestBase {
                 cb.equal(order.get("checkInDate"), checkInDate));
         List<Order> results = session.createQuery(criteria)
                 .list();
+
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void findOrderByUserEmailQueryDsl() {
+        TestDataImporter.importData(session);
+        String userEmail = "vasya@gmai.com";
+
+        List<Order> results = new JPAQuery<Order>(session)
+                .select(order)
+                .from(order)
+                .join(order.user, user)
+                .where(user.email.eq(userEmail))
+                .fetch();
+
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void findAllOrdersByHotelNameQueryDsl() {
+        TestDataImporter.importData(session);
+        String hotelName = "Minsk";
+
+        List<Order> results = new JPAQuery<Order>(session)
+                .select(order)
+                .from(order)
+                .join(order.room, room)
+                .join(room.hotel, hotel)
+                .where(hotel.name.eq(hotelName))
+                .fetch();
+
+        assertThat(results).hasSize(2);
+    }
+
+    @Test
+    void findOrdersByCheckInDateQueryDsl() {
+        TestDataImporter.importData(session);
+        LocalDate checkInDate = LocalDate.of(2024, 10, 20);
+
+        List<Order> results = new JPAQuery<Order>(session)
+                .select(order)
+                .from(order)
+                .where(order.checkInDate.eq(checkInDate))
+                .fetch();
 
         assertThat(results).hasSize(1);
     }
