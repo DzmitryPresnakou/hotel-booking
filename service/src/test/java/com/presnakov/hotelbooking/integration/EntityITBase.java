@@ -1,6 +1,5 @@
 package com.presnakov.hotelbooking.integration;
 
-import com.presnakov.hotelbooking.dao.HotelRepository;
 import com.presnakov.hotelbooking.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,7 +14,6 @@ public abstract class EntityITBase {
 
     protected static SessionFactory sessionFactory;
     protected static Session session;
-    protected static HotelRepository hotelRepository;
 
     @BeforeAll
     static void createSessionFactory() {
@@ -39,7 +37,6 @@ public abstract class EntityITBase {
         }
         session = sessionFactory.openSession();
         session.beginTransaction();
-        hotelRepository = new HotelRepository(session);
     }
 
     @AfterEach

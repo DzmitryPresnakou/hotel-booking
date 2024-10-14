@@ -2,7 +2,7 @@ package com.presnakov.hotelbooking.dao;
 
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,8 +11,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Transactional
 class HotelRepositoryIT extends EntityITBase {
+
+    protected static HotelRepository hotelRepository;
+
+    @BeforeEach
+    void createHotelRepository() {
+        hotelRepository = new HotelRepository(session);
+    }
 
     @Test
     void save() {
