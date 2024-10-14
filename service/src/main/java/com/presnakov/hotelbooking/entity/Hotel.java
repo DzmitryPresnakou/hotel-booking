@@ -23,7 +23,7 @@ import java.util.Set;
 @ToString(exclude = "rooms")
 @Builder
 @Entity
-public class Hotel {
+public class Hotel implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
