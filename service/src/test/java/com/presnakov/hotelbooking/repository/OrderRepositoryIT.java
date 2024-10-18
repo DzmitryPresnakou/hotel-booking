@@ -11,12 +11,10 @@ import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.integration.EntityITBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.Arguments;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -287,14 +285,5 @@ class OrderRepositoryIT extends EntityITBase {
                 .checkInDate(checkInDate)
                 .checkOutDate(checkOutDate)
                 .build();
-    }
-
-    static Stream<Arguments> getDateRanges() {
-        return Stream.of(
-                Arguments.of(1),
-                Arguments.of(2),
-                Arguments.of(3),
-                Arguments.of(4)
-        );
     }
 }

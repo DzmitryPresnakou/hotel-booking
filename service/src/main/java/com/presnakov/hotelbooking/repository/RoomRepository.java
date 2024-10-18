@@ -19,13 +19,42 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
     }
 
     public List<Room> findAllRoomsByFilter(RoomFilter filter) {
-        return new JPAQuery<Room>(getEntityManager())
+        List<Room> rooms = new JPAQuery<Room>(getEntityManager())
+                .select(room)
+                .from(room)
+                .where(getByCompleteInfo(filter))
+                .fetch();
+
+        List<Room> bookedRooms = new JPAQuery<Room>(getEntityManager())
                 .select(room)
                 .from(order)
                 .join(order.room, room)
                 .join(room.hotel, hotel)
-                .where(getByCompleteInfo(filter), getByFreeDate(filter))
+                .where(getByBookedDateRange(filter))
                 .fetch();
+        for (Room room : bookedRooms) {
+            rooms.remove(room);
+        }
+        return rooms;
+    }
+
+    public List<Room> findAllRoomsByFreeDateRange(RoomFilter filter) {
+        List<Room> rooms = new JPAQuery<Room>(getEntityManager())
+                .select(room)
+                .from(room)
+                .fetch();
+
+        List<Room> bookedRooms = new JPAQuery<Room>(getEntityManager())
+                .select(room)
+                .from(order)
+                .join(order.room, room)
+                .join(room.hotel, hotel)
+                .where(getByBookedDateRange(filter))
+                .fetch();
+        for (Room room : bookedRooms) {
+            rooms.remove(room);
+        }
+        return rooms;
     }
 
     private static Predicate getByCompleteInfo(RoomFilter filter) {
@@ -37,12 +66,10 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
                 .buildAnd();
     }
 
-    private static Predicate getByFreeDate(RoomFilter filter) {
+    private static Predicate getByBookedDateRange(RoomFilter filter) {
         return QPredicate.builder()
-                .add(filter.getCheckOutDate(), order.checkInDate::after)
-                .add(filter.getCheckOutDate(), order.checkInDate::eq)
-                .add(filter.getCheckInDate(), order.checkOutDate::before)
-                .add(filter.getCheckInDate(), order.checkOutDate::eq)
-                .buildOr();
+                .add(filter.getCheckOutDate(), order.checkInDate::before)
+                .add(filter.getCheckInDate(), order.checkOutDate::after)
+                .buildAnd();
     }
 }
