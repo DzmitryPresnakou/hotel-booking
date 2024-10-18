@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.querydsl.jpa.impl.JPAQuery;

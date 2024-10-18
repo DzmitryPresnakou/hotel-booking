@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.Order;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -18,7 +18,7 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
         super(Order.class, entityManager);
     }
 
-    public List<Order> findOrderByUserEmail(String email) {
+    public List<Order> findOrdersByUserEmail(String email) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
                 .from(order)
@@ -27,7 +27,7 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
                 .fetch();
     }
 
-    public List<Order> findAllOrdersByHotelName(String name) {
+    public List<Order> findOrdersByHotelName(String name) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
                 .from(order)
@@ -42,6 +42,15 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
                 .select(order)
                 .from(order)
                 .where(order.checkInDate.eq(checkInDate))
+                .fetch();
+    }
+
+    public List<Order> findOrdersByDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
+        return new JPAQuery<Order>(getEntityManager())
+                .select(order)
+                .from(order)
+                .where(order.checkInDate.before(checkOutDate)
+                        .and(order.checkOutDate.after(checkInDate)))
                 .fetch();
     }
 }

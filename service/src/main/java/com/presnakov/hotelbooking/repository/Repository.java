@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.BaseEntity;
 
@@ -10,7 +10,7 @@ public interface Repository<K extends Serializable, E extends BaseEntity<K>> {
 
     E save(E entity);
 
-    void delete(K id);
+    void delete(E entity);
 
     void update(E entity);
 

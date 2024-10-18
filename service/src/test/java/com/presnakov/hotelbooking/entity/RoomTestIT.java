@@ -1,6 +1,6 @@
 package com.presnakov.hotelbooking.entity;
 
-import com.presnakov.hotelbooking.dao.QPredicate;
+import com.presnakov.hotelbooking.repository.QPredicate;
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.integration.EntityTestBase;
 import com.presnakov.hotelbooking.util.TestDataImporter;
@@ -61,6 +61,8 @@ public class RoomTestIT extends EntityTestBase {
                                                  "and r.roomClass = :comfortClass " +
                                                  "and r.occupancy = :occupancy " +
                                                  "and r.pricePerDay = :pricePerDay " +
+//                                                 "and o.checkInDate >= :checkOutDate " +
+//                                                 "and o.checkOutDate <= :checkInDate", Room.class)
                                                  "and not LEAST(o.checkOutDate, :checkOutDate) > GREATEST(o.checkInDate, :checkInDate)", Room.class)
                 .setParameter("hotelName", hotelName)
                 .setParameter("comfortClass", roomClass)

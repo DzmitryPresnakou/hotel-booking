@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.integration.EntityITBase;
@@ -16,7 +16,7 @@ class HotelRepositoryIT extends EntityITBase {
     protected static HotelRepository hotelRepository;
 
     @BeforeEach
-    void createHotelRepository() {
+    void createRepository() {
         hotelRepository = new HotelRepository(session);
     }
 
@@ -33,7 +33,7 @@ class HotelRepositoryIT extends EntityITBase {
     void delete() {
         Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
 
-        hotelRepository.delete(hotel.getId());
+        hotelRepository.delete(hotel);
 
         assertThat(hotelRepository.findById(hotel.getId())).isEmpty();
     }
@@ -41,7 +41,6 @@ class HotelRepositoryIT extends EntityITBase {
     @Test
     void update() {
         Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
-        hotelRepository.save(hotel);
         hotel.setName("Minsk");
         hotel.setPhoto("photo10.jpg");
 
@@ -70,10 +69,10 @@ class HotelRepositoryIT extends EntityITBase {
         Hotel hotel5 = hotelRepository.save(getHotel("Disneys Port Orleans Resort", "photo5.jpg"));
 
         List<Hotel> actualResult = hotelRepository.findAll();
+
         List<Integer> hotelIds = actualResult.stream()
                 .map(Hotel::getId)
                 .toList();
-
         assertThat(actualResult).hasSize(5);
         assertThat(hotelIds).contains(hotel1.getId(), hotel2.getId(), hotel3.getId(), hotel4.getId(), hotel5.getId());
     }

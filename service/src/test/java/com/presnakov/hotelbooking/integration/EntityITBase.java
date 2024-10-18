@@ -35,7 +35,7 @@ public abstract class EntityITBase {
         if (sessionFactory == null || sessionFactory.isClosed()) {
             throw new IllegalStateException("SessionFactory doesn't exist");
         }
-        session = sessionFactory.openSession();
+        session = sessionFactory.getCurrentSession();
         session.beginTransaction();
     }
 

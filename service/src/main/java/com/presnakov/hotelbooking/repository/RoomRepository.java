@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Room;
@@ -18,31 +18,31 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
         super(Room.class, entityManager);
     }
 
-    public List<Room> findAllByHotelNameClassOccupancyPriceFreeDate(RoomFilter filter) {
+    public List<Room> findAllRoomsByFilter(RoomFilter filter) {
         return new JPAQuery<Room>(getEntityManager())
                 .select(room)
                 .from(order)
                 .join(order.room, room)
                 .join(room.hotel, hotel)
-                .where(getFirstPredicate(filter), getSecondPredicate(filter))
+                .where(getByCompleteInfo(filter), getByFreeDate(filter))
                 .fetch();
     }
 
-    private static Predicate getSecondPredicate(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getCheckOutDate(), order.checkInDate::after)
-                .add(filter.getCheckOutDate(), order.checkInDate::eq)
-                .add(filter.getCheckInDate(), order.checkOutDate::before)
-                .add(filter.getCheckInDate(), order.checkOutDate::eq)
-                .buildOr();
-    }
-
-    private static Predicate getFirstPredicate(RoomFilter filter) {
+    private static Predicate getByCompleteInfo(RoomFilter filter) {
         return QPredicate.builder()
                 .add(filter.getHotelName(), hotel.name::eq)
                 .add(filter.getOccupancy(), room.occupancy::eq)
                 .add(filter.getPricePerDay(), room.pricePerDay::eq)
                 .add(filter.getRoomClass(), room.roomClass::eq)
                 .buildAnd();
+    }
+
+    private static Predicate getByFreeDate(RoomFilter filter) {
+        return QPredicate.builder()
+                .add(filter.getCheckOutDate(), order.checkInDate::after)
+                .add(filter.getCheckOutDate(), order.checkInDate::eq)
+                .add(filter.getCheckInDate(), order.checkOutDate::before)
+                .add(filter.getCheckInDate(), order.checkOutDate::eq)
+                .buildOr();
     }
 }

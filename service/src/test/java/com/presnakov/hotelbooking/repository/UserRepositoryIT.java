@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.User;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class UserRepositoryTest extends EntityITBase {
+class UserRepositoryIT extends EntityITBase {
 
     protected static UserRepository userRepository;
 
@@ -39,17 +39,16 @@ class UserRepositoryTest extends EntityITBase {
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
 
-        userRepository.delete(user.getId());
+        userRepository.delete(user);
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
     }
 
     @Test
     void update() {
-        User user = getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
-        userRepository.save(user);
+                2500, "12345", RoleEnum.USER));
         user.setFirstName("Petr");
         user.setLastName("Petrov");
         user.setEmail("petya@gmail.com");

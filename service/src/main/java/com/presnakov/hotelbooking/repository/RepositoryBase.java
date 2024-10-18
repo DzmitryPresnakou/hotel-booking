@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.dao;
+package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.BaseEntity;
 import jakarta.persistence.EntityManager;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
+public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
 
     private final Class<E> clazz;
     @Getter
@@ -23,8 +23,8 @@ public class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> imp
     }
 
     @Override
-    public void delete(K id) {
-        entityManager.remove(entityManager.find(clazz, id));
+    public void delete(E entity) {
+        entityManager.remove(entityManager.find(clazz, entity.getId()));
         entityManager.flush();
     }
 
