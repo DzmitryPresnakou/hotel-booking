@@ -28,7 +28,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "room_order")
-public class Order {
+public class Order implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

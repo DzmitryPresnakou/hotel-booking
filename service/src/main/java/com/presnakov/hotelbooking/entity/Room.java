@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString(exclude = "hotel")
 @Builder
 @Entity
-public class Room {
+public class Room implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
