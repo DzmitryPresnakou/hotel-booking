@@ -21,9 +21,11 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
     public List<Room> findAllRoomsByFilter(RoomFilter filter) {
         return new JPAQuery<Room>(getEntityManager())
                 .select(room)
-                .from(room)
+                .from(order)
+                .rightJoin(order.room, room)
+                .on(getByCheckInDate(filter), getByCheckOutDate(filter))
                 .join(room.hotel, hotel)
-                .where(getByCompleteInfo(filter))
+                .where(getByCompleteInfo(filter), order.id.isNull())
                 .fetch();
     }
 
