@@ -1,16 +1,8 @@
 package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
-import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.entity.Order;
-import com.presnakov.hotelbooking.entity.OrderStatusEnum;
-import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.Room;
-import com.presnakov.hotelbooking.entity.RoomClassEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.entity.*;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,9 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.presnakov.hotelbooking.entity.QHotel.hotel;
-import static com.presnakov.hotelbooking.entity.QOrder.order;
-import static com.presnakov.hotelbooking.entity.QRoom.room;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -106,6 +95,22 @@ class RoomRepositoryIT extends EntityITBase {
 
     @Test
     void findAllRoomsByFilter() {
+        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        RoomFilter filter = RoomFilter.builder()
+                .hotelName(hotel.getName())
+                .occupancy(room.getOccupancy())
+                .pricePerDay(room.getPricePerDay())
+                .roomClass(room.getRoomClass())
+                .build();
+
+        List<Room> actualResult = roomRepository.findAllRoomsByFilter(filter);
+
+        List<Integer> roomIds = actualResult.stream()
+                .map(Room::getId)
+                .toList();
+        assertThat(actualResult).hasSize(1);
+        assertThat(roomIds).contains(room.getId());
     }
 
     @ParameterizedTest
@@ -118,7 +123,7 @@ class RoomRepositoryIT extends EntityITBase {
         User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .checkInDate(checkInDate)
@@ -191,22 +196,6 @@ class RoomRepositoryIT extends EntityITBase {
                 .checkInDate(checkInDate)
                 .checkOutDate(checkOutDate)
                 .build();
-    }
-
-    private static Predicate getByCompleteInfo(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getHotelName(), hotel.name::eq)
-                .add(filter.getOccupancy(), room.occupancy::eq)
-                .add(filter.getPricePerDay(), room.pricePerDay::eq)
-                .add(filter.getRoomClass(), room.roomClass::eq)
-                .buildAnd();
-    }
-
-    private static Predicate getByBookedDateRange(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getCheckOutDate(), order.checkInDate::before)
-                .add(filter.getCheckInDate(), order.checkOutDate::after)
-                .buildAnd();
     }
 
     static Stream<Arguments> getDateRanges() {
