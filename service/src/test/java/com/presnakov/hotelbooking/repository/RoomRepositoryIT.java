@@ -93,15 +93,29 @@ class RoomRepositoryIT extends EntityITBase {
         assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId());
     }
 
-    @Test
-    void findAllRoomsByFilter() {
+    @ParameterizedTest
+    @MethodSource("getDateRanges")
+    void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
+        orderRepository = new OrderRepository(session);
+        userRepository = new UserRepository(session);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room3 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room4 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+
+        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        orderRepository.save(getOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+                LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .hotelName(hotel.getName())
-                .occupancy(room.getOccupancy())
-                .pricePerDay(room.getPricePerDay())
-                .roomClass(room.getRoomClass())
+                .occupancy(room1.getOccupancy())
+                .pricePerDay(room1.getPricePerDay())
+                .roomClass(room1.getRoomClass())
+                .checkInDate(checkInDate)
+                .checkOutDate(checkOutDate)
                 .build();
 
         List<Room> actualResult = roomRepository.findAllRoomsByFilter(filter);
@@ -109,8 +123,8 @@ class RoomRepositoryIT extends EntityITBase {
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)
                 .toList();
-        assertThat(actualResult).hasSize(1);
-        assertThat(roomIds).contains(room.getId());
+        assertThat(actualResult).hasSize(4);
+        assertThat(roomIds).contains(room1.getId(), room2.getId(),room3.getId(),room4.getId());
     }
 
     @ParameterizedTest
