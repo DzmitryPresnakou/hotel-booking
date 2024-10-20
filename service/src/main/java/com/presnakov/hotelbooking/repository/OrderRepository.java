@@ -3,6 +3,7 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.Order;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import static com.presnakov.hotelbooking.entity.QOrder.order;
 import static com.presnakov.hotelbooking.entity.QRoom.room;
 import static com.presnakov.hotelbooking.entity.QUser.user;
 
+@Repository
 public class OrderRepository extends RepositoryBase<Integer, Order> {
 
     public OrderRepository(EntityManager entityManager) {

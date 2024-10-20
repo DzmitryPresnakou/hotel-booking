@@ -1,5 +1,6 @@
 package com.presnakov.hotelbooking.integration;
 
+import com.presnakov.hotelbooking.config.ApplicationConfiguration;
 import com.presnakov.hotelbooking.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.lang.reflect.Proxy;
 
@@ -14,10 +16,11 @@ public abstract class EntityITBase {
 
     protected static SessionFactory sessionFactory;
     protected static Session session;
+    protected static AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
 
     @BeforeAll
     static void createSessionFactory() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
+        sessionFactory = context.getBean(SessionFactory.class);
         session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                 (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
 
