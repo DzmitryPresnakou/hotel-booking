@@ -1,7 +1,6 @@
 package com.presnakov.hotelbooking.integration;
 
 import com.presnakov.hotelbooking.config.ApplicationConfiguration;
-import com.presnakov.hotelbooking.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -23,7 +22,6 @@ public abstract class EntityITBase {
         sessionFactory = context.getBean(SessionFactory.class);
         session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                 (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-
     }
 
     @AfterAll

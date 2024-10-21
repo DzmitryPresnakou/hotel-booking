@@ -3,6 +3,7 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.User;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class UserRepository extends RepositoryBase<Integer, User> {
         super(User.class, entityManager);
     }
 
+    @Transactional
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(new JPAQuery<User>(getEntityManager())
                 .select(user)

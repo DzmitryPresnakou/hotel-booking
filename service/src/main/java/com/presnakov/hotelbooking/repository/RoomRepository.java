@@ -5,6 +5,7 @@ import com.presnakov.hotelbooking.entity.Room;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
         super(Room.class, entityManager);
     }
 
+    @Transactional
     public List<Room> findAllRoomsByFilter(RoomFilter filter) {
         return new JPAQuery<Room>(getEntityManager())
                 .select(room)
@@ -31,6 +33,7 @@ public class RoomRepository extends RepositoryBase<Integer, Room> {
                 .fetch();
     }
 
+    @Transactional
     public List<Room> findAllRoomsByFreeDateRange(RoomFilter filter) {
         return new JPAQuery<Room>(getEntityManager())
                 .select(room)

@@ -2,7 +2,6 @@ package com.presnakov.hotelbooking.util;
 
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
 import org.testcontainers.containers.PostgreSQLContainer;
 

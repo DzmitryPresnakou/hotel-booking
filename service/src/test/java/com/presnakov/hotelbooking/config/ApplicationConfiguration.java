@@ -4,16 +4,16 @@ import com.presnakov.hotelbooking.repository.HotelRepository;
 import com.presnakov.hotelbooking.repository.OrderRepository;
 import com.presnakov.hotelbooking.repository.RoomRepository;
 import com.presnakov.hotelbooking.repository.UserRepository;
-import com.presnakov.hotelbooking.util.HibernateUtil;
+import com.presnakov.hotelbooking.util.HibernateTestUtil;
 import jakarta.persistence.EntityManager;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.cglib.proxy.Proxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+
+import java.lang.reflect.Proxy;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -22,12 +22,14 @@ public class ApplicationConfiguration {
 
     @Bean
     public SessionFactory sessionFactory() {
-        return HibernateUtil.buildSessionFactory();
+        return HibernateTestUtil.buildSessionFactory();
     }
 
     @Bean
     public EntityManager entityManager(SessionFactory sessionFactory) {
-        return sessionFactory.createEntityManager();
+        Session session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+        return session.unwrap(EntityManager.class);
     }
 
     @Bean
