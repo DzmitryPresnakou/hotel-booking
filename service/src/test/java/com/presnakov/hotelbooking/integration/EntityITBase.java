@@ -21,7 +21,7 @@ public abstract class EntityITBase {
     static void createSessionFactory() {
         sessionFactory = context.getBean(SessionFactory.class);
         session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
-                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));;
     }
 
     @AfterAll
