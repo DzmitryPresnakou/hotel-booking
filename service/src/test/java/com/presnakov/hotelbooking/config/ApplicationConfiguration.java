@@ -23,9 +23,8 @@ public class ApplicationConfiguration {
 
     @Bean
     public EntityManager entityManager(SessionFactory sessionFactory) {
-        Session session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
-                (proxy, method, args1) -> method.invoke(sessionFactory.openSession(), args1));
-        return session.unwrap(EntityManager.class);
+        return (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
     }
 
     @Bean

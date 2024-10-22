@@ -3,7 +3,6 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,7 +16,6 @@ public class HotelRepository extends RepositoryBase<Integer, Hotel> {
         super(Hotel.class, entityManager);
     }
 
-    @Transactional
     public Optional<Hotel> findByName(String name) {
         return Optional.ofNullable(new JPAQuery<Hotel>(getEntityManager())
                 .select(hotel)

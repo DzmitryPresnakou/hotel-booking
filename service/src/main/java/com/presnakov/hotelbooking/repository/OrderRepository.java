@@ -3,7 +3,6 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.Order;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
         super(Order.class, entityManager);
     }
 
-    @Transactional
     public List<Order> findOrdersByUserEmail(String email) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
@@ -31,7 +29,6 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
                 .fetch();
     }
 
-    @Transactional
     public List<Order> findOrdersByHotelName(String name) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
@@ -42,7 +39,6 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
                 .fetch();
     }
 
-    @Transactional
     public List<Order> findOrdersByCheckInDate(LocalDate checkInDate) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
@@ -51,7 +47,6 @@ public class OrderRepository extends RepositoryBase<Integer, Order> {
                 .fetch();
     }
     
-    @Transactional
     public List<Order> findOrdersByDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
         return new JPAQuery<Order>(getEntityManager())
                 .select(order)
