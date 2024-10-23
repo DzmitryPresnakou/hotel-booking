@@ -26,8 +26,8 @@ class RoomRepositoryIT extends EntityITBase {
 
     @BeforeEach
     void createRepository() {
-        roomRepository = context.getBean(RoomRepository.class);
-        hotelRepository = context.getBean(HotelRepository.class);
+        roomRepository = applicationContext.getBean(RoomRepository.class);
+        hotelRepository = applicationContext.getBean(HotelRepository.class);
     }
 
     @Test
@@ -96,8 +96,8 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = context.getBean(OrderRepository.class);
-        userRepository = context.getBean(UserRepository.class);
+        orderRepository = applicationContext.getBean(OrderRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         Room room2 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -130,8 +130,8 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = context.getBean(OrderRepository.class);
-        userRepository = context.getBean(UserRepository.class);
+        orderRepository = applicationContext.getBean(OrderRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",

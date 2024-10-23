@@ -19,7 +19,7 @@ class UserRepositoryIT extends EntityITBase {
 
     @BeforeEach
     void createHotelRepository() {
-        userRepository = context.getBean(UserRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
     }
 
     @Test
