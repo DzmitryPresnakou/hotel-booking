@@ -28,10 +28,10 @@ class OrderRepositoryIT extends EntityITBase {
 
     @BeforeEach
     void createRepository() {
-        orderRepository = new OrderRepository(session);
-        roomRepository = new RoomRepository(session);
-        hotelRepository = new HotelRepository(session);
-        userRepository = new UserRepository(session);
+        orderRepository = applicationContext.getBean(OrderRepository.class);
+        roomRepository = applicationContext.getBean(RoomRepository.class);
+        hotelRepository = applicationContext.getBean(HotelRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
     }
 
     @Test

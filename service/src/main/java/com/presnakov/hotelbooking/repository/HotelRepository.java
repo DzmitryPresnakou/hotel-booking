@@ -3,11 +3,13 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 import static com.presnakov.hotelbooking.entity.QHotel.hotel;
 
+@Repository
 public class HotelRepository extends RepositoryBase<Integer, Hotel> {
 
     public HotelRepository(EntityManager entityManager) {

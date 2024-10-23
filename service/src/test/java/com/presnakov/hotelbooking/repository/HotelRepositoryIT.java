@@ -17,7 +17,7 @@ class HotelRepositoryIT extends EntityITBase {
 
     @BeforeEach
     void createRepository() {
-        hotelRepository = new HotelRepository(session);
+        hotelRepository = applicationContext.getBean(HotelRepository.class);
     }
 
     @Test

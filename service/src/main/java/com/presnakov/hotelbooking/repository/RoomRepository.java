@@ -5,6 +5,7 @@ import com.presnakov.hotelbooking.entity.Room;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import static com.presnakov.hotelbooking.entity.QHotel.hotel;
 import static com.presnakov.hotelbooking.entity.QOrder.order;
 import static com.presnakov.hotelbooking.entity.QRoom.room;
 
+@Repository
 public class RoomRepository extends RepositoryBase<Integer, Room> {
 
     public RoomRepository(EntityManager entityManager) {

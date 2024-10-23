@@ -26,8 +26,8 @@ class RoomRepositoryIT extends EntityITBase {
 
     @BeforeEach
     void createRepository() {
-        roomRepository = new RoomRepository(session);
-        hotelRepository = new HotelRepository(session);
+        roomRepository = applicationContext.getBean(RoomRepository.class);
+        hotelRepository = applicationContext.getBean(HotelRepository.class);
     }
 
     @Test
@@ -96,8 +96,8 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = new OrderRepository(session);
-        userRepository = new UserRepository(session);
+        orderRepository = applicationContext.getBean(OrderRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         Room room2 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -124,14 +124,14 @@ class RoomRepositoryIT extends EntityITBase {
                 .map(Room::getId)
                 .toList();
         assertThat(actualResult).hasSize(4);
-        assertThat(roomIds).contains(room1.getId(), room2.getId(),room3.getId(),room4.getId());
+        assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId(), room4.getId());
     }
 
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = new OrderRepository(session);
-        userRepository = new UserRepository(session);
+        orderRepository = applicationContext.getBean(OrderRepository.class);
+        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
