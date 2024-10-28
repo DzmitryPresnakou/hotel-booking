@@ -3,8 +3,9 @@ package com.presnakov.hotelbooking.repository;
 import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,14 +14,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 class UserRepositoryIT extends EntityITBase {
 
-    protected static UserRepository userRepository;
-
-    @BeforeEach
-    void createHotelRepository() {
-        userRepository = applicationContext.getBean(UserRepository.class);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void save() {

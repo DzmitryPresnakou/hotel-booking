@@ -9,8 +9,9 @@ import com.presnakov.hotelbooking.entity.Room;
 import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,20 +20,17 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 class OrderRepositoryIT extends EntityITBase {
 
-    protected static OrderRepository orderRepository;
-    protected static RoomRepository roomRepository;
-    protected static HotelRepository hotelRepository;
-    protected static UserRepository userRepository;
-
-    @BeforeEach
-    void createRepository() {
-        orderRepository = applicationContext.getBean(OrderRepository.class);
-        roomRepository = applicationContext.getBean(RoomRepository.class);
-        hotelRepository = applicationContext.getBean(HotelRepository.class);
-        userRepository = applicationContext.getBean(UserRepository.class);
-    }
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private HotelRepository hotelRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void save() {

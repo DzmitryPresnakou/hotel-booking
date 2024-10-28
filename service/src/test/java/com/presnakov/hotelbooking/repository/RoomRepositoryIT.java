@@ -1,13 +1,21 @@
 package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
-import com.presnakov.hotelbooking.entity.*;
+import com.presnakov.hotelbooking.entity.Hotel;
+import com.presnakov.hotelbooking.entity.Order;
+import com.presnakov.hotelbooking.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
+import com.presnakov.hotelbooking.entity.RoleEnum;
+import com.presnakov.hotelbooking.entity.Room;
+import com.presnakov.hotelbooking.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,18 +25,17 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 class RoomRepositoryIT extends EntityITBase {
 
-    protected static OrderRepository orderRepository;
-    protected static RoomRepository roomRepository;
-    protected static HotelRepository hotelRepository;
-    protected static UserRepository userRepository;
-
-    @BeforeEach
-    void createRepository() {
-        roomRepository = applicationContext.getBean(RoomRepository.class);
-        hotelRepository = applicationContext.getBean(HotelRepository.class);
-    }
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private HotelRepository hotelRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void save() {
@@ -96,8 +103,6 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = applicationContext.getBean(OrderRepository.class);
-        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         Room room2 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -130,8 +135,6 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        orderRepository = applicationContext.getBean(OrderRepository.class);
-        userRepository = applicationContext.getBean(UserRepository.class);
         Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",

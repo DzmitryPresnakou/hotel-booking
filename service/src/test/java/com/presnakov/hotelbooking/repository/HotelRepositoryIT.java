@@ -2,8 +2,9 @@ package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.integration.EntityITBase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,14 +12,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SpringBootTest
 class HotelRepositoryIT extends EntityITBase {
 
-    protected static HotelRepository hotelRepository;
-
-    @BeforeEach
-    void createRepository() {
-        hotelRepository = applicationContext.getBean(HotelRepository.class);
-    }
+    @Autowired
+    private HotelRepository hotelRepository;
 
     @Test
     void save() {

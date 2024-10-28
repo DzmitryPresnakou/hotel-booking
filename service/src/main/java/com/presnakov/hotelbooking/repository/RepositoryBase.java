@@ -4,6 +4,7 @@ import com.presnakov.hotelbooking.entity.BaseEntity;
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
