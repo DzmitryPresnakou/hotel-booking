@@ -1,26 +1,26 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.integration.EntityITBase;
+import com.presnakov.hotelbooking.repository.HotelRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-class HotelRepositoryIT extends EntityITBase {
+class HotelRepositoryIT extends RepositoryITBase {
 
     @Autowired
     private HotelRepository hotelRepository;
+    private DataSource dataSource;
 
     @Test
     void save() {
-        Hotel hotel = getHotel("Bobruisk", "hotelphoto001.jpg");
+        Hotel hotel = createHotel("Bobruisk", "hotelphoto001.jpg");
 
         Hotel actualResult = hotelRepository.save(hotel);
 
@@ -29,7 +29,7 @@ class HotelRepositoryIT extends EntityITBase {
 
     @Test
     void delete() {
-        Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         hotelRepository.delete(hotel);
 
@@ -38,7 +38,7 @@ class HotelRepositoryIT extends EntityITBase {
 
     @Test
     void update() {
-        Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
         hotel.setName("Minsk");
         hotel.setPhoto("photo10.jpg");
 
@@ -50,7 +50,7 @@ class HotelRepositoryIT extends EntityITBase {
 
     @Test
     void findById() {
-        Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         Optional<Hotel> actualResult = hotelRepository.findById(hotel.getId());
 
@@ -60,11 +60,11 @@ class HotelRepositoryIT extends EntityITBase {
 
     @Test
     void findAll() {
-        Hotel hotel1 = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
-        Hotel hotel2 = hotelRepository.save(getHotel("Flamingo Las Vegas", "photo2.jpg"));
-        Hotel hotel3 = hotelRepository.save(getHotel("Atlantis Paradise Island", "photo3.jpg"));
-        Hotel hotel4 = hotelRepository.save(getHotel("Hilton Hawaiian Village", "photo4.jpg"));
-        Hotel hotel5 = hotelRepository.save(getHotel("Disneys Port Orleans Resort", "photo5.jpg"));
+        Hotel hotel1 = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel2 = hotelRepository.save(createHotel("Flamingo Las Vegas", "photo2.jpg"));
+        Hotel hotel3 = hotelRepository.save(createHotel("Atlantis Paradise Island", "photo3.jpg"));
+        Hotel hotel4 = hotelRepository.save(createHotel("Hilton Hawaiian Village", "photo4.jpg"));
+        Hotel hotel5 = hotelRepository.save(createHotel("Disneys Port Orleans Resort", "photo5.jpg"));
 
         List<Hotel> actualResult = hotelRepository.findAll();
 
@@ -77,7 +77,7 @@ class HotelRepositoryIT extends EntityITBase {
 
     @Test
     void findByName() {
-        Hotel hotel = hotelRepository.save(getHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         Optional<Hotel> actualResult = hotelRepository.findByName(hotel.getName());
 
@@ -85,7 +85,7 @@ class HotelRepositoryIT extends EntityITBase {
         assertThat(actualResult.get()).isEqualTo(hotel);
     }
 
-    private static Hotel getHotel(String name, String photo) {
+    private static Hotel createHotel(String name, String photo) {
         return Hotel.builder()
                 .name(name)
                 .photo(photo)

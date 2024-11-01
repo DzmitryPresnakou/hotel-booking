@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Hotel;
@@ -9,13 +9,15 @@ import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.Room;
 import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.entity.User;
-import com.presnakov.hotelbooking.integration.EntityITBase;
+import com.presnakov.hotelbooking.repository.HotelRepository;
+import com.presnakov.hotelbooking.repository.OrderRepository;
+import com.presnakov.hotelbooking.repository.RoomRepository;
+import com.presnakov.hotelbooking.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,22 +27,18 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-class RoomRepositoryIT extends EntityITBase {
+@RequiredArgsConstructor
+class RoomRepositoryIT extends RepositoryITBase {
 
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private RoomRepository roomRepository;
-    @Autowired
-    private HotelRepository hotelRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
 
     @Test
     void save() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel);
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel);
 
         Room actualResult = roomRepository.save(room);
 
@@ -49,8 +47,8 @@ class RoomRepositoryIT extends EntityITBase {
 
     @Test
     void delete() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         roomRepository.delete(room);
 
@@ -59,8 +57,8 @@ class RoomRepositoryIT extends EntityITBase {
 
     @Test
     void update() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         room.setRoomClass(RoomClassEnum.COMFORT);
         room.setPricePerDay(40);
@@ -74,8 +72,8 @@ class RoomRepositoryIT extends EntityITBase {
 
     @Test
     void findById() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         Optional<Room> actualResult = roomRepository.findById(room.getId());
 
@@ -85,11 +83,11 @@ class RoomRepositoryIT extends EntityITBase {
 
     @Test
     void findAll() {
-        Hotel hotel1 = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Hotel hotel2 = hotelRepository.save(getHotel("Minsk", "hotelphoto002.jpg"));
-        Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
-        Room room2 = roomRepository.save(getRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
-        Room room3 = roomRepository.save(getRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
+        Hotel hotel1 = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Hotel hotel2 = hotelRepository.save(createHotel("Minsk", "hotelphoto002.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
 
         List<Room> actualResult = roomRepository.findAll();
 
@@ -103,16 +101,16 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room2 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room3 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room4 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room4 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(getOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(createOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .hotelName(hotel.getName())
@@ -135,12 +133,12 @@ class RoomRepositoryIT extends EntityITBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .checkInDate(checkInDate)
@@ -156,18 +154,18 @@ class RoomRepositoryIT extends EntityITBase {
         assertThat(roomIds).contains(room.getId());
     }
 
-    private static Hotel getHotel(String name, String photo) {
+    private static Hotel createHotel(String name, String photo) {
         return Hotel.builder()
                 .photo(photo)
                 .name(name)
                 .build();
     }
 
-    private static Room getRoom(RoomClassEnum roomClass,
-                                Integer pricePerDay,
-                                String photo,
-                                Integer occupancy,
-                                Hotel hotel) {
+    private static Room createRoom(RoomClassEnum roomClass,
+                                   Integer pricePerDay,
+                                   String photo,
+                                   Integer occupancy,
+                                   Hotel hotel) {
         return Room.builder()
                 .roomClass(roomClass)
                 .pricePerDay(pricePerDay)
@@ -177,15 +175,15 @@ class RoomRepositoryIT extends EntityITBase {
                 .build();
     }
 
-    private static User getUser(String firstName,
-                                String lastName,
-                                String email,
-                                String phone,
-                                String photo,
-                                LocalDate birthDate,
-                                Integer money,
-                                String password,
-                                RoleEnum roleEnum) {
+    private static User createUser(String firstName,
+                                   String lastName,
+                                   String email,
+                                   String phone,
+                                   String photo,
+                                   LocalDate birthDate,
+                                   Integer money,
+                                   String password,
+                                   RoleEnum roleEnum) {
         return User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -199,12 +197,12 @@ class RoomRepositoryIT extends EntityITBase {
                 .build();
     }
 
-    private static Order getOrder(User user,
-                                  Room room,
-                                  OrderStatusEnum orderStatus,
-                                  PaymentStatusEnum paymentStatus,
-                                  LocalDate checkInDate,
-                                  LocalDate checkOutDate) {
+    private static Order createOrder(User user,
+                                     Room room,
+                                     OrderStatusEnum orderStatus,
+                                     PaymentStatusEnum paymentStatus,
+                                     LocalDate checkInDate,
+                                     LocalDate checkOutDate) {
         return Order.builder()
                 .user(user)
                 .room(room)

@@ -4,7 +4,6 @@ import com.presnakov.hotelbooking.entity.BaseEntity;
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.Optional;
 public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
 
     private final Class<E> clazz;
+
     @Getter
     private final EntityManager entityManager;
 

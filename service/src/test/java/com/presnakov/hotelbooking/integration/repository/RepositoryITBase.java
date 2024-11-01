@@ -1,25 +1,20 @@
-package com.presnakov.hotelbooking.integration;
+package com.presnakov.hotelbooking.integration.repository;
 
-import com.presnakov.hotelbooking.config.ApplicationTestConfiguration;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@DirtiesContext
+//@Transactional
+//@NoArgsConstructor()
 @SpringBootTest
-public abstract class EntityITBase {
+public abstract class RepositoryITBase {
 
     protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.0");
 
-    @PersistenceContext
-    protected EntityManager entityManager;
+//    protected static AnnotationConfigApplicationContext applicationContext;
 
     @DynamicPropertySource
     private static void registerDataSourceProperty(DynamicPropertyRegistry registry) {
@@ -31,10 +26,13 @@ public abstract class EntityITBase {
     @BeforeAll
     static void beforeAll() {
         postgres.start();
+//        applicationContext = new AnnotationConfigApplicationContext(ApplicationTestConfiguration.class);
     }
 
     @AfterAll
     static void afterAll() {
         postgres.stop();
+//        applicationContext.close();
     }
+
 }
