@@ -5,6 +5,7 @@ import com.presnakov.hotelbooking.integration.annotation.IT;
 import com.presnakov.hotelbooking.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IT
 @RequiredArgsConstructor
+@Transactional
 class HotelRepositoryIT {
 
     private final HotelRepository hotelRepository;
