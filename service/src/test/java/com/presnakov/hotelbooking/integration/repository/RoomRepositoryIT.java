@@ -9,6 +9,7 @@ import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.Room;
 import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.integration.annotation.IT;
 import com.presnakov.hotelbooking.repository.HotelRepository;
 import com.presnakov.hotelbooking.repository.OrderRepository;
 import com.presnakov.hotelbooking.repository.RoomRepository;
@@ -27,8 +28,9 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@IT
 @RequiredArgsConstructor
-class RoomRepositoryIT extends RepositoryITBase {
+class RoomRepositoryIT {
 
     private final OrderRepository orderRepository;
     private final RoomRepository roomRepository;

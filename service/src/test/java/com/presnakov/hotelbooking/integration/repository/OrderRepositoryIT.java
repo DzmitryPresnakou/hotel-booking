@@ -8,6 +8,7 @@ import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.Room;
 import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.integration.annotation.IT;
 import com.presnakov.hotelbooking.repository.HotelRepository;
 import com.presnakov.hotelbooking.repository.OrderRepository;
 import com.presnakov.hotelbooking.repository.RoomRepository;
@@ -15,7 +16,6 @@ import com.presnakov.hotelbooking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +23,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@IT
 @RequiredArgsConstructor
-class OrderRepositoryIT extends RepositoryITBase {
+class OrderRepositoryIT{
 
     private final OrderRepository orderRepository;
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final UserRepository userRepository;
-    private final DataSource dataSource;
 
     @Test
     void save() {

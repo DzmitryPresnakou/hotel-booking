@@ -2,10 +2,10 @@ package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.integration.annotation.IT;
 import com.presnakov.hotelbooking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@IT
 @RequiredArgsConstructor
-class UserRepositoryIT extends RepositoryITBase {
+class UserRepositoryIT {
 
-    @Autowired
     private final UserRepository userRepository;
 
     @Test

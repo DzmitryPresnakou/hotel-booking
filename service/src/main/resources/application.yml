@@ -1,5 +1,10 @@
-spring.datasource:
-  driver-class-name: org.postgresql.Driver
-  username: postgres
-  password: 550563
-  url: jdbc:postgresql://localhost:5432/hotel_repository
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 550563
+    url: jdbc:postgresql://localhost:5432/hotel_repository
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
