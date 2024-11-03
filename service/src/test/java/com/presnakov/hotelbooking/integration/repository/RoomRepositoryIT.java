@@ -80,6 +80,22 @@ class RoomRepositoryIT {
         assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId());
     }
 
+    @Test
+    void findAllByHotel() {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel));
+
+        List<Room> actualResult = roomRepository.findAllByHotel(hotel);
+
+        List<Integer> roomIds = actualResult.stream()
+                .map(Room::getId)
+                .toList();
+        assertThat(actualResult).hasSize(3);
+        assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId());
+    }
+
     private static Hotel createHotel(String name, String photo) {
         return Hotel.builder()
                 .photo(photo)
