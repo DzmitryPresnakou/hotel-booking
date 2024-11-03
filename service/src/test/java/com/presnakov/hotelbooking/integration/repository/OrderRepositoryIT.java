@@ -15,7 +15,6 @@ import com.presnakov.hotelbooking.repository.RoomRepository;
 import com.presnakov.hotelbooking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IT
 @RequiredArgsConstructor
-@Transactional
 class OrderRepositoryIT{
 
     private final OrderRepository orderRepository;
