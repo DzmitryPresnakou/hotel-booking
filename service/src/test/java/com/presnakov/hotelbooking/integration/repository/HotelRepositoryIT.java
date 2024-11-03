@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IT
 @RequiredArgsConstructor
@@ -19,33 +20,23 @@ class HotelRepositoryIT {
     private final HotelRepository hotelRepository;
 
     @Test
+    void delete() {
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+
+        Optional<Hotel> maybeHotel = hotelRepository.findById(hotel.getId());
+
+        assertTrue(maybeHotel.isPresent());
+        maybeHotel.ifPresent(hotelRepository::delete);
+        assertTrue(hotelRepository.findById(hotel.getId()).isEmpty());
+    }
+
+    @Test
     void save() {
         Hotel hotel = createHotel("Bobruisk", "hotelphoto001.jpg");
 
         Hotel actualResult = hotelRepository.save(hotel);
 
         assertNotNull(actualResult.getId());
-    }
-
-    @Test
-    void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
-
-        hotelRepository.delete(hotel);
-
-        assertThat(hotelRepository.findById(hotel.getId())).isEmpty();
-    }
-
-    @Test
-    void update() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
-        hotel.setName("Minsk");
-        hotel.setPhoto("photo10.jpg");
-
-        hotelRepository.update(hotel);
-
-        Hotel updatedHotel = hotelRepository.findById(hotel.getId()).get();
-        assertThat(updatedHotel).isEqualTo(hotel);
     }
 
     @Test

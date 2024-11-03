@@ -1,26 +1,20 @@
 package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.User;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
-import static com.presnakov.hotelbooking.entity.QUser.user;
+public interface UserRepository extends Repository<User, Integer> {
 
-@Repository
-public class UserRepository extends RepositoryBase<Integer, User> {
+    User save(User entity);
 
-    public UserRepository(EntityManager entityManager) {
-        super(User.class, entityManager);
-    }
+    void delete(User entity);
 
-    public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(new JPAQuery<User>(getEntityManager())
-                .select(user)
-                .from(user)
-                .where(user.email.eq(email))
-                .fetchOne());
-    }
+    Optional<User> findById(Integer id);
+
+    List<User> findAll();
+
+    Optional<User> findByEmail(String email);
 }

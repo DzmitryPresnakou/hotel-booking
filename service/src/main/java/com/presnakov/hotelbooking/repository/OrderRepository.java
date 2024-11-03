@@ -1,58 +1,21 @@
 package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.entity.Order;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import static com.presnakov.hotelbooking.entity.QHotel.hotel;
-import static com.presnakov.hotelbooking.entity.QOrder.order;
-import static com.presnakov.hotelbooking.entity.QRoom.room;
-import static com.presnakov.hotelbooking.entity.QUser.user;
+public interface OrderRepository extends Repository<Order, Integer> {
 
-@Repository
-public class OrderRepository extends RepositoryBase<Integer, Order> {
+    Order save(Order entity);
 
-    public OrderRepository(EntityManager entityManager) {
-        super(Order.class, entityManager);
-    }
+    void delete(Order entity);
 
-    public List<Order> findOrdersByUserEmail(String email) {
-        return new JPAQuery<Order>(getEntityManager())
-                .select(order)
-                .from(order)
-                .join(order.user, user)
-                .where(user.email.eq(email))
-                .fetch();
-    }
+    Optional<Order> findById(Integer id);
 
-    public List<Order> findOrdersByHotelName(String name) {
-        return new JPAQuery<Order>(getEntityManager())
-                .select(order)
-                .from(order)
-                .join(order.room, room)
-                .join(room.hotel, hotel)
-                .where(hotel.name.eq(name))
-                .fetch();
-    }
+    List<Order> findAll();
 
-    public List<Order> findOrdersByCheckInDate(LocalDate checkInDate) {
-        return new JPAQuery<Order>(getEntityManager())
-                .select(order)
-                .from(order)
-                .where(order.checkInDate.eq(checkInDate))
-                .fetch();
-    }
-    
-    public List<Order> findOrdersByDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        return new JPAQuery<Order>(getEntityManager())
-                .select(order)
-                .from(order)
-                .where(order.checkInDate.before(checkOutDate)
-                        .and(order.checkOutDate.after(checkInDate)))
-                .fetch();
-    }
+    List<Order> findOrdersByCheckInDate(LocalDate checkInDate);
 }

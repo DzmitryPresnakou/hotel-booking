@@ -1,66 +1,18 @@
 package com.presnakov.hotelbooking.repository;
 
-import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Room;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.presnakov.hotelbooking.entity.QHotel.hotel;
-import static com.presnakov.hotelbooking.entity.QOrder.order;
-import static com.presnakov.hotelbooking.entity.QRoom.room;
+public interface RoomRepository extends Repository<Room, Integer> {
 
-@Repository
-public class RoomRepository extends RepositoryBase<Integer, Room> {
+    Room save(Room entity);
 
-    public RoomRepository(EntityManager entityManager) {
-        super(Room.class, entityManager);
-    }
+    void delete(Room entity);
 
-    public List<Room> findAllRoomsByFilter(RoomFilter filter) {
-        return new JPAQuery<Room>(getEntityManager())
-                .select(room)
-                .from(order)
-                .rightJoin(order.room, room)
-                .on(getByCheckInDate(filter), getByCheckOutDate(filter))
-                .join(room.hotel, hotel)
-                .where(getByCompleteInfo(filter), order.id.isNull())
-                .fetch();
-    }
+    Optional<Room> findById(Integer id);
 
-    public List<Room> findAllRoomsByFreeDateRange(RoomFilter filter) {
-        return new JPAQuery<Room>(getEntityManager())
-                .select(room)
-                .from(order)
-                .rightJoin(order.room, room)
-                .on(getByCheckInDate(filter), getByCheckOutDate(filter))
-                .where(order.id.isNull())
-                .fetch();
-    }
-
-    private static Predicate getByCheckInDate(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getCheckInDate(), order.checkInDate::after)
-                .add(filter.getCheckOutDate(), order.checkInDate::before)
-                .buildAnd();
-    }
-
-    private static Predicate getByCheckOutDate(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getCheckInDate(), order.checkOutDate::after)
-                .add(filter.getCheckOutDate(), order.checkOutDate::before)
-                .buildOr();
-    }
-
-    private static Predicate getByCompleteInfo(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getHotelName(), hotel.name::eq)
-                .add(filter.getOccupancy(), room.occupancy::eq)
-                .add(filter.getPricePerDay(), room.pricePerDay::eq)
-                .add(filter.getRoomClass(), room.roomClass::eq)
-                .buildAnd();
-    }
+    List<Room> findAll();
 }

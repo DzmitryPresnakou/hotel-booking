@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IT
 @RequiredArgsConstructor
-class OrderRepositoryIT{
+class OrderRepositoryIT {
 
     private final OrderRepository orderRepository;
     private final RoomRepository roomRepository;
@@ -60,25 +60,6 @@ class OrderRepositoryIT{
         orderRepository.delete(order);
 
         assertThat(orderRepository.findById(order.getId())).isEmpty();
-    }
-
-    @Test
-    void update() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
-
-        order.setCheckInDate(LocalDate.of(2024, 11, 11));
-        order.setCheckOutDate(LocalDate.of(2024, 11, 22));
-        order.setStatus(OrderStatusEnum.APPROVED);
-        orderRepository.update(order);
-
-        Order updatedOrder = orderRepository.findById(order.getId()).get();
-        assertThat(updatedOrder).isEqualTo(order);
     }
 
     @Test
@@ -130,51 +111,6 @@ class OrderRepositoryIT{
     }
 
     @Test
-    void findOrdersByUserEmail() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
-
-        List<Order> actualResult = orderRepository.findOrdersByUserEmail(user.getEmail());
-        List<String> emails = actualResult.stream()
-                .map(Order::getUser)
-                .toList()
-                .stream()
-                .map(User::getEmail)
-                .toList();
-        assertThat(actualResult).hasSize(1);
-        assertThat(emails).contains(user.getEmail());
-    }
-
-    @Test
-    void findOrdersByHotelName() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
-
-        List<Order> actualResult = orderRepository.findOrdersByHotelName(hotel.getName());
-        List<String> hotels = actualResult.stream()
-                .map(Order::getRoom)
-                .toList()
-                .stream()
-                .map(Room::getHotel)
-                .toList()
-                .stream()
-                .map(Hotel::getName)
-                .toList();
-        assertThat(actualResult).hasSize(1);
-        assertThat(hotels).contains(hotel.getName());
-    }
-
-    @Test
     void findOrdersByCheckInDate() {
         Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -190,40 +126,6 @@ class OrderRepositoryIT{
                 .toList();
         assertThat(actualResult).hasSize(1);
         assertThat(orderCheckInDates).containsExactly(order.getCheckInDate());
-    }
-
-    @Test
-    void findOrdersByDateRange() {
-        Hotel hotel1 = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Hotel hotel2 = hotelRepository.save(createHotel("Minsk", "hotelphoto002.jpg"));
-        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
-        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
-        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
-        User user1 = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        User user2 = userRepository.save(createUser("Vanya", "Ivanov", "vanya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1997, 6, 11),
-                3000, "56987", RoleEnum.USER));
-        User user3 = userRepository.save(createUser("Petya", "Petrov", "petya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
-                5000, "4563258", RoleEnum.USER));
-        Order order1 = orderRepository.save(createOrder(user1, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 10, 20), LocalDate.of(2024, 11, 6)));
-        Order order2 = orderRepository.save(createOrder(user2, room2, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 20)));
-        Order order3 = orderRepository.save(createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 16)));
-        LocalDate startRange = LocalDate.of(2024, 11, 5);
-        LocalDate endRange = LocalDate.of(2024, 12, 5);
-
-        List<Order> actualResult = orderRepository.findOrdersByDateRange(startRange, endRange);
-
-        List<Integer> orderIds = actualResult.stream()
-                .map(Order::getId)
-                .toList();
-        assertThat(actualResult).hasSize(3);
-        assertThat(orderIds).contains(order1.getId(), order2.getId(), order3.getId());
     }
 
     private static Hotel createHotel(String name, String photo) {
