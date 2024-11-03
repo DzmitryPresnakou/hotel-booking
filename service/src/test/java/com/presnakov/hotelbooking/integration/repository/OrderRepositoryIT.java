@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.entity.Order;
@@ -8,8 +8,12 @@ import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.Room;
 import com.presnakov.hotelbooking.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.entity.User;
-import com.presnakov.hotelbooking.integration.EntityITBase;
-import org.junit.jupiter.api.BeforeEach;
+import com.presnakov.hotelbooking.integration.annotation.IT;
+import com.presnakov.hotelbooking.repository.HotelRepository;
+import com.presnakov.hotelbooking.repository.OrderRepository;
+import com.presnakov.hotelbooking.repository.RoomRepository;
+import com.presnakov.hotelbooking.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -19,29 +23,23 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class OrderRepositoryIT extends EntityITBase {
+@IT
+@RequiredArgsConstructor
+class OrderRepositoryIT{
 
-    protected static OrderRepository orderRepository;
-    protected static RoomRepository roomRepository;
-    protected static HotelRepository hotelRepository;
-    protected static UserRepository userRepository;
-
-    @BeforeEach
-    void createRepository() {
-        orderRepository = applicationContext.getBean(OrderRepository.class);
-        roomRepository = applicationContext.getBean(RoomRepository.class);
-        hotelRepository = applicationContext.getBean(HotelRepository.class);
-        userRepository = applicationContext.getBean(UserRepository.class);
-    }
+    private final OrderRepository orderRepository;
+    private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
 
     @Test
     void save() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order = createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25));
 
         Order actualResult = orderRepository.save(order);
@@ -51,12 +49,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void delete() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         orderRepository.delete(order);
@@ -66,12 +64,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void update() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         order.setCheckInDate(LocalDate.of(2024, 11, 11));
@@ -85,12 +83,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findById() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         Optional<Order> actualResult = orderRepository.findById(order.getId());
@@ -101,25 +99,25 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findAll() {
-        Hotel hotel1 = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Hotel hotel2 = hotelRepository.save(getHotel("Minsk", "hotelphoto002.jpg"));
-        Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
-        Room room2 = roomRepository.save(getRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
-        Room room3 = roomRepository.save(getRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
-        User user1 = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        Hotel hotel1 = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Hotel hotel2 = hotelRepository.save(createHotel("Minsk", "hotelphoto002.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
+        User user1 = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        User user2 = userRepository.save(getUser("Vanya", "Ivanov", "vanya@gmail.com",
+        User user2 = userRepository.save(createUser("Vanya", "Ivanov", "vanya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1997, 6, 11),
                 3000, "56987", RoleEnum.USER));
-        User user3 = userRepository.save(getUser("Petya", "Petrov", "petya@gmail.com",
+        User user3 = userRepository.save(createUser("Petya", "Petrov", "petya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
                 5000, "4563258", RoleEnum.USER));
-        Order order1 = orderRepository.save(getOrder(user1, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order1 = orderRepository.save(createOrder(user1, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 20), LocalDate.of(2024, 10, 30)));
-        Order order2 = orderRepository.save(getOrder(user2, room2, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
+        Order order2 = orderRepository.save(createOrder(user2, room2, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 25), LocalDate.of(2024, 11, 10)));
-        Order order3 = orderRepository.save(getOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
+        Order order3 = orderRepository.save(createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 16)));
 
         List<Order> actualResult = orderRepository.findAll();
@@ -133,12 +131,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findOrdersByUserEmail() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         List<Order> actualResult = orderRepository.findOrdersByUserEmail(user.getEmail());
@@ -154,12 +152,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findOrdersByHotelName() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         List<Order> actualResult = orderRepository.findOrdersByHotelName(hotel.getName());
@@ -178,12 +176,12 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findOrdersByCheckInDate() {
-        Hotel hotel = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmai.com",
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(getOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
         List<Order> actualResult = orderRepository.findOrdersByCheckInDate(order.getCheckInDate());
@@ -196,25 +194,25 @@ class OrderRepositoryIT extends EntityITBase {
 
     @Test
     void findOrdersByDateRange() {
-        Hotel hotel1 = hotelRepository.save(getHotel("Plaza", "hotelphoto001.jpg"));
-        Hotel hotel2 = hotelRepository.save(getHotel("Minsk", "hotelphoto002.jpg"));
-        Room room1 = roomRepository.save(getRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
-        Room room2 = roomRepository.save(getRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
-        Room room3 = roomRepository.save(getRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
-        User user1 = userRepository.save(getUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        Hotel hotel1 = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Hotel hotel2 = hotelRepository.save(createHotel("Minsk", "hotelphoto002.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
+        User user1 = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        User user2 = userRepository.save(getUser("Vanya", "Ivanov", "vanya@gmail.com",
+        User user2 = userRepository.save(createUser("Vanya", "Ivanov", "vanya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1997, 6, 11),
                 3000, "56987", RoleEnum.USER));
-        User user3 = userRepository.save(getUser("Petya", "Petrov", "petya@gmail.com",
+        User user3 = userRepository.save(createUser("Petya", "Petrov", "petya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
                 5000, "4563258", RoleEnum.USER));
-        Order order1 = orderRepository.save(getOrder(user1, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        Order order1 = orderRepository.save(createOrder(user1, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 20), LocalDate.of(2024, 11, 6)));
-        Order order2 = orderRepository.save(getOrder(user2, room2, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
+        Order order2 = orderRepository.save(createOrder(user2, room2, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 20)));
-        Order order3 = orderRepository.save(getOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
+        Order order3 = orderRepository.save(createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 16)));
         LocalDate startRange = LocalDate.of(2024, 11, 5);
         LocalDate endRange = LocalDate.of(2024, 12, 5);
@@ -228,18 +226,18 @@ class OrderRepositoryIT extends EntityITBase {
         assertThat(orderIds).contains(order1.getId(), order2.getId(), order3.getId());
     }
 
-    private static Hotel getHotel(String name, String photo) {
+    private static Hotel createHotel(String name, String photo) {
         return Hotel.builder()
                 .photo(photo)
                 .name(name)
                 .build();
     }
 
-    private static Room getRoom(RoomClassEnum roomClass,
-                                Integer pricePerDay,
-                                String photo,
-                                Integer occupancy,
-                                Hotel hotel) {
+    private static Room createRoom(RoomClassEnum roomClass,
+                                   Integer pricePerDay,
+                                   String photo,
+                                   Integer occupancy,
+                                   Hotel hotel) {
         return Room.builder()
                 .roomClass(roomClass)
                 .pricePerDay(pricePerDay)
@@ -249,15 +247,15 @@ class OrderRepositoryIT extends EntityITBase {
                 .build();
     }
 
-    private static User getUser(String firstName,
-                                String lastName,
-                                String email,
-                                String phone,
-                                String photo,
-                                LocalDate birthDate,
-                                Integer money,
-                                String password,
-                                RoleEnum roleEnum) {
+    private static User createUser(String firstName,
+                                   String lastName,
+                                   String email,
+                                   String phone,
+                                   String photo,
+                                   LocalDate birthDate,
+                                   Integer money,
+                                   String password,
+                                   RoleEnum roleEnum) {
         return User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -271,12 +269,12 @@ class OrderRepositoryIT extends EntityITBase {
                 .build();
     }
 
-    private static Order getOrder(User user,
-                                  Room room,
-                                  OrderStatusEnum orderStatus,
-                                  PaymentStatusEnum paymentStatus,
-                                  LocalDate checkInDate,
-                                  LocalDate checkOutDate) {
+    private static Order createOrder(User user,
+                                     Room room,
+                                     OrderStatusEnum orderStatus,
+                                     PaymentStatusEnum paymentStatus,
+                                     LocalDate checkInDate,
+                                     LocalDate checkOutDate) {
         return Order.builder()
                 .user(user)
                 .room(room)
