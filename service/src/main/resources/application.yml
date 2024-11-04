@@ -4,6 +4,10 @@ spring:
     username: postgres
     password: 550563
     url: jdbc:postgresql://localhost:5432/hotel_repository
+
+  liquibase:
+    change-log: classpath:db/changelog/db-changelog-master.yml
+
   jpa:
     hibernate:
       ddl-auto: update
