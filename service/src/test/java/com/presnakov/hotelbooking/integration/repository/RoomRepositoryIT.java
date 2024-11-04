@@ -1,5 +1,6 @@
 package com.presnakov.hotelbooking.integration.repository;
 
+import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.entity.Order;
 import com.presnakov.hotelbooking.entity.OrderStatusEnum;
@@ -15,7 +16,9 @@ import com.presnakov.hotelbooking.repository.RoomRepository;
 import com.presnakov.hotelbooking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +34,8 @@ class RoomRepositoryIT {
 
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Test
     void save() {
@@ -94,6 +99,62 @@ class RoomRepositoryIT {
                 .toList();
         assertThat(actualResult).hasSize(3);
         assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getDateRanges")
+    void findAllByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room4 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        orderRepository.save(createOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+                LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
+        RoomFilter filter = RoomFilter.builder()
+                .hotelName(hotel.getName())
+                .occupancy(room1.getOccupancy())
+                .pricePerDay(room1.getPricePerDay())
+                .roomClass(room1.getRoomClass())
+                .checkInDate(checkInDate)
+                .checkOutDate(checkOutDate)
+                .build();
+
+        List<Room> actualResult = roomRepository.findAllByFilter(filter);
+
+        List<Integer> roomIds = actualResult.stream()
+                .map(Room::getId)
+                .toList();
+        assertThat(actualResult).hasSize(4);
+        assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId(), room4.getId());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getDateRanges")
+    void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+                LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
+        RoomFilter filter = RoomFilter.builder()
+                .checkInDate(checkInDate)
+                .checkOutDate(checkOutDate)
+                .build();
+
+        List<Room> actualResult = roomRepository.findAllByFreeDateRange(filter);
+
+        List<Integer> roomIds = actualResult.stream()
+                .map(Room::getId)
+                .toList();
+        assertThat(actualResult).hasSize(1);
+        assertThat(roomIds).contains(room.getId());
     }
 
     private static Hotel createHotel(String name, String photo) {

@@ -9,7 +9,7 @@ import org.springframework.data.repository.Repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoomRepository extends Repository<Room, Integer> {
+public interface RoomRepository extends Repository<Room, Integer>, FilterRoomRepository {
 
     Room save(Room entity);
 
