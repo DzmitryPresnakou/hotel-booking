@@ -101,7 +101,7 @@ class OrderRepositoryIT {
         Order order3 = orderRepository.save(createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 16)));
 
-        List<Order> actualResult = orderRepository.findAll();
+        List<Order> actualResult = (List<Order>) orderRepository.findAll();
 
         List<Integer> orderIds = actualResult.stream()
                 .map(Order::getId)

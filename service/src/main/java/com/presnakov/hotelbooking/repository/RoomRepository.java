@@ -4,20 +4,11 @@ import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.entity.Room;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface RoomRepository extends Repository<Room, Integer>, FilterRoomRepository {
-
-    Room save(Room entity);
-
-    void delete(Room entity);
-
-    Optional<Room> findById(Integer id);
-
-    List<Room> findAll();
+public interface RoomRepository extends CrudRepository<Room, Integer>, FilterRoomRepository {
 
     @EntityGraph(attributePaths = {"hotel"})
     @Query(value = "select r from Room r")

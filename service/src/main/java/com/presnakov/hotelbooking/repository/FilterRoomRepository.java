@@ -10,6 +10,4 @@ public interface FilterRoomRepository {
     List<Room> findAllByFilter(RoomFilter filter);
 
     List<Room> findAllByFreeDateRange(RoomFilter filter);
-
-    void update(Room entity);
 }

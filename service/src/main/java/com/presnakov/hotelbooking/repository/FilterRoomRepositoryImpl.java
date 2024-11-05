@@ -30,6 +30,7 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .fetch();
     }
 
+    @Override
     public List<Room> findAllByFreeDateRange(RoomFilter filter) {
         return new JPAQuery<Room>(entityManager)
                 .select(room)
@@ -38,11 +39,6 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .on(getByCheckInDate(filter), getByCheckOutDate(filter))
                 .where(order.id.isNull())
                 .fetch();
-    }
-
-    @Override
-    public void update(Room entity) {
-        entityManager.merge(entity);
     }
 
     private static Predicate getByCheckInDate(RoomFilter filter) {

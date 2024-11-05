@@ -66,7 +66,7 @@ class UserRepositoryIT {
                 "+375251478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
                 5000, "4563258", RoleEnum.USER));
 
-        List<User> actualResult = userRepository.findAll();
+        List<User> actualResult = (List<User>) userRepository.findAll();
         List<Integer> userIds = actualResult.stream()
                 .map(User::getId)
                 .toList();

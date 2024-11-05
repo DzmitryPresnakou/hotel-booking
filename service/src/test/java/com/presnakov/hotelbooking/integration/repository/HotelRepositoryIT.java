@@ -57,7 +57,7 @@ class HotelRepositoryIT {
         Hotel hotel4 = hotelRepository.save(createHotel("Hilton Hawaiian Village", "photo4.jpg"));
         Hotel hotel5 = hotelRepository.save(createHotel("Disneys Port Orleans Resort", "photo5.jpg"));
 
-        List<Hotel> actualResult = hotelRepository.findAll();
+        List<Hotel> actualResult = (List<Hotel>) hotelRepository.findAll();
 
         List<Integer> hotelIds = actualResult.stream()
                 .map(Hotel::getId)

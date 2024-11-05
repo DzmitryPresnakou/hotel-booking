@@ -76,7 +76,7 @@ class RoomRepositoryIT {
         Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
         Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
 
-        List<Room> actualResult = roomRepository.findAll();
+        List<Room> actualResult = (List<Room>) roomRepository.findAll();
 
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)
