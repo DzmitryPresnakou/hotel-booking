@@ -32,6 +32,27 @@ class UserRepositoryIT {
     }
 
     @Test
+    void update() {
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        user.setFirstName("Petr");
+        user.setLastName("Petrov");
+        user.setEmail("petya@gmail.com");
+        user.setPhone("+375446698523");
+        user.setPhoto("photo10.jpg");
+        user.setBirthDate(LocalDate.of(1998, 12, 18));
+        user.setMoney(5000);
+        user.setPassword("3698223654");
+        user.setRole(RoleEnum.ADMIN);
+
+        userRepository.update(user);
+
+        User updatedUser = userRepository.findById(user.getId()).get();
+        assertThat(updatedUser).isEqualTo(user);
+    }
+
+    @Test
     void delete() {
         User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),

@@ -48,6 +48,21 @@ class RoomRepositoryIT {
     }
 
     @Test
+    void update() {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+
+        room.setRoomClass(RoomClassEnum.COMFORT);
+        room.setPricePerDay(40);
+        room.setOccupancy(3);
+        room.setPhoto("roomphoto111.jpg");
+        roomRepository.update(room);
+
+        Room updatedRoom = roomRepository.findById(room.getId()).get();
+        assertThat(updatedRoom).isEqualTo(room);
+    }
+
+    @Test
     void delete() {
         Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));

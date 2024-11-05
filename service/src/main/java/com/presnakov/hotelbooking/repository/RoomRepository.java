@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface RoomRepository extends CrudRepository<Room, Integer>, FilterRoomRepository {
+public interface RoomRepository extends CrudRepository<Room, Integer>, FilterRoomRepository, RepositoryBase {
 
     @EntityGraph(attributePaths = {"hotel"})
     @Query(value = "select r from Room r")
