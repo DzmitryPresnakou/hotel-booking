@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IT
 @RequiredArgsConstructor
-class OrderRepositoryIT{
+class OrderRepositoryIT {
 
     private final OrderRepository orderRepository;
     private final RoomRepository roomRepository;
@@ -48,21 +48,6 @@ class OrderRepositoryIT{
     }
 
     @Test
-    void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
-                LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
-
-        orderRepository.delete(order);
-
-        assertThat(orderRepository.findById(order.getId())).isEmpty();
-    }
-
-    @Test
     void update() {
         Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -75,10 +60,25 @@ class OrderRepositoryIT{
         order.setCheckInDate(LocalDate.of(2024, 11, 11));
         order.setCheckOutDate(LocalDate.of(2024, 11, 22));
         order.setStatus(OrderStatusEnum.APPROVED);
-        orderRepository.update(order);
+        orderRepository.save(order);
 
         Order updatedOrder = orderRepository.findById(order.getId()).get();
         assertThat(updatedOrder).isEqualTo(order);
+    }
+
+    @Test
+    void delete() {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmai.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        Order order = orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+                LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
+
+        orderRepository.delete(order);
+
+        assertThat(orderRepository.findById(order.getId())).isEmpty();
     }
 
     @Test
@@ -120,7 +120,7 @@ class OrderRepositoryIT{
         Order order3 = orderRepository.save(createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 16)));
 
-        List<Order> actualResult = orderRepository.findAll();
+        List<Order> actualResult = (List<Order>) orderRepository.findAll();
 
         List<Integer> orderIds = actualResult.stream()
                 .map(Order::getId)

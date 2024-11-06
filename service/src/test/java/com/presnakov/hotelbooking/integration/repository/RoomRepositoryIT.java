@@ -32,10 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RequiredArgsConstructor
 class RoomRepositoryIT {
 
-    private final OrderRepository orderRepository;
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Test
     void save() {
@@ -48,16 +48,6 @@ class RoomRepositoryIT {
     }
 
     @Test
-    void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-
-        roomRepository.delete(room);
-
-        assertThat(roomRepository.findById(room.getId())).isEmpty();
-    }
-
-    @Test
     void update() {
         Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
         Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -66,10 +56,20 @@ class RoomRepositoryIT {
         room.setPricePerDay(40);
         room.setOccupancy(3);
         room.setPhoto("roomphoto111.jpg");
-        roomRepository.update(room);
+        roomRepository.save(room);
 
         Room updatedRoom = roomRepository.findById(room.getId()).get();
         assertThat(updatedRoom).isEqualTo(room);
+    }
+
+    @Test
+    void delete() {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+
+        roomRepository.delete(room);
+
+        assertThat(roomRepository.findById(room.getId())).isEmpty();
     }
 
     @Test
@@ -91,7 +91,23 @@ class RoomRepositoryIT {
         Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
         Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
 
-        List<Room> actualResult = roomRepository.findAll();
+        List<Room> actualResult = (List<Room>) roomRepository.findAll();
+
+        List<Integer> roomIds = actualResult.stream()
+                .map(Room::getId)
+                .toList();
+        assertThat(actualResult).hasSize(3);
+        assertThat(roomIds).contains(room1.getId(), room2.getId(), room3.getId());
+    }
+
+    @Test
+    void findAllByHotel() {
+        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel));
+        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel));
+
+        List<Room> actualResult = roomRepository.findAllByHotelName(hotel.getName());
 
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)
@@ -102,7 +118,7 @@ class RoomRepositoryIT {
 
     @ParameterizedTest
     @MethodSource("getDateRanges")
-    void findAllRoomsByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
+    void findAllByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
         Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
         Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
         Room room2 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
@@ -123,7 +139,7 @@ class RoomRepositoryIT {
                 .checkOutDate(checkOutDate)
                 .build();
 
-        List<Room> actualResult = roomRepository.findAllRoomsByFilter(filter);
+        List<Room> actualResult = roomRepository.findAllByFilter(filter);
 
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)
@@ -147,7 +163,7 @@ class RoomRepositoryIT {
                 .checkOutDate(checkOutDate)
                 .build();
 
-        List<Room> actualResult = roomRepository.findAllRoomsByFreeDateRange(filter);
+        List<Room> actualResult = roomRepository.findAllByFreeDateRange(filter);
 
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)

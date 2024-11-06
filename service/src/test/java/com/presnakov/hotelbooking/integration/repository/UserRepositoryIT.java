@@ -32,17 +32,6 @@ class UserRepositoryIT {
     }
 
     @Test
-    void delete() {
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-
-        userRepository.delete(user);
-
-        assertThat(userRepository.findById(user.getId())).isEmpty();
-    }
-
-    @Test
     void update() {
         User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
@@ -57,10 +46,21 @@ class UserRepositoryIT {
         user.setPassword("3698223654");
         user.setRole(RoleEnum.ADMIN);
 
-        userRepository.update(user);
+        userRepository.save(user);
 
         User updatedUser = userRepository.findById(user.getId()).get();
         assertThat(updatedUser).isEqualTo(user);
+    }
+
+    @Test
+    void delete() {
+        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+
+        userRepository.delete(user);
+
+        assertThat(userRepository.findById(user.getId())).isEmpty();
     }
 
     @Test
@@ -87,7 +87,7 @@ class UserRepositoryIT {
                 "+375251478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
                 5000, "4563258", RoleEnum.USER));
 
-        List<User> actualResult = userRepository.findAll();
+        List<User> actualResult = (List<User>) userRepository.findAll();
         List<Integer> userIds = actualResult.stream()
                 .map(User::getId)
                 .toList();

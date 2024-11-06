@@ -11,12 +11,24 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IT
 @RequiredArgsConstructor
 class HotelRepositoryIT {
 
     private final HotelRepository hotelRepository;
+
+    @Test
+    void delete() {
+        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+
+        Optional<Hotel> maybeHotel = hotelRepository.findById(hotel.getId());
+
+        assertTrue(maybeHotel.isPresent());
+        maybeHotel.ifPresent(hotelRepository::delete);
+        assertTrue(hotelRepository.findById(hotel.getId()).isEmpty());
+    }
 
     @Test
     void save() {
@@ -28,21 +40,12 @@ class HotelRepositoryIT {
     }
 
     @Test
-    void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
-
-        hotelRepository.delete(hotel);
-
-        assertThat(hotelRepository.findById(hotel.getId())).isEmpty();
-    }
-
-    @Test
     void update() {
         Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
         hotel.setName("Minsk");
         hotel.setPhoto("photo10.jpg");
 
-        hotelRepository.update(hotel);
+        hotelRepository.save(hotel);
 
         Hotel updatedHotel = hotelRepository.findById(hotel.getId()).get();
         assertThat(updatedHotel).isEqualTo(hotel);
@@ -66,7 +69,7 @@ class HotelRepositoryIT {
         Hotel hotel4 = hotelRepository.save(createHotel("Hilton Hawaiian Village", "photo4.jpg"));
         Hotel hotel5 = hotelRepository.save(createHotel("Disneys Port Orleans Resort", "photo5.jpg"));
 
-        List<Hotel> actualResult = hotelRepository.findAll();
+        List<Hotel> actualResult = (List<Hotel>) hotelRepository.findAll();
 
         List<Integer> hotelIds = actualResult.stream()
                 .map(Hotel::getId)
