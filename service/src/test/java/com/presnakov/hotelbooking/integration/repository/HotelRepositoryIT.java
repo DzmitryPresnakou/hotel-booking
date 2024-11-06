@@ -3,7 +3,6 @@ package com.presnakov.hotelbooking.integration.repository;
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.integration.annotation.IT;
 import com.presnakov.hotelbooking.repository.HotelRepository;
-import jakarta.persistence.Entity;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +45,7 @@ class HotelRepositoryIT {
         hotel.setName("Minsk");
         hotel.setPhoto("photo10.jpg");
 
-        hotelRepository.update(hotel);
+        hotelRepository.save(hotel);
 
         Hotel updatedHotel = hotelRepository.findById(hotel.getId()).get();
         assertThat(updatedHotel).isEqualTo(hotel);

@@ -46,7 +46,7 @@ class UserRepositoryIT {
         user.setPassword("3698223654");
         user.setRole(RoleEnum.ADMIN);
 
-        userRepository.update(user);
+        userRepository.save(user);
 
         User updatedUser = userRepository.findById(user.getId()).get();
         assertThat(updatedUser).isEqualTo(user);

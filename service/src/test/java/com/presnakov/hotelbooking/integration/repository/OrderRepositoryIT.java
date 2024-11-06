@@ -60,7 +60,7 @@ class OrderRepositoryIT {
         order.setCheckInDate(LocalDate.of(2024, 11, 11));
         order.setCheckOutDate(LocalDate.of(2024, 11, 22));
         order.setStatus(OrderStatusEnum.APPROVED);
-        orderRepository.update(order);
+        orderRepository.save(order);
 
         Order updatedOrder = orderRepository.findById(order.getId()).get();
         assertThat(updatedOrder).isEqualTo(order);

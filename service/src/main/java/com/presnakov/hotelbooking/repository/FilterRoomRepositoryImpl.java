@@ -2,8 +2,8 @@ package com.presnakov.hotelbooking.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Room;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +38,16 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .rightJoin(order.room, room)
                 .on(getByCheckInDate(filter), getByCheckOutDate(filter))
                 .where(order.id.isNull())
+                .fetch();
+    }
+
+    @Override
+    public List<Room> findAllByHotelName(String hotelName) {
+        return new JPAQuery<Room>(entityManager)
+                .select(room)
+                .from(room)
+                .join(room.hotel, hotel)
+                .where(hotel.name.eq(hotelName))
                 .fetch();
     }
 

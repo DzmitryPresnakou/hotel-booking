@@ -56,7 +56,7 @@ class RoomRepositoryIT {
         room.setPricePerDay(40);
         room.setOccupancy(3);
         room.setPhoto("roomphoto111.jpg");
-        roomRepository.update(room);
+        roomRepository.save(room);
 
         Room updatedRoom = roomRepository.findById(room.getId()).get();
         assertThat(updatedRoom).isEqualTo(room);
@@ -107,7 +107,7 @@ class RoomRepositoryIT {
         Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel));
         Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel));
 
-        List<Room> actualResult = roomRepository.findAllByHotel(hotel);
+        List<Room> actualResult = roomRepository.findAllByHotelName(hotel.getName());
 
         List<Integer> roomIds = actualResult.stream()
                 .map(Room::getId)

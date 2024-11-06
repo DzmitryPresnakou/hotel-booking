@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface HotelRepository extends CrudRepository<Hotel, Integer>, RepositoryBase {
+public interface HotelRepository extends CrudRepository<Hotel, Integer> {
 
     Optional<Hotel> findByName(String name);
 }

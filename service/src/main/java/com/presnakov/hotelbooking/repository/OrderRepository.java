@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface OrderRepository extends CrudRepository<Order, Integer>, FilterOrderRepository, RepositoryBase {
+public interface OrderRepository extends CrudRepository<Order, Integer>, FilterOrderRepository {
 
     List<Order> findOrdersByCheckInDate(LocalDate checkInDate);
 }
