@@ -1,7 +1,7 @@
 package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.integration.annotation.IT;
+import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -13,9 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@IT
 @RequiredArgsConstructor
-class HotelRepositoryIT {
+class HotelRepositoryIT extends IntegrationTestBase {
 
     private final HotelRepository hotelRepository;
 
