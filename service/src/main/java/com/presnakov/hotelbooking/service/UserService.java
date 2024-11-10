@@ -23,8 +23,7 @@ public class UserService {
     private final UserCreateEditMapper userCreateEditMapper;
 
     public List<UserReadDto> findAll() {
-        List<User> users = (List<User>) userRepository.findAll();
-        return users.stream()
+        return userRepository.findAll().stream()
                 .map(userReadMapper::map)
                 .toList();
     }

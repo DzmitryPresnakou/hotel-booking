@@ -14,15 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredArgsConstructor
 @Sql({
         "classpath:sql/data.sql"
 })
-public class UserServiceIT extends IntegrationTestBase {
+class UserServiceIT extends IntegrationTestBase {
 
     private static final Integer USER_1 = 1;
 
@@ -98,4 +96,9 @@ public class UserServiceIT extends IntegrationTestBase {
         });
     }
 
+    @Test
+    void delete() {
+        assertFalse(userService.delete(-124));
+        assertTrue(userService.delete(USER_1));
+    }
 }

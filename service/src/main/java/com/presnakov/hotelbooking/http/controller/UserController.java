@@ -1,6 +1,7 @@
 package com.presnakov.hotelbooking.http.controller;
 
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
+import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ public class UserController {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
+                    model.addAttribute("roles", RoleEnum.values());
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

@@ -2,10 +2,12 @@ package com.presnakov.hotelbooking.dto;
 
 import com.presnakov.hotelbooking.entity.RoleEnum;
 import lombok.Value;
+import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDate;
 
 @Value
+@FieldNameConstants
 public class UserCreateEditDto {
     String firstName;
     String lastName;
