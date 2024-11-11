@@ -5,8 +5,29 @@
     <title>Users</title>
 </head>
 <body>
+<form action="/users">
+    <label for="firstName">First Name:
+        <input id="firstName" type="text" name="firstName">
+    </label>
+    <label for="lastName">Last Name:
+        <input id="lastName" type="text" name="lastName">
+    </label>
+    <label for="email">Email:
+        <input id="email" type="text" name="email">
+    </label>
+    <label for="money">Money:
+        <input id="money" type="text" name="money">
+    </label>
+    <label for="role">Role:
+        <input id="role" type="text" name="role">
+    </label>
+    <label for="birthDate">Birthdate:
+        <input id="birthDate" type="date" name="birthDate">
+    </label>
+    <button type="submit">Filter</button>
+</form>
 <div th:each="user : ${users}">
-    <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.email}|">User</a>
+    <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.firstName} ${user.lastName} - ${user.email}|">User</a>
 </div>
 </body>
 </html>

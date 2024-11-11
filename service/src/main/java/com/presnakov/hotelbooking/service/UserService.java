@@ -1,8 +1,8 @@
 package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
+import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
 import com.presnakov.hotelbooking.repository.UserRepository;
@@ -24,6 +24,12 @@ public class UserService {
 
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
+                .map(userReadMapper::map)
+                .toList();
+    }
+
+    public List<UserReadDto> findAll(UserFilter filter) {
+        return userRepository.findAllByFilter(filter).stream()
                 .map(userReadMapper::map)
                 .toList();
     }

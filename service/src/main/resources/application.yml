@@ -1,8 +1,5 @@
 spring:
   mvc:
-    view:
-      prefix: /templates/
-      suffix: .html
     format:
       date: iso
   datasource:
