@@ -73,10 +73,11 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void create() throws Exception {
+        String userEmail = "misha@gmail.com";
         mockMvc.perform(post("/users")
                         .param(firstName, "Misha")
                         .param(lastName, "Misutkin")
-                        .param(email, "misha@gmail.com")
+                        .param(email, userEmail)
                         .param(password, "12345")
                         .param(role, "ADMIN")
                         .param(phone, "+375441236547")
@@ -86,6 +87,7 @@ class UserControllerIT extends IntegrationTestBase {
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrlPattern("/users/{\\d+}"));
+        assertThat(userRepository.findByEmail(userEmail)).isPresent();
     }
 
     @Test

@@ -15,9 +15,9 @@
     <label for="email">Email:
         <input id="email" type="text" name="email" th:value="*{email}">
     </label><br>
-    <label for="password">Password:
-        <input id="password" type="text" name="password" th:value="*{password}">
-    </label><br>
+
+    <input id="userPassword" type="hidden" name="password" th:value="*{password}">
+
     <label for="phone">Phone:
         <input id="phone" type="text" name="phone" th:value="*{phone}">
     </label><br>

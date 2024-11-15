@@ -54,7 +54,7 @@ public class UserController {
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id, @ModelAttribute UserCreateEditDto user) {
         return userService.update(id, user)
-                .map(it -> "redirect:/users/{id}")
+                .map(it -> "redirect:/users")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
