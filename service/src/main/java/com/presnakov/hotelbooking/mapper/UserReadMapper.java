@@ -11,17 +11,17 @@ public class UserReadMapper implements Mapper<User, UserReadDto> {
 
     @Override
     public UserReadDto map(User object) {
-        return new UserReadDto(
-                object.getId(),
-                object.getFirstName(),
-                object.getLastName(),
-                object.getEmail(),
-                object.getPassword(),
-                object.getRole(),
-                object.getPhone(),
-                object.getPhoto(),
-                object.getMoney(),
-                object.getBirthDate()
-        );
+        return UserReadDto.builder()
+                .id(object.getId())
+                .firstName(object.getFirstName())
+                .lastName(object.getLastName())
+                .email(object.getEmail())
+                .password(object.getPassword())
+                .role(object.getRole())
+                .phone(object.getPhone())
+                .photo(object.getPhoto())
+                .money(object.getMoney())
+                .birthDate(object.getBirthDate())
+                .build();
     }
 }
