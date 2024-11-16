@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -72,8 +71,20 @@ class UserControllerIT extends IntegrationTestBase {
     }
 
     @Test
+    void registration() throws Exception {
+        mockMvc.perform(get("/users/registration"))
+                .andExpectAll(
+                        status().is2xxSuccessful(),
+                        view().name("user/registration"),
+                        model().attributeExists("user"),
+                        model().attributeExists("roles")
+                );
+    }
+
+    @Test
     void create() throws Exception {
         String userEmail = "misha@gmail.com";
+
         mockMvc.perform(post("/users")
                         .param(firstName, "Misha")
                         .param(lastName, "Misutkin")
@@ -86,8 +97,35 @@ class UserControllerIT extends IntegrationTestBase {
                         .param(birthDate, "2001-01-01"))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrlPattern("/users/{\\d+}"));
+                        redirectedUrl("/users"));
+
         assertThat(userRepository.findByEmail(userEmail)).isPresent();
+    }
+
+    @Test
+    void update() throws Exception {
+        User user = userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                2500, "12345", RoleEnum.USER));
+        String newFirstName = "innokentiy@gmail.com";
+        String newLastName = "innokentiy@gmail.com";
+        String newEmail = "innokentiy@gmail.com";
+
+        mockMvc.perform(post("/users/" + user.getId() + "/update")
+                        .param(firstName, newFirstName)
+                        .param(lastName, newLastName)
+                        .param(email, newEmail)
+                        .param(password, user.getPassword())
+                        .param(role, user.getRole().name())
+                        .param(phone, user.getPhone())
+                        .param(photo, user.getPhoto())
+                        .param(money, user.getMoney().toString())
+                        .param(birthDate, user.getBirthDate().toString()))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/users"));
+
+        assertThat(userRepository.findByEmail(newEmail)).isPresent();
     }
 
     @Test
@@ -113,7 +151,7 @@ class UserControllerIT extends IntegrationTestBase {
                                    LocalDate birthDate,
                                    Integer money,
                                    String password,
-                                   RoleEnum roleEnum) {
+                                   RoleEnum role) {
         return User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -123,7 +161,7 @@ class UserControllerIT extends IntegrationTestBase {
                 .birthDate(birthDate)
                 .money(money)
                 .password(password)
-                .role(roleEnum)
+                .role(role)
                 .build();
     }
 }

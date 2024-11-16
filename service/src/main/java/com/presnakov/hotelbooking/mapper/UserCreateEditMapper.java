@@ -19,7 +19,6 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
     public User map(UserCreateEditDto object) {
         User user = new User();
         copy(object, user);
-
         return user;
     }
 
@@ -27,7 +26,9 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         user.setFirstName(object.getFirstName());
         user.setLastName(object.getLastName());
         user.setEmail(object.getEmail());
-        user.setPassword(object.getPassword());
+        if (user.getPassword() == null) {
+            user.setPassword(object.getPassword());
+        }
         user.setRole(object.getRole());
         user.setPhone(object.getPhone());
         user.setPhoto(object.getPhoto());

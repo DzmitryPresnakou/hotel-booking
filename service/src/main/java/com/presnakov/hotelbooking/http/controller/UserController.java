@@ -25,6 +25,7 @@ public class UserController {
     @GetMapping
     public String findAll(Model model, UserFilter filter) {
         model.addAttribute("users", userService.findAll(filter));
+        model.addAttribute("roles", RoleEnum.values());
         return "user/users";
     }
 
@@ -48,7 +49,8 @@ public class UserController {
 
     @PostMapping
     public String create(@ModelAttribute UserCreateEditDto user) {
-        return "redirect:/users/" + userService.create(user).getId();
+        userService.create(user);
+        return "redirect:/users";
     }
 
     @PostMapping("/{id}/update")
