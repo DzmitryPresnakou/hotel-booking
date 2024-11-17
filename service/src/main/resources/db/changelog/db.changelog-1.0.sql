@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS room
     class         VARCHAR(64)               NOT NULL,
     photo         VARCHAR(128)              NOT NULL,
     price_per_day INT                       NOT NULL,
-    hotel_id      INT REFERENCES hotel (id) NOT NULL
+    hotel_id      INT NOT NULL REFERENCES hotel (id) ON DELETE CASCADE
 );
 --rollback DROP TABLE room;
 
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS room
 CREATE TABLE IF NOT EXISTS room_order
 (
     id             SERIAL PRIMARY KEY,
-    user_id        INT REFERENCES users (id) NOT NULL,
-    room_id        INT REFERENCES room (id)  NOT NULL,
+    user_id        INT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    room_id        INT NOT NULL REFERENCES room (id) ON DELETE CASCADE,
     status         VARCHAR(64)               NOT NULL,
     payment_status VARCHAR(64)               NOT NULL,
     check_in_date  DATE                      NOT NULL,

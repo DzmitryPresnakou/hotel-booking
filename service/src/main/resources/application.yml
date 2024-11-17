@@ -1,11 +1,14 @@
 spring:
+  mvc:
+    format:
+      date: iso
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: 550563
     url: jdbc:postgresql://localhost:5432/hotel_repository
-
   jpa:
     properties.hibernate:
       show_sql: true
       format_sql: true
+    open-in-view: false
