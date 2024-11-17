@@ -31,6 +31,7 @@
         <postgresql.testcontainers.version>1.20.2</postgresql.testcontainers.version>
         <jakarta.version>3.2.0</jakarta.version>
         <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
+        <springdoc.version>2.6.0</springdoc.version>
     </properties>
 
     <dependencyManagement>
@@ -48,6 +49,11 @@
                 <version>${querydsl.version}</version>
                 <classifier>jakarta</classifier>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.annotation</groupId>
