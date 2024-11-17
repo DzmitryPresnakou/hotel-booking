@@ -5,13 +5,19 @@ import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
+import com.presnakov.hotelbooking.repository.QPredicate;
 import com.presnakov.hotelbooking.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.presnakov.hotelbooking.entity.QUser.user;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +34,18 @@ public class UserService {
                 .toList();
     }
 
-    public List<UserReadDto> findAll(UserFilter filter) {
-        return userRepository.findAllByFilter(filter).stream()
-                .map(userReadMapper::map)
-                .toList();
+    public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
+        Predicate predicate = QPredicate.builder()
+                .add(filter.getFirstName(), user.firstName::containsIgnoreCase)
+                .add(filter.getLastName(), user.lastName::containsIgnoreCase)
+                .add(filter.getEmail(), user.email::containsIgnoreCase)
+                .add(filter.getRole(), user.role::eq)
+                .add(filter.getMoney(), user.money::gt)
+                .add(filter.getBirthDate(), user.birthDate::before)
+                .buildAnd();
+
+        return userRepository.findAll(predicate, pageable)
+                .map(userReadMapper::map);
     }
 
     public Optional<UserReadDto> findById(Integer id) {

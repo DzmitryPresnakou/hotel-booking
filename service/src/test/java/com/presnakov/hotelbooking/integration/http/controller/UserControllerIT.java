@@ -21,7 +21,6 @@ import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.phone;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.photo;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.role;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -52,8 +51,8 @@ class UserControllerIT extends IntegrationTestBase {
                 .andExpectAll(
                         status().is2xxSuccessful(),
                         view().name("user/users"),
-                        model().attributeExists("users"),
-                        model().attribute("users", hasSize(3)));
+                        model().attributeExists("users"));
+        assertThat(userRepository.findAll().size()).isEqualTo(3);
     }
 
     @Test
@@ -83,23 +82,25 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void create() throws Exception {
-        String userEmail = "misha@gmail.com";
+        User user = createUser("Misha", "Misutkin", "misha@gmail.com",
+                "+375441236547", "mishaphoto.jpg", LocalDate.of(2001, 1, 1),
+                5500, "12345", RoleEnum.USER);
 
         mockMvc.perform(post("/users")
-                        .param(firstName, "Misha")
-                        .param(lastName, "Misutkin")
-                        .param(email, userEmail)
-                        .param(password, "12345")
-                        .param(role, "ADMIN")
-                        .param(phone, "+375441236547")
-                        .param(photo, "mishaphoto.jpg")
-                        .param(money, "5500")
-                        .param(birthDate, "2001-01-01"))
+                        .param(firstName, user.getFirstName())
+                        .param(lastName, user.getLastName())
+                        .param(email, user.getEmail())
+                        .param(password, user.getPassword())
+                        .param(role, user.getRole().name())
+                        .param(phone, user.getPhone())
+                        .param(photo, user.getPhoto())
+                        .param(money, user.getMoney().toString())
+                        .param(birthDate, user.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrl("/users"));
+                        redirectedUrl("/users/" + userRepository.findByEmail(user.getEmail()).get().getId()));
 
-        assertThat(userRepository.findByEmail(userEmail)).isPresent();
+        assertThat(userRepository.findByEmail(user.getEmail())).isPresent();
     }
 
     @Test
@@ -123,7 +124,7 @@ class UserControllerIT extends IntegrationTestBase {
                         .param(birthDate, user.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrl("/users"));
+                        redirectedUrl("/users/" + user.getId()));
 
         assertThat(userRepository.findByEmail(newEmail)).isPresent();
     }
