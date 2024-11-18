@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -35,10 +36,6 @@ public class UserCreateEditDto {
     @Size(min = 3, max = 64)
     String phone;
 
-    @NotBlank
-    @Size(min = 3, max = 128)
-    String photo;
-
     @NotNull
     @PositiveOrZero
     Integer money;
@@ -46,4 +43,6 @@ public class UserCreateEditDto {
     @NotNull
     @Past
     LocalDate birthDate;
+
+    MultipartFile photo;
 }

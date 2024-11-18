@@ -1,5 +1,6 @@
 package com.presnakov.hotelbooking.service;
 
+import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
@@ -9,10 +10,13 @@ import com.presnakov.hotelbooking.repository.QPredicate;
 import com.presnakov.hotelbooking.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
     private final UserCreateEditMapper userCreateEditMapper;
+    private final ImageService imageService;
 
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
@@ -53,10 +58,20 @@ public class UserService {
                 .map(userReadMapper::map);
     }
 
+    public Optional<byte[]> findAvatar(Integer id) {
+        return userRepository.findById(id)
+                .map(User::getPhoto)
+                .filter(StringUtils::hasText)
+                .flatMap(imageService::get);
+    }
+
     @Transactional
     public UserReadDto create(UserCreateEditDto userDto) {
         return Optional.of(userDto)
-                .map(userCreateEditMapper::map)
+                .map(dto -> {
+                    uploadImage(dto.getPhoto());
+                    return userCreateEditMapper.map(dto);
+                })
                 .map(userRepository::save)
                 .map(userReadMapper::map)
                 .orElseThrow();
@@ -65,7 +80,10 @@ public class UserService {
     @Transactional
     public Optional<UserReadDto> update(Integer id, UserCreateEditDto userDto) {
         return userRepository.findById(id)
-                .map(entity -> userCreateEditMapper.map(userDto, entity))
+                .map(entity -> {
+                    uploadImage(userDto.getPhoto());
+                    return userCreateEditMapper.map(userDto, entity);
+                })
                 .map(userRepository::saveAndFlush)
                 .map(userReadMapper::map);
     }
@@ -79,6 +97,13 @@ public class UserService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    @SneakyThrows
+    private void uploadImage(MultipartFile image) {
+        if (!image.isEmpty()) {
+            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+        }
     }
 
 }

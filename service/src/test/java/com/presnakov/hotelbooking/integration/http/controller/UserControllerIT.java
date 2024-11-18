@@ -83,7 +83,7 @@ class UserControllerIT extends IntegrationTestBase {
     @Test
     void create() throws Exception {
         User user = createUser("Misha", "Misutkin", "misha@gmail.com",
-                "+375441236547", "mishaphoto.jpg", LocalDate.of(2001, 1, 1),
+                "+375441236547",  null, LocalDate.of(2001, 1, 1),
                 5500, "12345", RoleEnum.USER);
 
         mockMvc.perform(post("/users")

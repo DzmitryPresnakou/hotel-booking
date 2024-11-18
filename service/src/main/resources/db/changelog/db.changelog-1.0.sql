@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users
     last_name  VARCHAR(128)         NOT NULL,
     email      VARCHAR(128)         NOT NULL unique,
     phone      VARCHAR(64)          NOT NULL,
-    photo      VARCHAR(128)         NOT NULL,
+    photo      VARCHAR(64)                 ,
     birth_date DATE                 NOT NULL,
     money      INT                  NOT NULL,
     password   VARCHAR(128)         NOT NULL,

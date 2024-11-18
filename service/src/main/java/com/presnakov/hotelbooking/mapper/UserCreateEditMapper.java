@@ -4,6 +4,11 @@ import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
+
+import static java.util.function.Predicate.not;
 
 @Component
 @RequiredArgsConstructor
@@ -31,8 +36,11 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         }
         user.setRole(object.getRole());
         user.setPhone(object.getPhone());
-        user.setPhoto(object.getPhoto());
         user.setMoney(object.getMoney());
         user.setBirthDate(object.getBirthDate());
+
+        Optional.ofNullable(object.getPhoto())
+                .filter(not(MultipartFile::isEmpty))
+                .ifPresent(image -> user.setPhoto(image.getOriginalFilename()));
     }
 }
