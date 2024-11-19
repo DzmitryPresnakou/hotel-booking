@@ -106,7 +106,7 @@ class UserControllerIT extends IntegrationTestBase {
     @Test
     void update() throws Exception {
         User user = userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+                "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
         String newFirstName = "innokentiy@gmail.com";
         String newLastName = "innokentiy@gmail.com";

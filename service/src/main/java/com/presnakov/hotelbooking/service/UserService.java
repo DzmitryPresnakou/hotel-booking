@@ -100,10 +100,9 @@ public class UserService {
     }
 
     @SneakyThrows
-    private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
-            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+    private void uploadImage(MultipartFile photo) {
+        if (photo != null && !photo.isEmpty()) {
+            imageService.upload(photo.getOriginalFilename(), photo.getInputStream());
         }
     }
-
 }
