@@ -2,6 +2,7 @@ package com.presnakov.hotelbooking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -16,7 +17,8 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @RequiredArgsConstructor
 public class ImageService {
 
-    private final String bucket = "C:\\Users\\77458\\IdeaProjects\\multimodule-maven\\images";
+    @Value("${app.image.bucket")
+    private final String bucket;
 
     @SneakyThrows
     public void upload(String imagePath, InputStream content) {
