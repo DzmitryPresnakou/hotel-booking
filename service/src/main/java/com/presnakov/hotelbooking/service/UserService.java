@@ -58,6 +58,11 @@ public class UserService {
                 .map(userReadMapper::map);
     }
 
+    public Optional<UserReadDto> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userReadMapper::map);
+    }
+
     public Optional<byte[]> findAvatar(Integer id) {
         return userRepository.findById(id)
                 .map(User::getPhoto)

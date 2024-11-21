@@ -3,6 +3,7 @@ package com.presnakov.hotelbooking.integration.repository;
 import com.presnakov.hotelbooking.entity.Hotel;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.repository.HotelRepository;
+import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         Optional<Hotel> maybeHotel = hotelRepository.findById(hotel.getId());
 
@@ -31,7 +32,7 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void save() {
-        Hotel hotel = createHotel("Bobruisk", "hotelphoto001.jpg");
+        Hotel hotel = CreateDataUtil.createHotel("Bobruisk", "hotelphoto001.jpg");
 
         Hotel actualResult = hotelRepository.save(hotel);
 
@@ -40,7 +41,7 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void update() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("First World Hotel & Plaza", "photo1.jpg"));
         hotel.setName("Minsk");
         hotel.setPhoto("photo10.jpg");
 
@@ -52,7 +53,7 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findById() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         Optional<Hotel> actualResult = hotelRepository.findById(hotel.getId());
 
@@ -62,11 +63,11 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findAll() {
-        Hotel hotel1 = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
-        Hotel hotel2 = hotelRepository.save(createHotel("Flamingo Las Vegas", "photo2.jpg"));
-        Hotel hotel3 = hotelRepository.save(createHotel("Atlantis Paradise Island", "photo3.jpg"));
-        Hotel hotel4 = hotelRepository.save(createHotel("Hilton Hawaiian Village", "photo4.jpg"));
-        Hotel hotel5 = hotelRepository.save(createHotel("Disneys Port Orleans Resort", "photo5.jpg"));
+        Hotel hotel1 = hotelRepository.save(CreateDataUtil.createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel2 = hotelRepository.save(CreateDataUtil.createHotel("Flamingo Las Vegas", "photo2.jpg"));
+        Hotel hotel3 = hotelRepository.save(CreateDataUtil.createHotel("Atlantis Paradise Island", "photo3.jpg"));
+        Hotel hotel4 = hotelRepository.save(CreateDataUtil.createHotel("Hilton Hawaiian Village", "photo4.jpg"));
+        Hotel hotel5 = hotelRepository.save(CreateDataUtil.createHotel("Disneys Port Orleans Resort", "photo5.jpg"));
 
         List<Hotel> actualResult = (List<Hotel>) hotelRepository.findAll();
 
@@ -79,18 +80,11 @@ class HotelRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findByName() {
-        Hotel hotel = hotelRepository.save(createHotel("First World Hotel & Plaza", "photo1.jpg"));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("First World Hotel & Plaza", "photo1.jpg"));
 
         Optional<Hotel> actualResult = hotelRepository.findByName(hotel.getName());
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get()).isEqualTo(hotel);
-    }
-
-    private static Hotel createHotel(String name, String photo) {
-        return Hotel.builder()
-                .name(name)
-                .photo(photo)
-                .build();
     }
 }

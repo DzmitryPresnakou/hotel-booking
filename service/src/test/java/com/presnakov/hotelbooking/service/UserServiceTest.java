@@ -7,6 +7,7 @@ import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
 import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.util.CreateDataUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,17 +43,17 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void findAll() {
-        User user1 = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+    void shouldFindAll() {
+        User user1 = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        User user2 = createUser("Vanya", "Ivanov", "vanya@gmail.com",
+        User user2 = CreateDataUtil.createUser("Vanya", "Ivanov", "vanya@gmail.com",
                 "+375446698523", null, LocalDate.of(1997, 6, 11),
                 3000, "56987", RoleEnum.USER);
-        UserReadDto userReadDto1 = getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
+        UserReadDto userReadDto1 = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        UserReadDto userReadDto2 = getUserReadDto(2, "Vanya", "Ivanov", "vanya@gmail.com",
+        UserReadDto userReadDto2 = CreateDataUtil.getUserReadDto(2, "Vanya", "Ivanov", "vanya@gmail.com",
                 "+375446698523", LocalDate.of(1997, 6, 11),
                 3000, "56987", RoleEnum.USER);
         List<User> users = List.of(user1, user2);
@@ -72,11 +73,11 @@ class UserServiceTest {
 
     @Test
     void shouldFindById() {
-        User user = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
         Optional<User> maybeUser = Optional.of(user);
-        UserReadDto userReadDto = getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
+        UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
 
@@ -105,13 +106,13 @@ class UserServiceTest {
 
     @Test
     void create() {
-        User user = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        UserCreateEditDto userCreateEditDto = getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+        UserCreateEditDto userCreateEditDto = CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        UserReadDto userReadDto = getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
+        UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
 
@@ -128,13 +129,13 @@ class UserServiceTest {
 
     @Test
     void update() {
-        User user = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        UserCreateEditDto userCreateEditDto = getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+        UserCreateEditDto userCreateEditDto = CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
-        UserReadDto userReadDto = getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
+        UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
 
@@ -152,7 +153,7 @@ class UserServiceTest {
 
     @Test
     void delete() {
-        User user = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
 
@@ -166,7 +167,7 @@ class UserServiceTest {
 
     @Test
     void shouldNotDelete() {
-        User user = createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER);
 
@@ -176,69 +177,5 @@ class UserServiceTest {
         assertFalse(actualResult);
         verify(userRepository).findById(user.getId());
         verify(userRepository, never()).delete(user);
-    }
-
-    private static User createUser(String firstName,
-                                   String lastName,
-                                   String email,
-                                   String phone,
-                                   String photo,
-                                   LocalDate birthDate,
-                                   Integer money,
-                                   String password,
-                                   RoleEnum role) {
-        return User.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .phone(phone)
-                .photo(photo)
-                .birthDate(birthDate)
-                .money(money)
-                .password(password)
-                .role(role)
-                .build();
-    }
-
-    private static UserReadDto getUserReadDto(Integer id,
-                                              String firstName,
-                                              String lastName,
-                                              String email,
-                                              String phone,
-                                              LocalDate birthDate,
-                                              Integer money,
-                                              String password,
-                                              RoleEnum role) {
-        return UserReadDto.builder()
-                .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .phone(phone)
-                .birthDate(birthDate)
-                .money(money)
-                .password(password)
-                .role(role)
-                .build();
-    }
-
-    private static UserCreateEditDto getUserCreateEditDto(String firstName,
-                                                          String lastName,
-                                                          String email,
-                                                          String phone,
-                                                          LocalDate birthDate,
-                                                          Integer money,
-                                                          String password,
-                                                          RoleEnum role) {
-        return UserCreateEditDto.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .phone(phone)
-                .birthDate(birthDate)
-                .money(money)
-                .password(password)
-                .role(role)
-                .build();
     }
 }
