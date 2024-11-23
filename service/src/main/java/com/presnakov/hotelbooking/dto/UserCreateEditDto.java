@@ -29,7 +29,9 @@ public class UserCreateEditDto {
     @Email
     String email;
 
-    String password;
+    @NotBlank()
+    String rawPassword;
+
     RoleEnum role;
 
     @NotBlank
