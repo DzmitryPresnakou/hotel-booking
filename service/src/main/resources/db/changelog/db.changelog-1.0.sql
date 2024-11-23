@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS users
     last_name  VARCHAR(128)         NOT NULL,
     email      VARCHAR(128)         NOT NULL unique,
     phone      VARCHAR(64)          NOT NULL,
-    photo      VARCHAR(128)         NOT NULL,
+    photo      VARCHAR(64)                 ,
     birth_date DATE                 NOT NULL,
     money      INT                  NOT NULL,
     password   VARCHAR(128)         NOT NULL,
-    role       VARCHAR(128)         NOT NULL,
+    role       VARCHAR(64)DEFAULT USER NOT NULL,
     is_active  BOOLEAN DEFAULT true NOT NULL
 );
 --rollback DROP TABLE users;
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS room
     id            SERIAL PRIMARY KEY,
     occupancy     INT                       NOT NULL,
     class         VARCHAR(64)               NOT NULL,
-    photo         VARCHAR(128)              NOT NULL,
+    photo         VARCHAR(64)               NOT NULL,
     price_per_day INT                       NOT NULL,
     hotel_id      INT NOT NULL REFERENCES hotel (id) ON DELETE CASCADE
 );

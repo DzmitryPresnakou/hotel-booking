@@ -5,11 +5,11 @@ VALUES ('First World Hotel & Plaza', 'photo1.jpg'),
        ('Hilton Hawaiian Village', 'photo4.jpg'),
        ('Disneys Port Orleans Resort', 'photo5.jpg');
 
-INSERT INTO users (first_name, last_name, email, password, role, phone, photo, birth_date, money)
-VALUES ('Vasya', 'Vasilyev', 'vasya@gmail.com', '112233', 'USER', '+375291478523', 'userphoto1.jpg', '1995-02-05',
+INSERT INTO users (first_name, last_name, email, password, role, phone, birth_date, money)
+VALUES ('Vasya', 'Vasilyev', 'vasya@gmail.com', '112233', 'USER', '+375291478523', '1995-02-05',
         '2500'),
-       ('Vanya', 'Ivanov', 'vanya@gmail.com', '223344', 'USER', '+375446842935', 'userphoto2.jpg', '1997-06-11', '3000'),
-       ('Petr', 'Petrov', 'petrov@gmail.com', '123456', 'ADMIN', '+375291236547', 'userphoto3.jpg', '2000-11-09',
+       ('Vanya', 'Ivanov', 'vanya@gmail.com', '223344', 'USER', '+375446842935', '1997-06-11', '3000'),
+       ('Petr', 'Petrov', 'petrov@gmail.com', '123456', 'ADMIN', '+375291236547', '2000-11-09',
         '5000');
 
 INSERT INTO room (occupancy, class, photo, price_per_day, hotel_id)

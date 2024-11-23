@@ -2,7 +2,6 @@ package com.presnakov.hotelbooking.integration.repository;
 
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.entity.Order;
 import com.presnakov.hotelbooking.entity.OrderStatusEnum;
 import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
 import com.presnakov.hotelbooking.entity.RoleEnum;
@@ -14,6 +13,7 @@ import com.presnakov.hotelbooking.repository.HotelRepository;
 import com.presnakov.hotelbooking.repository.OrderRepository;
 import com.presnakov.hotelbooking.repository.RoomRepository;
 import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,8 +38,8 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void save() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel);
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel);
 
         Room actualResult = roomRepository.save(room);
 
@@ -48,8 +48,8 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void update() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         room.setRoomClass(RoomClassEnum.COMFORT);
         room.setPricePerDay(40);
@@ -63,8 +63,8 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void delete() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         roomRepository.delete(room);
 
@@ -73,8 +73,8 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findById() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
         Optional<Room> actualResult = roomRepository.findById(room.getId());
 
@@ -84,11 +84,11 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findAll() {
-        Hotel hotel1 = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Hotel hotel2 = hotelRepository.save(createHotel("Minsk", "hotelphoto002.jpg"));
-        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
-        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
-        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
+        Hotel hotel1 = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Hotel hotel2 = hotelRepository.save(CreateDataUtil.createHotel("Minsk", "hotelphoto002.jpg"));
+        Room room1 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel1));
+        Room room2 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel2));
+        Room room3 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel2));
 
         List<Room> actualResult = (List<Room>) roomRepository.findAll();
 
@@ -101,10 +101,10 @@ class RoomRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findAllByHotel() {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room2 = roomRepository.save(createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel));
-        Room room3 = roomRepository.save(createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.COMFORT, 59, "roomphoto002.jpg", 3, hotel));
+        Room room3 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.BUSINESS, 79, "roomphoto003.jpg", 4, hotel));
 
         List<Room> actualResult = roomRepository.findAllByHotelName(hotel.getName());
 
@@ -118,16 +118,16 @@ class RoomRepositoryIT extends IntegrationTestBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllByFilter(LocalDate checkInDate, LocalDate checkOutDate) {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room1 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room2 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room3 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        Room room4 = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room1 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room2 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room3 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        Room room4 = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
 
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = userRepository.save(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(createOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(CreateDataUtil.createOrder(user, room1, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .hotelName(hotel.getName())
@@ -150,12 +150,12 @@ class RoomRepositoryIT extends IntegrationTestBase {
     @ParameterizedTest
     @MethodSource("getDateRanges")
     void findAllRoomsByFreeDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
-        Hotel hotel = hotelRepository.save(createHotel("Plaza", "hotelphoto001.jpg"));
-        Room room = roomRepository.save(createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
-        User user = userRepository.save(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        Hotel hotel = hotelRepository.save(CreateDataUtil.createHotel("Plaza", "hotelphoto001.jpg"));
+        Room room = roomRepository.save(CreateDataUtil.createRoom(RoomClassEnum.ECONOMY, 29, "roomphoto001.jpg", 2, hotel));
+        User user = userRepository.save(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        orderRepository.save(createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
+        orderRepository.save(CreateDataUtil.createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 10), LocalDate.of(2024, 11, 22)));
         RoomFilter filter = RoomFilter.builder()
                 .checkInDate(checkInDate)
@@ -169,65 +169,6 @@ class RoomRepositoryIT extends IntegrationTestBase {
                 .toList();
         assertThat(actualResult).hasSize(1);
         assertThat(roomIds).contains(room.getId());
-    }
-
-    private static Hotel createHotel(String name, String photo) {
-        return Hotel.builder()
-                .photo(photo)
-                .name(name)
-                .build();
-    }
-
-    private static Room createRoom(RoomClassEnum roomClass,
-                                   Integer pricePerDay,
-                                   String photo,
-                                   Integer occupancy,
-                                   Hotel hotel) {
-        return Room.builder()
-                .roomClass(roomClass)
-                .pricePerDay(pricePerDay)
-                .photo(photo)
-                .occupancy(occupancy)
-                .hotel(hotel)
-                .build();
-    }
-
-    private static User createUser(String firstName,
-                                   String lastName,
-                                   String email,
-                                   String phone,
-                                   String photo,
-                                   LocalDate birthDate,
-                                   Integer money,
-                                   String password,
-                                   RoleEnum roleEnum) {
-        return User.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .phone(phone)
-                .photo(photo)
-                .birthDate(birthDate)
-                .money(money)
-                .password(password)
-                .role(roleEnum)
-                .build();
-    }
-
-    private static Order createOrder(User user,
-                                     Room room,
-                                     OrderStatusEnum orderStatus,
-                                     PaymentStatusEnum paymentStatus,
-                                     LocalDate checkInDate,
-                                     LocalDate checkOutDate) {
-        return Order.builder()
-                .user(user)
-                .room(room)
-                .status(orderStatus)
-                .paymentStatus(paymentStatus)
-                .checkInDate(checkInDate)
-                .checkOutDate(checkOutDate)
-                .build();
     }
 
     static Stream<Arguments> getDateRanges() {

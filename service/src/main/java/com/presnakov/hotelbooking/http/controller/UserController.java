@@ -1,24 +1,29 @@
 package com.presnakov.hotelbooking.http.controller;
 
+import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.service.UserService;
-import com.presnakov.hotelbooking.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Slf4j
 @Controller
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -54,12 +59,20 @@ public class UserController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute UserCreateEditDto user) {
+    public String create(@ModelAttribute @Validated UserCreateEditDto user,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/users/registration";
+        }
         return "redirect:/users/" + userService.create(user).getId();
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Integer id, @ModelAttribute UserCreateEditDto user) {
+    public String update(@PathVariable("id") Integer id,
+                         @ModelAttribute @Validated UserCreateEditDto user) {
         return userService.update(id, user)
                 .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

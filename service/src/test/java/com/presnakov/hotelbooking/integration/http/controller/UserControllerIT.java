@@ -4,6 +4,7 @@ import com.presnakov.hotelbooking.entity.RoleEnum;
 import com.presnakov.hotelbooking.entity.User;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,13 +38,13 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void findAll() throws Exception {
-        userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        userRepository.saveAndFlush(createUser("Vanya", "Ivanov", "vanya@gmail.com",
+        userRepository.saveAndFlush(CreateDataUtil.createUser("Vanya", "Ivanov", "vanya@gmail.com",
                 "+375446698523", "userphoto001.jpg", LocalDate.of(1997, 6, 11),
                 3000, "56987", RoleEnum.USER));
-        userRepository.saveAndFlush(createUser("Petya", "Petrov", "petya@gmail.com",
+        userRepository.saveAndFlush(CreateDataUtil.createUser("Petya", "Petrov", "petya@gmail.com",
                 "+375251478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
                 5000, "4563258", RoleEnum.USER));
 
@@ -57,7 +58,7 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void findById() throws Exception {
-        User user = userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
 
@@ -82,8 +83,8 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void create() throws Exception {
-        User user = createUser("Misha", "Misutkin", "misha@gmail.com",
-                "+375441236547", "mishaphoto.jpg", LocalDate.of(2001, 1, 1),
+        User user = CreateDataUtil.createUser("Misha", "Misutkin", "misha@gmail.com",
+                "+375441236547", null, LocalDate.of(2001, 1, 1),
                 5500, "12345", RoleEnum.USER);
 
         mockMvc.perform(post("/users")
@@ -105,8 +106,8 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void update() throws Exception {
-        User user = userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
+        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
         String newFirstName = "innokentiy@gmail.com";
         String newLastName = "innokentiy@gmail.com";
@@ -131,7 +132,7 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void delete() throws Exception {
-        User user = userRepository.saveAndFlush(createUser("Vasya", "Vasilyev", "vasya@gmail.com",
+        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
 
@@ -142,27 +143,5 @@ class UserControllerIT extends IntegrationTestBase {
                 );
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
-    }
-
-    private static User createUser(String firstName,
-                                   String lastName,
-                                   String email,
-                                   String phone,
-                                   String photo,
-                                   LocalDate birthDate,
-                                   Integer money,
-                                   String password,
-                                   RoleEnum role) {
-        return User.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .phone(phone)
-                .photo(photo)
-                .birthDate(birthDate)
-                .money(money)
-                .password(password)
-                .role(role)
-                .build();
     }
 }

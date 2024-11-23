@@ -38,7 +38,8 @@ public class User implements BaseEntity<Integer> {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private RoleEnum role;
+    @Builder.Default
+    private RoleEnum role = RoleEnum.USER;
 
     private String phone;
     private String photo;
