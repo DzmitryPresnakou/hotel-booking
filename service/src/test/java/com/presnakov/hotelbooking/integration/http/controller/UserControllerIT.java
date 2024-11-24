@@ -1,9 +1,9 @@
 package com.presnakov.hotelbooking.integration.http.controller;
 
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
-import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.birthDate;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.email;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.firstName;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.lastName;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.rawPassword;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.username;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.firstname;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.lastname;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.money;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.password;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.phone;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.photo;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.role;
@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password;
 
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
@@ -88,10 +89,10 @@ class UserControllerIT extends IntegrationTestBase {
                 5500, "12345", RoleEnum.USER);
 
         mockMvc.perform(post("/users")
-                        .param(firstName, user.getFirstName())
-                        .param(lastName, user.getLastName())
-                        .param(email, user.getEmail())
-                        .param(password, user.getPassword())
+                        .param(firstname, user.getFirstname())
+                        .param(lastname, user.getLastname())
+                        .param(username, user.getUsername())
+                        .param(rawPassword, user.getPassword())
                         .param(role, user.getRole().name())
                         .param(phone, user.getPhone())
                         .param(photo, user.getPhoto())
@@ -99,9 +100,9 @@ class UserControllerIT extends IntegrationTestBase {
                         .param(birthDate, user.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrl("/users/" + userRepository.findByEmail(user.getEmail()).get().getId()));
+                        redirectedUrl("/users/" + userRepository.findByUsername(user.getUsername()).get().getId()));
 
-        assertThat(userRepository.findByEmail(user.getEmail())).isPresent();
+        assertThat(userRepository.findByUsername(user.getUsername())).isPresent();
     }
 
     @Test
@@ -109,15 +110,15 @@ class UserControllerIT extends IntegrationTestBase {
         User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", null, LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        String newFirstName = "innokentiy@gmail.com";
-        String newLastName = "innokentiy@gmail.com";
-        String newEmail = "innokentiy@gmail.com";
+        String newFirstname = "innokentiy@gmail.com";
+        String newLastname = "innokentiy@gmail.com";
+        String newUsername = "innokentiy@gmail.com";
 
         mockMvc.perform(post("/users/" + user.getId() + "/update")
-                        .param(firstName, newFirstName)
-                        .param(lastName, newLastName)
-                        .param(email, newEmail)
-                        .param(password, user.getPassword())
+                        .param(firstname, newFirstname)
+                        .param(lastname, newLastname)
+                        .param(username, newUsername)
+                        .param(rawPassword, user.getPassword())
                         .param(role, user.getRole().name())
                         .param(phone, user.getPhone())
                         .param(photo, user.getPhoto())
@@ -127,7 +128,7 @@ class UserControllerIT extends IntegrationTestBase {
                         status().is3xxRedirection(),
                         redirectedUrl("/users/" + user.getId()));
 
-        assertThat(userRepository.findByEmail(newEmail)).isPresent();
+        assertThat(userRepository.findByUsername(newUsername)).isPresent();
     }
 
     @Test

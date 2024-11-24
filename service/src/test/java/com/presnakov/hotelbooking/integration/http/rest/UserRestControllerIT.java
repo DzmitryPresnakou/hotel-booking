@@ -3,7 +3,7 @@ package com.presnakov.hotelbooking.integration.http.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.service.UserService;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
@@ -73,16 +73,16 @@ class UserRestControllerIT extends IntegrationTestBase {
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON_VALUE),
                         content().json(objectMapper.writeValueAsString(user)));
-        assertThat(userService.findByEmail(user.getEmail())).isPresent();
+        assertThat(userService.findByUsername(user.getUsername())).isPresent();
     }
 
     @Test
     void shouldUpdate() throws Exception {
         UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER));
-        UserReadDto foundUser = userService.findByEmail(userReadDto.getEmail()).get();
+        UserReadDto foundUser = userService.findByUsername(userReadDto.getUsername()).get();
         UserCreateEditDto updatedUser = CreateDataUtil.getUserCreateEditDto("Misha", "Misutkin", "misha@gmail.com",
-                foundUser.getPhone(), foundUser.getBirthDate(), foundUser.getMoney(), foundUser.getPassword(), foundUser.getRole());
+                foundUser.getPhone(), foundUser.getBirthDate(), foundUser.getMoney(), null, foundUser.getRole());
 
         mockMvc.perform(put("/api/v1/users/" + foundUser.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -91,19 +91,19 @@ class UserRestControllerIT extends IntegrationTestBase {
                         status().is2xxSuccessful(),
                         content().contentType(MediaType.APPLICATION_JSON_VALUE),
                         content().json(objectMapper.writeValueAsString(updatedUser)));
-        assertThat(userService.findByEmail(updatedUser.getEmail())).isPresent();
+        assertThat(userService.findByUsername(updatedUser.getUsername())).isPresent();
     }
 
     @Test
     void shouldDelete() throws Exception {
         UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER));
-        UserReadDto foundUser = userService.findByEmail(userReadDto.getEmail()).get();
+        UserReadDto foundUser = userService.findByUsername(userReadDto.getUsername()).get();
 
         mockMvc.perform(delete("/api/v1/users/" + foundUser.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpectAll(
                         status().is2xxSuccessful());
-        assertThat(userService.findByEmail(foundUser.getEmail())).isEmpty();
+        assertThat(userService.findByUsername(foundUser.getUsername())).isEmpty();
     }
 }

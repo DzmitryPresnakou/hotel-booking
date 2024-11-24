@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.entity;
+package com.presnakov.hotelbooking.database.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -2,22 +2,22 @@ package com.presnakov.hotelbooking.util;
 
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.entity.Order;
-import com.presnakov.hotelbooking.entity.OrderStatusEnum;
-import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.Room;
-import com.presnakov.hotelbooking.entity.RoomClassEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.Hotel;
+import com.presnakov.hotelbooking.database.entity.Order;
+import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.database.entity.PaymentStatusEnum;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.Room;
+import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.database.entity.User;
 
 import java.time.LocalDate;
 
 public class CreateDataUtil {
 
-    public static User createUser(String firstName,
-                                  String lastName,
-                                  String email,
+    public static User createUser(String firstname,
+                                  String lastname,
+                                  String username,
                                   String phone,
                                   String photo,
                                   LocalDate birthDate,
@@ -25,9 +25,9 @@ public class CreateDataUtil {
                                   String password,
                                   RoleEnum role) {
         return User.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
+                .firstname(firstname)
+                .lastname(lastname)
+                .username(username)
                 .phone(phone)
                 .photo(photo)
                 .birthDate(birthDate)
@@ -38,43 +38,41 @@ public class CreateDataUtil {
     }
 
     public static UserReadDto getUserReadDto(Integer id,
-                                             String firstName,
-                                             String lastName,
-                                             String email,
+                                             String firstname,
+                                             String lastname,
+                                             String username,
                                              String phone,
                                              LocalDate birthDate,
                                              Integer money,
-                                             String password,
                                              RoleEnum role) {
         return UserReadDto.builder()
                 .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
+                .firstname(firstname)
+                .lastname(lastname)
+                .username(username)
                 .phone(phone)
                 .birthDate(birthDate)
                 .money(money)
-                .password(password)
                 .role(role)
                 .build();
     }
 
-    public static UserCreateEditDto getUserCreateEditDto(String firstName,
-                                                         String lastName,
-                                                         String email,
+    public static UserCreateEditDto getUserCreateEditDto(String firstname,
+                                                         String lastname,
+                                                         String username,
                                                          String phone,
                                                          LocalDate birthDate,
                                                          Integer money,
                                                          String password,
                                                          RoleEnum role) {
         return UserCreateEditDto.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
+                .firstname(firstname)
+                .lastname(lastname)
+                .username(username)
                 .phone(phone)
                 .birthDate(birthDate)
                 .money(money)
-                .password(password)
+                .rawPassword(password)
                 .role(role)
                 .build();
     }

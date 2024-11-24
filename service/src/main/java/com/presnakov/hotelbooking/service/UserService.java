@@ -1,18 +1,19 @@
 package com.presnakov.hotelbooking.service;
 
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
-import com.presnakov.hotelbooking.repository.QPredicate;
-import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.database.querydsl.QPredicate;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.presnakov.hotelbooking.entity.QUser.user;
+import static com.presnakov.hotelbooking.database.entity.QUser.user;
 
 @Service
 @RequiredArgsConstructor
@@ -45,9 +46,9 @@ public class UserService implements UserDetailsService {
 
     public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
         Predicate predicate = QPredicate.builder()
-                .add(filter.getFirstName(), user.firstName::containsIgnoreCase)
-                .add(filter.getLastName(), user.lastName::containsIgnoreCase)
-                .add(filter.getEmail(), user.email::containsIgnoreCase)
+                .add(filter.getFirstname(), user.firstname::containsIgnoreCase)
+                .add(filter.getLastname(), user.lastname::containsIgnoreCase)
+                .add(filter.getUsername(), user.username::containsIgnoreCase)
                 .add(filter.getRole(), user.role::eq)
                 .add(filter.getMoney(), user.money::gt)
                 .add(filter.getBirthDate(), user.birthDate::before)
@@ -57,13 +58,14 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Optional<UserReadDto> findById(Integer id) {
         return userRepository.findById(id)
                 .map(userReadMapper::map);
     }
 
-    public Optional<UserReadDto> findByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public Optional<UserReadDto> findByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .map(userReadMapper::map);
     }
 
@@ -116,13 +118,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
                 .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
+                        user.getUsername(),
                         user.getPassword(),
                         Collections.singleton(user.getRole())
                 ))
-                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
     }
 }

@@ -1,7 +1,8 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.repository;
 
+import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.UserFilter;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.presnakov.hotelbooking.entity.QUser.user;
+import static com.presnakov.hotelbooking.database.entity.QUser.user;
 
 @RequiredArgsConstructor
 public class FilterUserRepositoryImpl implements FilterUserRepository {
@@ -27,9 +28,9 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
 
     private static Predicate getByCompleteInfo(UserFilter filter) {
         return QPredicate.builder()
-                .add(filter.getFirstName(), user.firstName::containsIgnoreCase)
-                .add(filter.getLastName(), user.lastName::containsIgnoreCase)
-                .add(filter.getEmail(), user.email::containsIgnoreCase)
+                .add(filter.getFirstname(), user.firstname::containsIgnoreCase)
+                .add(filter.getLastname(), user.lastname::containsIgnoreCase)
+                .add(filter.getUsername(), user.username::containsIgnoreCase)
                 .add(filter.getRole(), user.role::eq)
                 .add(filter.getMoney(), user.money::gt)
                 .add(filter.getBirthDate(), user.birthDate::before)

@@ -1,18 +1,18 @@
 package com.presnakov.hotelbooking.integration.repository;
 
-import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.entity.Order;
-import com.presnakov.hotelbooking.entity.OrderStatusEnum;
-import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.Room;
-import com.presnakov.hotelbooking.entity.RoomClassEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.Hotel;
+import com.presnakov.hotelbooking.database.entity.Order;
+import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.database.entity.PaymentStatusEnum;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.Room;
+import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
-import com.presnakov.hotelbooking.repository.HotelRepository;
-import com.presnakov.hotelbooking.repository.OrderRepository;
-import com.presnakov.hotelbooking.repository.RoomRepository;
-import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.database.repository.HotelRepository;
+import com.presnakov.hotelbooking.database.repository.OrderRepository;
+import com.presnakov.hotelbooking.database.repository.RoomRepository;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -120,7 +120,7 @@ class OrderRepositoryIT extends IntegrationTestBase {
         Order order3 = orderRepository.save(CreateDataUtil.createOrder(user3, room3, OrderStatusEnum.APPROVED, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 16)));
 
-        List<Order> actualResult = (List<Order>) orderRepository.findAll();
+        List<Order> actualResult = orderRepository.findAll();
 
         List<Integer> orderIds = actualResult.stream()
                 .map(Order::getId)
@@ -139,15 +139,15 @@ class OrderRepositoryIT extends IntegrationTestBase {
         orderRepository.save(CreateDataUtil.createOrder(user, room, OrderStatusEnum.OPEN, PaymentStatusEnum.APPROVED,
                 LocalDate.of(2024, 10, 15), LocalDate.of(2024, 10, 25)));
 
-        List<Order> actualResult = orderRepository.findOrdersByUserEmail(user.getEmail());
+        List<Order> actualResult = orderRepository.findOrdersByUsername(user.getUsername());
         List<String> emails = actualResult.stream()
                 .map(Order::getUser)
                 .toList()
                 .stream()
-                .map(User::getEmail)
+                .map(User::getUsername)
                 .toList();
         assertThat(actualResult).hasSize(1);
-        assertThat(emails).contains(user.getEmail());
+        assertThat(emails).contains(user.getUsername());
     }
 
     @Test

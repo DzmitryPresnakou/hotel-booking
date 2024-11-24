@@ -8,14 +8,14 @@
 <div th:insert="~{fragment :: header}"></div>
 <form th:action="@{/users/{userId}/update(userId=${user.id})}" enctype="multipart/form-data" method="post"
       th:object="${user}">
-    <label for="firstName">First Name:
-        <input id="firstName" type="text" name="firstName" th:value="*{firstName}">
+    <label for="username">Username:
+        <input id="username" type="text" name="username" th:value="*{getUsername}">
     </label><br>
-    <label for="lastName">Last Name:
-        <input id="lastName" type="text" name="lastName" th:value="*{lastName}">
+    <label for="firstname">Firstname:
+        <input id="firstname" type="text" name="firstname" th:value="*{getFirstname}">
     </label><br>
-    <label for="email">Email:
-        <input id="email" type="text" name="email" th:value="*{email}">
+    <label for="lastname">Lastname:
+        <input id="lastname" type="text" name="lastname" th:value="*{getLastname}">
     </label><br>
     <label for="phone">Phone:
         <input id="phone" type="text" name="phone" th:value="*{phone}">

@@ -1,7 +1,8 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.repository;
 
+import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.RoomFilter;
-import com.presnakov.hotelbooking.entity.Room;
+import com.presnakov.hotelbooking.database.entity.Room;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
@@ -9,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.presnakov.hotelbooking.entity.QHotel.hotel;
-import static com.presnakov.hotelbooking.entity.QOrder.order;
-import static com.presnakov.hotelbooking.entity.QRoom.room;
+import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
+import static com.presnakov.hotelbooking.database.entity.QOrder.order;
+import static com.presnakov.hotelbooking.database.entity.QRoom.room;
 
 @RequiredArgsConstructor
 public class FilterRoomRepositoryImpl implements FilterRoomRepository {

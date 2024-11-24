@@ -5,6 +5,9 @@ import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.service.UserService;
+import com.presnakov.hotelbooking.validation.group.CreateAction;
+import com.presnakov.hotelbooking.validation.group.UpdateAction;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,13 +61,13 @@ public class UserRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UserReadDto create(@Validated() @RequestBody UserCreateEditDto user) {
+    public UserReadDto create(@Validated({Default.class, CreateAction.class}) @RequestBody UserCreateEditDto user) {
         return userService.create(user);
     }
 
     @PutMapping("/{id}")
     public UserReadDto update(@PathVariable("id") Integer id,
-                              @Validated() @RequestBody UserCreateEditDto user) {
+                              @Validated({Default.class, UpdateAction.class}) @RequestBody UserCreateEditDto user) {
         return userService.update(id, user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }

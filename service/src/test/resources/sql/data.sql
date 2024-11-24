@@ -5,7 +5,7 @@ VALUES ('First World Hotel & Plaza', 'photo1.jpg'),
        ('Hilton Hawaiian Village', 'photo4.jpg'),
        ('Disneys Port Orleans Resort', 'photo5.jpg');
 
-INSERT INTO users (first_name, last_name, email, role, phone, birth_date, money)
+INSERT INTO users (firstname, lastname, username, role, phone, birth_date, money)
 VALUES ('Vasya', 'Vasilyev', 'vasya@gmail.com', 'USER', '+375291478523', '1995-02-05',
         '2500'),
        ('Vanya', 'Ivanov', 'vanya@gmail.com', 'USER', '+375446842935', '1997-06-11', '3000'),

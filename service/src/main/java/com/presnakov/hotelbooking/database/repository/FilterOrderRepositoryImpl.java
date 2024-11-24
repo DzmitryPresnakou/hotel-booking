@@ -1,6 +1,6 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.repository;
 
-import com.presnakov.hotelbooking.entity.Order;
+import com.presnakov.hotelbooking.database.entity.Order;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.presnakov.hotelbooking.entity.QHotel.hotel;
-import static com.presnakov.hotelbooking.entity.QOrder.order;
-import static com.presnakov.hotelbooking.entity.QRoom.room;
-import static com.presnakov.hotelbooking.entity.QUser.user;
+import static com.presnakov.hotelbooking.database.entity.QOrder.order;
+import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
+import static com.presnakov.hotelbooking.database.entity.QRoom.room;
+import static com.presnakov.hotelbooking.database.entity.QUser.user;
 
 @RequiredArgsConstructor
 public class FilterOrderRepositoryImpl implements FilterOrderRepository {
@@ -29,12 +29,12 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
     }
 
     @Override
-    public List<Order> findOrdersByUserEmail(String email) {
+    public List<Order> findOrdersByUsername(String username) {
         return new JPAQuery<Order>(entityManager)
                 .select(order)
                 .from(order)
                 .join(order.user, user)
-                .where(user.email.eq(email))
+                .where(user.username.eq(username))
                 .fetch();
     }
 

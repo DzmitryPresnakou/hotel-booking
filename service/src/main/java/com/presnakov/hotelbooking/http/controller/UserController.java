@@ -4,13 +4,20 @@ import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.service.UserService;
+import com.presnakov.hotelbooking.validation.group.CreateAction;
+import com.presnakov.hotelbooking.validation.group.UpdateAction;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,7 +48,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model) {
+    public String findById(@PathVariable("id") Integer id, Model model,
+                           @CurrentSecurityContext SecurityContext securityContext,
+                           @AuthenticationPrincipal UserDetails userDetails) {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
@@ -59,7 +68,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute @Validated UserCreateEditDto user,
+    public String create(@ModelAttribute @Validated({Default.class, CreateAction.class}) UserCreateEditDto user,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -73,7 +82,7 @@ public class UserController {
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
-                         @ModelAttribute @Validated UserCreateEditDto user) {
+                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) UserCreateEditDto user) {
         return userService.update(id, user)
                 .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

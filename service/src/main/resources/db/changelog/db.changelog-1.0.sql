@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS hotel
 CREATE TABLE IF NOT EXISTS users
 (
     id         SERIAL PRIMARY KEY,
-    first_name VARCHAR(128)                     NOT NULL,
-    last_name  VARCHAR(128)                     NOT NULL,
-    email      VARCHAR(128)                     NOT NULL unique,
+    firstname  VARCHAR(128),
+    lastname   VARCHAR(128),
+    username   VARCHAR(128)                     NOT NULL unique,
     phone      VARCHAR(64)                      NOT NULL,
     photo      VARCHAR(64),
     birth_date DATE                             NOT NULL,

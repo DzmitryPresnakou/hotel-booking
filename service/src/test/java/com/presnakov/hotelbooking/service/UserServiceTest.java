@@ -2,11 +2,11 @@ package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
-import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,10 +52,10 @@ class UserServiceTest {
                 3000, "56987", RoleEnum.USER);
         UserReadDto userReadDto1 = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, RoleEnum.USER);
         UserReadDto userReadDto2 = CreateDataUtil.getUserReadDto(2, "Vanya", "Ivanov", "vanya@gmail.com",
                 "+375446698523", LocalDate.of(1997, 6, 11),
-                3000, "56987", RoleEnum.USER);
+                3000, RoleEnum.USER);
         List<User> users = List.of(user1, user2);
 
         doReturn(users).when(userRepository).findAll();
@@ -79,7 +79,7 @@ class UserServiceTest {
         Optional<User> maybeUser = Optional.of(user);
         UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, RoleEnum.USER);
 
         doReturn(maybeUser).when(userRepository).findById(user.getId());
         doReturn(userReadDto).when(userReadMapper).map(user);
@@ -114,7 +114,7 @@ class UserServiceTest {
                 2500, "12345", RoleEnum.USER);
         UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, RoleEnum.USER);
 
         doReturn(user).when(userCreateEditMapper).map(userCreateEditDto);
         doReturn(user).when(userRepository).save(user);
@@ -137,7 +137,7 @@ class UserServiceTest {
                 2500, "12345", RoleEnum.USER);
         UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, RoleEnum.USER);
 
         doReturn(Optional.of(user)).when(userRepository).findById(user.getId());
         doReturn(user).when(userCreateEditMapper).map(userCreateEditDto, user);
