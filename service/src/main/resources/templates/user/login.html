@@ -5,12 +5,12 @@
     <title>Login</title>
 </head>
 <body>
-<form action="/login" method="post">
+<form th:action="@{/login}" method="post">
     <div style="color: red" th:if="${param.error}">
         Bad credentials
     </div>
     <label for="username">Username:
-        <input id="username"  type="text" name="username">
+        <input id="username" type="text" name="username">
     </label><br>
     <label for="password">Password:
         <input id="password" type="password" name="password">

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -111,7 +112,7 @@ class UserServiceTest {
                 2500, "12345", RoleEnum.USER);
         UserCreateEditDto userCreateEditDto = CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0]));
         UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, RoleEnum.USER);
@@ -134,7 +135,7 @@ class UserServiceTest {
                 2500, "12345", RoleEnum.USER);
         UserCreateEditDto userCreateEditDto = CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER);
+                2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0]));
         UserReadDto userReadDto = CreateDataUtil.getUserReadDto(1, "Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5),
                 2500, RoleEnum.USER);

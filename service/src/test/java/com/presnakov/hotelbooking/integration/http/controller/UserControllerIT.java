@@ -1,26 +1,26 @@
 package com.presnakov.hotelbooking.integration.http.controller;
 
 import com.presnakov.hotelbooking.database.entity.RoleEnum;
-import com.presnakov.hotelbooking.database.entity.User;
+import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
-import com.presnakov.hotelbooking.database.repository.UserRepository;
+import com.presnakov.hotelbooking.service.UserService;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.birthDate;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.rawPassword;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.username;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.firstname;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.lastname;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.money;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.phone;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.photo;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.role;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.username;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,42 +28,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password;
 
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(printOnlyOnFailure = false)
 @RequiredArgsConstructor
 class UserControllerIT extends IntegrationTestBase {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final MockMvc mockMvc;
+
 
     @Test
     void findAll() throws Exception {
-        userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
-        userRepository.saveAndFlush(CreateDataUtil.createUser("Vanya", "Ivanov", "vanya@gmail.com",
-                "+375446698523", "userphoto001.jpg", LocalDate.of(1997, 6, 11),
-                3000, "56987", RoleEnum.USER));
-        userRepository.saveAndFlush(CreateDataUtil.createUser("Petya", "Petrov", "petya@gmail.com",
-                "+375251478523", "userphoto001.jpg", LocalDate.of(2000, 11, 9),
-                5000, "4563258", RoleEnum.USER));
+        userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
+        userService.create(CreateDataUtil.getUserCreateEditDto("Vanya", "Ivanov", "vanya@gmail.com",
+                "+375446698523", LocalDate.of(1997, 6, 11), 3000, "56987", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
+        userService.create(CreateDataUtil.getUserCreateEditDto("Petya", "Petrov", "petya@gmail.com",
+                "+375251478523", LocalDate.of(2000, 11, 9), 5000, "4563258", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
         mockMvc.perform(get("/users"))
                 .andExpectAll(
                         status().is2xxSuccessful(),
                         view().name("user/users"),
                         model().attributeExists("users"));
-        assertThat(userRepository.findAll().size()).isEqualTo(3);
+        assertThat(userService.findAll().size()).isEqualTo(3);
     }
 
     @Test
     void findById() throws Exception {
-        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
+        UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
-        mockMvc.perform(get("/users/" + user.getId()))
+        mockMvc.perform(get("/users/" + userService.findByUsername(userReadDto.getUsername()).get().getId()))
                 .andExpectAll(
                         status().is2xxSuccessful(),
                         view().name("user/user"),
@@ -84,65 +80,60 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void create() throws Exception {
-        User user = CreateDataUtil.createUser("Misha", "Misutkin", "misha@gmail.com",
-                "+375441236547", null, LocalDate.of(2001, 1, 1),
-                5500, "12345", RoleEnum.USER);
+        UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
         mockMvc.perform(post("/users")
-                        .param(firstname, user.getFirstname())
-                        .param(lastname, user.getLastname())
-                        .param(username, user.getUsername())
-                        .param(rawPassword, user.getPassword())
-                        .param(role, user.getRole().name())
-                        .param(phone, user.getPhone())
-                        .param(photo, user.getPhoto())
-                        .param(money, user.getMoney().toString())
-                        .param(birthDate, user.getBirthDate().toString()))
+                        .param(firstname, userReadDto.getFirstname())
+                        .param(lastname, userReadDto.getLastname())
+                        .param(username, userReadDto.getUsername())
+                        .param(role, userReadDto.getRole().name())
+                        .param(phone, userReadDto.getPhone())
+                        .param(photo, "test")
+                        .param(money, userReadDto.getMoney().toString())
+                        .param(birthDate, userReadDto.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrl("/users/" + userRepository.findByUsername(user.getUsername()).get().getId()));
-
-        assertThat(userRepository.findByUsername(user.getUsername())).isPresent();
+                        redirectedUrl("/login"));
+        assertThat(userService.findByUsername("misha@gmail.com").isPresent());
     }
 
     @Test
     void update() throws Exception {
-        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", null, LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
+        UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
+
         String newFirstname = "innokentiy@gmail.com";
         String newLastname = "innokentiy@gmail.com";
         String newUsername = "innokentiy@gmail.com";
 
-        mockMvc.perform(post("/users/" + user.getId() + "/update")
+        mockMvc.perform(post("/users/" + 1 + "/update")
                         .param(firstname, newFirstname)
                         .param(lastname, newLastname)
                         .param(username, newUsername)
-                        .param(rawPassword, user.getPassword())
-                        .param(role, user.getRole().name())
-                        .param(phone, user.getPhone())
-                        .param(photo, user.getPhoto())
-                        .param(money, user.getMoney().toString())
-                        .param(birthDate, user.getBirthDate().toString()))
+                        .param(role, userReadDto.getRole().name())
+                        .param(phone, userReadDto.getPhone())
+                        .param(photo, (new MockMultipartFile("test", new byte[0])).getOriginalFilename())
+                        .param(money, userReadDto.getMoney().toString())
+                        .param(birthDate, userReadDto.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrl("/users/" + user.getId()));
+                        redirectedUrl("/users/" + userReadDto.getId()));
 
-        assertThat(userRepository.findByUsername(newUsername)).isPresent();
+        assertThat(userService.findByUsername(newUsername)).isPresent();
     }
 
     @Test
     void delete() throws Exception {
-        User user = userRepository.saveAndFlush(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
-                2500, "12345", RoleEnum.USER));
+        UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
-        mockMvc.perform(post("/users/" + user.getId() + "/delete"))
+        mockMvc.perform(post("/users/" + 1 + "/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/users")
                 );
 
-        assertThat(userRepository.findById(user.getId())).isEmpty();
+        assertThat(userService.findById(1)).isEmpty();
     }
 }

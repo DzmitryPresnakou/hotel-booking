@@ -1,19 +1,18 @@
 package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.database.entity.User;
+import com.presnakov.hotelbooking.database.querydsl.QPredicate;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
-import com.presnakov.hotelbooking.database.querydsl.QPredicate;
-import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -58,7 +57,6 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Optional<UserReadDto> findById(Integer id) {
         return userRepository.findById(id)
                 .map(userReadMapper::map);

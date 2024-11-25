@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static com.presnakov.hotelbooking.database.entity.RoleEnum.ADMIN;
 
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
@@ -18,9 +17,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .requestMatchers("/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/users/\\d+/delete").hasAuthority(ADMIN.getAuthority())
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated()
@@ -31,8 +30,7 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID"))
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/users")
-                        .permitAll());
+                        .defaultSuccessUrl("/users"));
         return http.build();
     }
 

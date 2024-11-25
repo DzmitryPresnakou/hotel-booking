@@ -10,6 +10,7 @@ import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.database.entity.Room;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.database.entity.User;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 
@@ -64,7 +65,8 @@ public class CreateDataUtil {
                                                          LocalDate birthDate,
                                                          Integer money,
                                                          String password,
-                                                         RoleEnum role) {
+                                                         RoleEnum role,
+                                                         MockMultipartFile photo) {
         return UserCreateEditDto.builder()
                 .firstname(firstname)
                 .lastname(lastname)
@@ -74,6 +76,7 @@ public class CreateDataUtil {
                 .money(money)
                 .rawPassword(password)
                 .role(role)
+                .photo(photo)
                 .build();
     }
 
