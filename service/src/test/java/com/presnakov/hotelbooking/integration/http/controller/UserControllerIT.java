@@ -1,6 +1,7 @@
 package com.presnakov.hotelbooking.integration.http.controller;
 
 import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.service.UserService;
@@ -18,7 +19,7 @@ import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.firstname;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.lastname;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.money;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.phone;
-import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.photo;
+import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.rawPassword;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.role;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.username;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +36,6 @@ class UserControllerIT extends IntegrationTestBase {
 
     private final UserService userService;
     private final MockMvc mockMvc;
-
 
     @Test
     void findAll() throws Exception {
@@ -80,18 +80,18 @@ class UserControllerIT extends IntegrationTestBase {
 
     @Test
     void create() throws Exception {
-        UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
-                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
+        UserCreateEditDto userCreateEditDto = CreateDataUtil.getUserCreateEditDto("Misha", "Mishanin", "misha@gmail.com",
+                "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0]));
 
         mockMvc.perform(post("/users")
-                        .param(firstname, userReadDto.getFirstname())
-                        .param(lastname, userReadDto.getLastname())
-                        .param(username, userReadDto.getUsername())
-                        .param(role, userReadDto.getRole().name())
-                        .param(phone, userReadDto.getPhone())
-                        .param(photo, "test")
-                        .param(money, userReadDto.getMoney().toString())
-                        .param(birthDate, userReadDto.getBirthDate().toString()))
+                        .param(firstname, userCreateEditDto.getFirstname())
+                        .param(lastname, userCreateEditDto.getLastname())
+                        .param(username, userCreateEditDto.getUsername())
+                        .param(role, userCreateEditDto.getRole().name())
+                        .param(phone, userCreateEditDto.getPhone())
+                        .param(rawPassword, "test")
+                        .param(money, userCreateEditDto.getMoney().toString())
+                        .param(birthDate, userCreateEditDto.getBirthDate().toString()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/login"));
@@ -107,13 +107,13 @@ class UserControllerIT extends IntegrationTestBase {
         String newLastname = "innokentiy@gmail.com";
         String newUsername = "innokentiy@gmail.com";
 
-        mockMvc.perform(post("/users/" + 1 + "/update")
+        mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/update")
                         .param(firstname, newFirstname)
                         .param(lastname, newLastname)
                         .param(username, newUsername)
                         .param(role, userReadDto.getRole().name())
                         .param(phone, userReadDto.getPhone())
-                        .param(photo, (new MockMultipartFile("test", new byte[0])).getOriginalFilename())
+                        .param(rawPassword, "test")
                         .param(money, userReadDto.getMoney().toString())
                         .param(birthDate, userReadDto.getBirthDate().toString()))
                 .andExpectAll(
@@ -128,12 +128,12 @@ class UserControllerIT extends IntegrationTestBase {
         UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
-        mockMvc.perform(post("/users/" + 1 + "/delete"))
+        mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/users")
                 );
 
-        assertThat(userService.findById(1)).isEmpty();
+        assertThat(userService.findByUsername("vasya@gmail.com")).isEmpty();
     }
 }

@@ -1,9 +1,9 @@
 package com.presnakov.hotelbooking.integration.http.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.service.UserService;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
@@ -73,9 +73,9 @@ class UserRestControllerIT extends IntegrationTestBase {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(userDto)))
                 .andExpectAll(
-                        status().is2xxSuccessful(),
+                        status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON_VALUE),
-                        content().json(objectMapper.writeValueAsString(userDto)));
+                        content().json(objectMapper.writeValueAsString(userService.findByUsername(userDto.getUsername()))));
         assertThat(userService.findByUsername(userDto.getUsername())).isPresent();
     }
 
@@ -93,7 +93,7 @@ class UserRestControllerIT extends IntegrationTestBase {
                 .andExpectAll(
                         status().is2xxSuccessful(),
                         content().contentType(MediaType.APPLICATION_JSON_VALUE),
-                        content().json(objectMapper.writeValueAsString(updatedUser)));
+                        content().json(objectMapper.writeValueAsString(userService.findByUsername(updatedUser.getUsername()))));
         assertThat(userService.findByUsername(updatedUser.getUsername())).isPresent();
     }
 

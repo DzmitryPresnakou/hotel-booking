@@ -1,7 +1,5 @@
 package com.presnakov.hotelbooking.util;
 
-import com.presnakov.hotelbooking.dto.UserCreateEditDto;
-import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.database.entity.Order;
 import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
@@ -10,6 +8,8 @@ import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.database.entity.Room;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.database.entity.User;
+import com.presnakov.hotelbooking.dto.UserCreateEditDto;
+import com.presnakov.hotelbooking.dto.UserReadDto;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
@@ -64,7 +64,7 @@ public class CreateDataUtil {
                                                          String phone,
                                                          LocalDate birthDate,
                                                          Integer money,
-                                                         String password,
+                                                         String rawPassword,
                                                          RoleEnum role,
                                                          MockMultipartFile photo) {
         return UserCreateEditDto.builder()
@@ -74,7 +74,7 @@ public class CreateDataUtil {
                 .phone(phone)
                 .birthDate(birthDate)
                 .money(money)
-                .rawPassword(password)
+                .rawPassword(rawPassword)
                 .role(role)
                 .photo(photo)
                 .build();

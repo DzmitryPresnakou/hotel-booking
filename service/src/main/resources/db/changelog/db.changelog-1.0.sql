@@ -15,14 +15,14 @@ CREATE TABLE IF NOT EXISTS users
     id         SERIAL PRIMARY KEY,
     firstname  VARCHAR(128),
     lastname   VARCHAR(128),
-    username   VARCHAR(128)                     NOT NULL unique,
-    phone      VARCHAR(64)                      NOT NULL,
+    username   VARCHAR(128)             NOT NULL unique,
+    phone      VARCHAR(64)              NOT NULL,
     photo      VARCHAR(64),
-    birth_date DATE                             NOT NULL,
-    money      INT                              NOT NULL,
-    password   VARCHAR(128) DEFAULT '{noop}123' NOT NULL,
-    role       VARCHAR(64)  DEFAULT USER        NOT NULL,
-    is_active  BOOLEAN      DEFAULT true        NOT NULL
+    birth_date DATE                     NOT NULL,
+    money      INT                      NOT NULL,
+    password   VARCHAR(128)             NOT NULL,
+    role       VARCHAR(64) DEFAULT USER NOT NULL,
+    is_active  BOOLEAN     DEFAULT true NOT NULL
 );
 --rollback DROP TABLE users;
 

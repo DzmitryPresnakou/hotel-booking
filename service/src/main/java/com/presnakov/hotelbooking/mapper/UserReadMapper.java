@@ -1,7 +1,7 @@
 package com.presnakov.hotelbooking.mapper;
 
-import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.database.entity.User;
+import com.presnakov.hotelbooking.dto.UserReadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ public class UserReadMapper implements Mapper<User, UserReadDto> {
                 .firstname(object.getFirstname())
                 .lastname(object.getLastname())
                 .username(object.getUsername())
+                .rawPassword(object.getPassword())
                 .role(object.getRole())
                 .phone(object.getPhone())
                 .photo(object.getPhoto())

@@ -1,10 +1,10 @@
 package com.presnakov.hotelbooking.http.controller;
 
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.service.UserService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
 import com.presnakov.hotelbooking.validation.group.UpdateAction;
@@ -15,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -50,7 +47,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
-                           @CurrentSecurityContext SecurityContext securityContext,
                            @AuthenticationPrincipal UserDetails userDetails) {
         return userService.findById(id)
                 .map(user -> {
@@ -69,7 +65,6 @@ public class UserController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public String create(@ModelAttribute @Validated({Default.class, CreateAction.class}) UserCreateEditDto user,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {

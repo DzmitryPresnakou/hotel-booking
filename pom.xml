@@ -32,8 +32,7 @@
         <jakarta.version>3.2.0</jakarta.version>
         <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
         <springdoc.version>2.6.0</springdoc.version>
-        <spring.security.test.version>6.4.1</spring.security.test.version>
-    </properties>
+      </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -66,12 +65,6 @@
                 <groupId>org.testcontainers</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-test</artifactId>
-                <version>${spring.security.test.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

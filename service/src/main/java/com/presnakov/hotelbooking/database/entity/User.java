@@ -35,9 +35,7 @@ public class User implements BaseEntity<Integer> {
     private String firstname;
     private String lastname;
     private String username;
-
-    @Builder.Default
-    private String password = "123";
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

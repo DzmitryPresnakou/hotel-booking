@@ -15,6 +15,7 @@ public class UserReadDto {
     String username;
     RoleEnum role;
     String phone;
+    String rawPassword;
     String photo;
     Integer money;
     LocalDate birthDate;
