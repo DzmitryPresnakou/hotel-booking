@@ -1,6 +1,6 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.repository;
 
-import com.presnakov.hotelbooking.entity.Order;
+import com.presnakov.hotelbooking.database.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 

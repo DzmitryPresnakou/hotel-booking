@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.entity;
+package com.presnakov.hotelbooking.database.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "email")
+@EqualsAndHashCode(of = "username")
 @ToString(exclude = "orders")
 @Builder
 @Entity
@@ -32,9 +32,9 @@ public class User implements BaseEntity<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String firstname;
+    private String lastname;
+    private String username;
     private String password;
 
     @Enumerated(EnumType.STRING)

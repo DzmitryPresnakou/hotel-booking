@@ -1,7 +1,7 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.entity.Hotel;
-import com.presnakov.hotelbooking.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.database.entity.Hotel;
+import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;

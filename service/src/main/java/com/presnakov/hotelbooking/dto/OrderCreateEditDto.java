@@ -1,9 +1,9 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.entity.OrderStatusEnum;
-import com.presnakov.hotelbooking.entity.PaymentStatusEnum;
-import com.presnakov.hotelbooking.entity.Room;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.database.entity.PaymentStatusEnum;
+import com.presnakov.hotelbooking.database.entity.Room;
+import com.presnakov.hotelbooking.database.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;

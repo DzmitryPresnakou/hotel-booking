@@ -1,8 +1,8 @@
 package com.presnakov.hotelbooking.integration.repository;
 
-import com.presnakov.hotelbooking.entity.Hotel;
+import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
-import com.presnakov.hotelbooking.repository.HotelRepository;
+import com.presnakov.hotelbooking.database.repository.HotelRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

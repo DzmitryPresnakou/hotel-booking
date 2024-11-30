@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.entity;
+package com.presnakov.hotelbooking.database.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

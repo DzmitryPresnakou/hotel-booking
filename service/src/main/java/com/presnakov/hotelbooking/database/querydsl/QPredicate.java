@@ -1,4 +1,4 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.querydsl;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;

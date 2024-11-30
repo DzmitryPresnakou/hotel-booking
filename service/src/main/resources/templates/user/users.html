@@ -5,20 +5,21 @@
     <title>Users</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form action="/users">
     <div>
-        <label for="firstName">First Name:
-            <input id="firstName" type="text" name="firstName" th:value="${filter.firstName}">
+        <label for="username">Username:
+            <input id="username" type="text" name="username" th:value="${filter.getUsername}">
         </label>
     </div>
     <div>
-        <label for="lastName">Last Name:
-            <input id="lastName" type="text" name="lastName" th:value="${filter.lastName}">
+        <label for="firstname">Firstname:
+            <input id="firstname" type="text" name="firstname" th:value="${filter.getFirstname}">
         </label>
     </div>
     <div>
-        <label for="email">Email:
-            <input id="email" type="text" name="email" th:value="${filter.email}">
+        <label for="lastname">Lastname:
+            <input id="lastname" type="text" name="lastname" th:value="${filter.getLastname}">
         </label>
     </div>
     <div>
@@ -46,7 +47,8 @@
     <button type="submit">Filter</button>
 </form>
 <div th:each="user : ${users.content}">
-    <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.firstName} ${user.lastName} - ${user.email}|">User</a>
+    <a th:href="@{'/users/' + ${user.id}}"
+       th:text="|${user.id}. ${user.getFirstname} ${user.getLastname} - ${user.getUsername}|">User</a>
 </div>
 </body>
 </html>

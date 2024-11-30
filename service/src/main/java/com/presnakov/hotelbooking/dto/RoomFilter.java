@@ -1,6 +1,6 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import lombok.Builder;
 import lombok.Value;
 

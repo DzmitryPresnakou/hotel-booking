@@ -17,7 +17,7 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @RequiredArgsConstructor
 public class ImageService {
 
-    @Value("${app.image.bucket")
+    @Value("${app.image.bucket}")
     private final String bucket;
 
     @SneakyThrows

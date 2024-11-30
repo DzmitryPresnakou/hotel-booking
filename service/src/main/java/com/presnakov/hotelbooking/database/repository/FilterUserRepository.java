@@ -1,7 +1,7 @@
-package com.presnakov.hotelbooking.repository;
+package com.presnakov.hotelbooking.database.repository;
 
 import com.presnakov.hotelbooking.dto.UserFilter;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.User;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package com.presnakov.hotelbooking.integration.repository;
 
-import com.presnakov.hotelbooking.entity.RoleEnum;
-import com.presnakov.hotelbooking.entity.User;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.integration.IntegrationTestBase;
-import com.presnakov.hotelbooking.repository.UserRepository;
+import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -36,9 +36,9 @@ class UserRepositoryIT extends IntegrationTestBase {
         User user = userRepository.save(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
-        user.setFirstName("Petr");
-        user.setLastName("Petrov");
-        user.setEmail("petya@gmail.com");
+        user.setFirstname("Petr");
+        user.setLastname("Petrov");
+        user.setUsername("petya@gmail.com");
         user.setPhone("+375446698523");
         user.setPhoto("photo10.jpg");
         user.setBirthDate(LocalDate.of(1998, 12, 18));
@@ -97,12 +97,12 @@ class UserRepositoryIT extends IntegrationTestBase {
     }
 
     @Test
-    void findByEmail() {
+    void findByUsername() {
         User user = userRepository.save(CreateDataUtil.createUser("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
 
-        Optional<User> actualResult = userRepository.findByEmail(user.getEmail());
+        Optional<User> actualResult = userRepository.findByUsername(user.getUsername());
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get()).isEqualTo(user);

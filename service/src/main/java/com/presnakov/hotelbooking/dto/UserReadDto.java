@@ -1,6 +1,6 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import lombok.Builder;
 import lombok.Value;
 
@@ -10,12 +10,12 @@ import java.time.LocalDate;
 @Builder
 public class UserReadDto {
     Integer id;
-    String firstName;
-    String lastName;
-    String email;
-    String password;
+    String firstname;
+    String lastname;
+    String username;
     RoleEnum role;
     String phone;
+    String rawPassword;
     String photo;
     Integer money;
     LocalDate birthDate;

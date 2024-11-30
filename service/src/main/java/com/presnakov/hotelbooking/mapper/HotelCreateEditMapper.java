@@ -1,7 +1,7 @@
 package com.presnakov.hotelbooking.mapper;
 
 import com.presnakov.hotelbooking.dto.HotelCreateEditDto;
-import com.presnakov.hotelbooking.entity.Hotel;
+import com.presnakov.hotelbooking.database.entity.Hotel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
