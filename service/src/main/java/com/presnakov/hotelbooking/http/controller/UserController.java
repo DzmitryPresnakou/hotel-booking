@@ -48,11 +48,14 @@ public class UserController {
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
+        RoleEnum role = userService.findByUsername(userDetails.getUsername())
+                .map(UserReadDto::getRole)
+                .orElse(RoleEnum.USER);
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("roles", RoleEnum.values());
-                    model.addAttribute("authenticatedUserRole", userService.findByUsername(userDetails.getUsername()).get().getRole().name());
+                    model.addAttribute("authenticatedUserRole", role.name());
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

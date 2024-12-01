@@ -130,8 +130,11 @@ class UserControllerIT extends IntegrationTestBase {
     void delete() throws Exception {
         UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
+        Integer userId = userService.findByUsername(userReadDto.getUsername())
+                .map(UserReadDto::getId)
+                .orElse(1);
 
-        mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/delete")
+        mockMvc.perform(post("/users/" + userId + "/delete")
                         .with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
