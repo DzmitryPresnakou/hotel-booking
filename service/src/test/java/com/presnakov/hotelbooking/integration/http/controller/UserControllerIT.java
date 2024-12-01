@@ -23,6 +23,7 @@ import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.rawPasswor
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.role;
 import static com.presnakov.hotelbooking.dto.UserCreateEditDto.Fields.username;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -84,6 +85,7 @@ class UserControllerIT extends IntegrationTestBase {
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0]));
 
         mockMvc.perform(post("/users")
+                        .with(csrf())
                         .param(firstname, userCreateEditDto.getFirstname())
                         .param(lastname, userCreateEditDto.getLastname())
                         .param(username, userCreateEditDto.getUsername())
@@ -108,6 +110,7 @@ class UserControllerIT extends IntegrationTestBase {
         String newUsername = "innokentiy@gmail.com";
 
         mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/update")
+                        .with(csrf())
                         .param(firstname, newFirstname)
                         .param(lastname, newLastname)
                         .param(username, newUsername)
@@ -128,12 +131,13 @@ class UserControllerIT extends IntegrationTestBase {
         UserReadDto userReadDto = userService.create(CreateDataUtil.getUserCreateEditDto("Vasya", "Vasilyev", "vasya@gmail.com",
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
-        mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/delete"))
+        mockMvc.perform(post("/users/" + userService.findByUsername("vasya@gmail.com").get().getId() + "/delete")
+                        .with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/users")
                 );
 
-        assertThat(userService.findByUsername("vasya@gmail.com")).isEmpty();
+        assertThat(userService.findByUsername(userReadDto.getUsername())).isEmpty();
     }
 }

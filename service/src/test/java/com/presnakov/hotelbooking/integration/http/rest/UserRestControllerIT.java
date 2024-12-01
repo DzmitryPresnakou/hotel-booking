@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -70,6 +71,7 @@ class UserRestControllerIT extends IntegrationTestBase {
                 "+375441236547", LocalDate.of(2001, 1, 1), 5500, "12345", RoleEnum.USER, null);
 
         mockMvc.perform(post("/api/v1/users")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(userDto)))
                 .andExpectAll(
@@ -88,6 +90,7 @@ class UserRestControllerIT extends IntegrationTestBase {
                 foundUser.getPhone(), foundUser.getBirthDate(), foundUser.getMoney(), null, foundUser.getRole(), null);
 
         mockMvc.perform(put("/api/v1/users/" + userReadDto.getId())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(updatedUser)))
                 .andExpectAll(
@@ -103,6 +106,7 @@ class UserRestControllerIT extends IntegrationTestBase {
                 "+375291478523", LocalDate.of(1995, 2, 5), 2500, "12345", RoleEnum.USER, new MockMultipartFile("test", new byte[0])));
 
         mockMvc.perform(delete("/api/v1/users/" + userReadDto.getId())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpectAll(
                         status().is2xxSuccessful());

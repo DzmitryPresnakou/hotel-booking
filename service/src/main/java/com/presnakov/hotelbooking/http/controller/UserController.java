@@ -52,6 +52,7 @@ public class UserController {
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("roles", RoleEnum.values());
+                    model.addAttribute("authenticatedUserRole", userService.findByUsername(userDetails.getUsername()).get().getRole().name());
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
