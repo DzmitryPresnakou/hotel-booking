@@ -10,6 +10,18 @@
     <form th:action="@{/logout}" method="post">
         <button type="submit">Logout</button>
     </form>
+    <div th:insert="~{fragment :: locale}"></div>
+</div>
+<div th:fragment="locale">
+    <form action="">
+        <label>
+            <select name="lang" onchange="this.form.submit()">
+                <option></option>
+                <option value="en">EN</option>
+                <option value="ru">RU</option>
+            </select>
+        </label>
+    </form>
 </div>
 </body>
 </html>
