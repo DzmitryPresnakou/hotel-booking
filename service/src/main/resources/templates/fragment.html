@@ -7,7 +7,7 @@
 <body>
 <div th:fragment="header">
     <span th:text="${#authentication.principal.username}">Username</span>
-    <form th:action="@{/logout}" method="post">
+    <form action="/logout" method="post">
         <button type="submit">Logout</button>
     </form>
     <div th:insert="~{fragment :: locale}"></div>

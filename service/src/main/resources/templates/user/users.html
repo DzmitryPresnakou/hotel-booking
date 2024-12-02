@@ -2,33 +2,33 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Users</title>
+    <title th:text="#{users.users}">Users</title>
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <form action="/users">
     <div>
-        <label for="username">Username:
+        <label for="username"><span th:text="#{users.username}">Username:</span>
             <input id="username" type="text" name="username" th:value="${filter.getUsername}">
         </label>
     </div>
     <div>
-        <label for="firstname">Firstname:
+        <label for="firstname"><span th:text="#{users.firstname}">Firstname:</span>
             <input id="firstname" type="text" name="firstname" th:value="${filter.getFirstname}">
         </label>
     </div>
     <div>
-        <label for="lastname">Lastname:
+        <label for="lastname"><span th:text="#{users.lastname}">Lastname:</span>
             <input id="lastname" type="text" name="lastname" th:value="${filter.getLastname}">
         </label>
     </div>
     <div>
-        <label for="money">Money:
+        <label for="money"><span th:text="#{users.money}">Money:</span>
             <input id="money" type="text" name="money" th:value="${filter.money}">
         </label>
     </div>
     <div>
-        <label for="birthDate">Birthdate:
+        <label for="birthDate"><span th:text="#{users.birthDate}">Birthdate:</span>
             <input id="birthDate" type="date" name="birthDate" th:value="${filter.birthDate}">
         </label>
     </div>
@@ -37,14 +37,14 @@
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
     <div>
-        <label for="page">Page:
+        <label for="page" th:text="#{users.page}">
             <input id="page" type="number" name="page" th:value="${users.metadata.page}">
         </label>
-        <label for="size">Size:
+        <label for="size" th:text="#{users.size}">
             <input id="size" type="number" name="size" th:value="${users.metadata.size}">
         </label>
     </div>
-    <button type="submit">Filter</button>
+    <button type="submit" th:text="#{users.filter}">Filter</button>
 </form>
 <div th:each="user : ${users.content}">
     <a th:href="@{'/users/' + ${user.id}}"

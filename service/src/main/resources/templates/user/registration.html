@@ -2,36 +2,36 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{registration.registration}">Registration</title>
 </head>
 <body>
 <form th:action="@{/users}" enctype="multipart/form-data" method="post" th:object="${user}">
-    <label for="username">Username:
+    <label for="username"><span th:text="#{registration.username}">Username:</span>
         <input id="username" type="text" name="username" th:value="*{username}">
     </label><br>
-    <label for="rawPassword">Password:
+    <label for="rawPassword"><span th:text="#{registration.password}">Password:</span>
         <input id="rawPassword" type="password" name="rawPassword">
     </label><br>
-    <label for="firstname">First Name:
+    <label for="firstname"><span th:text="#{registration.firstname}">First Name:</span>
         <input id="firstname" type="text" name="firstname" th:value="*{getFirstname}">
     </label><br>
-    <label for="lastname">Last Name:
+    <label for="lastname"><span th:text="#{registration.lastname}">Last Name:</span>
         <input id="lastname" type="text" name="lastname" th:value="*{getLastname}">
     </label><br>
-    <label for="phone">Phone:
+    <label for="phone"><span th:text="#{registration.phone}">Phone:</span>
         <input id="phone" type="text" name="phone" th:value="*{phone}">
     </label><br>
-    <label for="money">Money:
+    <label for="money"><span th:text="#{registration.money}">Money:</span>
         <input id="money" type="text" name="money" th:value="*{money}">
     </label><br>
-    <label for="birthDate">BirthDate:
+    <label for="birthDate"><span th:text="#{registration.birthDate}">BirthDate:</span>
         <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
     </label><br>
     <div th:each="role : ${roles}">
         <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
-    <button type="submit">Register</button>
+    <button type="submit" th:text="#{registration.register}">Register</button>
 </form>
 <div th:if="${errors}">
     <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/v1/messages")
+@RequestMapping("api/v1/messages")
 @RequiredArgsConstructor
 public class MessageRestController {
 
@@ -22,3 +22,4 @@ public class MessageRestController {
         return messageSource.getMessage(key, null, null, new Locale(language));
     }
 }
+
