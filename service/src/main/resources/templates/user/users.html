@@ -37,10 +37,10 @@
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
     <div>
-        <label for="page" th:text="#{users.page}">
+        <label for="page"><span th:text="#{users.page}">Page:</span>
             <input id="page" type="number" name="page" th:value="${users.metadata.page}">
         </label>
-        <label for="size" th:text="#{users.size}">
+        <label for="size"><span th:text="#{users.size}">Size:</span>
             <input id="size" type="number" name="size" th:value="${users.metadata.size}">
         </label>
     </div>
