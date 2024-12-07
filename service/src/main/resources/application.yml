@@ -12,8 +12,6 @@ spring:
       show_sql: true
       format_sql: true
     open-in-view: false
-  messages:
-    basename: messages
 app:
   image:
     bucket: C:\Users\77458\IdeaProjects\multimodule-maven\images

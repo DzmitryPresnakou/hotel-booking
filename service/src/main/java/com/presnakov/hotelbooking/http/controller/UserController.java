@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -48,14 +49,15 @@ public class UserController {
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
-        RoleEnum role = userService.findByUsername(userDetails.getUsername())
-                .map(UserReadDto::getRole)
-                .orElse(RoleEnum.USER);
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("USER");
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("roles", RoleEnum.values());
-                    model.addAttribute("authenticatedUserRole", role.name());
+                    model.addAttribute("authenticatedUserRole", role);
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
