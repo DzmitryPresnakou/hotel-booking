@@ -1,6 +1,5 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,5 +26,5 @@ public class RoomCreateEditDto {
     Integer pricePerDay;
 
     @NotNull
-    Hotel hotel;
+    Integer hotelId;
 }

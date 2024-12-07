@@ -32,7 +32,7 @@
             <input id="birthDate" type="date" name="birthDate" th:value="${filter.birthDate}">
         </label>
     </div>
-    <div th:each="role : ${roles}">
+    <div th:if="${authenticatedUserRole == 'ADMIN'}" th:each="role : ${roles}">
         <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role}">
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
