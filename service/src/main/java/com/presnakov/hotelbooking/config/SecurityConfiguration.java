@@ -18,7 +18,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .requestMatchers("/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(POST, "/users").permitAll()
