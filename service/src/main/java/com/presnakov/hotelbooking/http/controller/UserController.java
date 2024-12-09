@@ -38,16 +38,25 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public String findAll(Model model, UserFilter filter, Pageable pageable) {
+    public String findAll(Model model,
+                          UserFilter filter,
+                          Pageable pageable,
+                          @AuthenticationPrincipal UserDetails userDetails) {
         Page<UserReadDto> page = userService.findAll(filter, pageable);
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("USER");
         model.addAttribute("users", PageResponse.of(page));
         model.addAttribute("filter", filter);
         model.addAttribute("roles", RoleEnum.values());
+        model.addAttribute("authenticatedUserRole", role);
         return "user/users";
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model,
+    public String findById(@PathVariable("id") Integer id,
+                           Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
         String role = userDetails.getAuthorities().stream()
                 .findFirst()

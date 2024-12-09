@@ -32,13 +32,14 @@
     <label for="photo"><span th:text="#{user.photo}">Photo:</span>
         <input id="photo" type="file" name="photo">
     </label><br>
-    <div th:each="role : ${roles}">
+    <div th:if="${authenticatedUserRole == 'ADMIN'}" th:each="role : ${roles}">
         <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
     <button type="submit" th:text="#{user.update}">Update</button>
 </form>
-<form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${authenticatedUserRole == 'ADMIN'}" method="post">
+<form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${authenticatedUserRole == 'ADMIN'}"
+      method="post">
     <button type="submit" th:text="#{user.remove}">Remove</button>
 </form>
 </body>

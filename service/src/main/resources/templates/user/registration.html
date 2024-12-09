@@ -28,7 +28,7 @@
     <label for="birthDate"><span th:text="#{registration.birthDate}">BirthDate:</span>
         <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
     </label><br>
-    <div th:each="role : ${roles}">
+    <div th:if="${authenticatedUserRole == 'ADMIN'}" th:each="role : ${roles}">
         <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
         <label th:for="${role}" th:text="${role}">Role name</label>
     </div>
