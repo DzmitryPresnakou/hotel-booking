@@ -19,4 +19,5 @@ public class UserReadDto {
     String photo;
     Integer money;
     LocalDate birthDate;
+    Boolean isActive;
 }

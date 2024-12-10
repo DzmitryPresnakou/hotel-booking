@@ -1,15 +1,15 @@
 package com.presnakov.hotelbooking.database.repository;
 
-import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.database.entity.Room;
-
-import java.util.List;
+import com.presnakov.hotelbooking.dto.RoomFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FilterRoomRepository {
 
-    List<Room> findAllByFilter(RoomFilter filter);
+    Page<Room> findAllByFilter(RoomFilter filter, Pageable pageable);
 
-    List<Room> findAllByFreeDateRange(RoomFilter filter);
+    Page<Room> findAllByFreeDateRange(RoomFilter filter, Pageable pageable);
 
-    List<Room> findAllByHotelName(String hotelName);
+    Page<Room> findAllByHotelName(String hotelName, Pageable pageable);
 }
