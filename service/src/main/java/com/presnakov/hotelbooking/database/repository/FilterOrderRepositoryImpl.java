@@ -3,7 +3,6 @@ package com.presnakov.hotelbooking.database.repository;
 import com.presnakov.hotelbooking.database.entity.Order;
 import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.OrderFilter;
-import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
@@ -15,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.presnakov.hotelbooking.database.entity.QOrder.order;
 import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
+import static com.presnakov.hotelbooking.database.entity.QOrder.order;
 import static com.presnakov.hotelbooking.database.entity.QRoom.room;
 import static com.presnakov.hotelbooking.database.entity.QUser.user;
 
