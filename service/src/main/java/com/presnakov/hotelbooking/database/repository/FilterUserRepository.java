@@ -1,11 +1,13 @@
 package com.presnakov.hotelbooking.database.repository;
 
-import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.database.entity.User;
-
-import java.util.List;
+import com.presnakov.hotelbooking.dto.UserFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FilterUserRepository {
 
-    List<User> findAllByFilter(UserFilter filter);
+    Page<User> findAllByFilter(UserFilter filter, Pageable pageable);
+
+    public void softDelete(User user);
 }

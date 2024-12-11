@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rooms</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form action="/rooms">
+    <div>
+        <label for="occupancy"><span>Occupancy:</span>
+            <input id="occupancy" type="text" name="occupancy" th:value="${filter.occupancy}">
+        </label>
+    </div>
+    <div>
+        <label for="pricePerDay"><span>Price Per Day:</span>
+            <input id="pricePerDay" type="text" name="pricePerDay" th:value="${filter.pricePerDay}">
+        </label>
+    </div>
+    <div>
+        <label for="hotel">Hotel:
+            <select id="hotel" name="hotelName">
+                <option th:each="hotel : ${hotels}"
+                        th:value="${hotel.name}"
+                        th:selected="${hotel.name == filter.hotelName}"
+                        th:text="${hotel.name}">Hotel
+                </option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label for="roomClass">Room class:
+            <select id="roomClass" name="roomClass">
+                <option th:each="roomClass : ${roomClasses}"
+                        th:value="${roomClass}"
+                        th:selected="${roomClass == filter.roomClass}"
+                        th:text="${roomClass}">Room class
+                </option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label for="checkInDate"><span>Check In Date:</span>
+            <input id="checkInDate" type="date" name="checkInDate" th:value="${filter.checkInDate}">
+        </label>
+    </div>
+    <div>
+        <label for="checkOutDate"><span>Check Out Date:</span>
+            <input id="checkOutDate" type="date" name="checkOutDate" th:value="${filter.checkOutDate}">
+        </label>
+    </div>
+    <div>
+        <label for="page"><span>Page:</span>
+            <input id="page" type="number" name="page" th:value="${rooms.metadata.page}">
+        </label>
+        <label for="size"><span>Size:</span>
+            <input id="size" type="number" name="size" th:value="${rooms.metadata.size}">
+        </label>
+    </div>
+    <button type="submit">Filter</button>
+</form>
+<div th:each="room : ${rooms.content}">
+    <a th:href="@{'/rooms/' + ${room.id}}"
+       th:text="|${room.id}. ${room.occupancy} rooms. ${room.pricePerDay}'$'. ${room.roomClass} - ${room.hotel.name}|">Room</a>
+</div>
+</body>
+</html>

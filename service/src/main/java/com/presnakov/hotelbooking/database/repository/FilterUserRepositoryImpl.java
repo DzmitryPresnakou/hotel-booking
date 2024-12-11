@@ -1,12 +1,15 @@
 package com.presnakov.hotelbooking.database.repository;
 
+import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.UserFilter;
-import com.presnakov.hotelbooking.database.entity.User;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,12 +21,14 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
     private final EntityManager entityManager;
 
     @Override
-    public List<User> findAllByFilter(UserFilter filter) {
-        return new JPAQuery<User>(entityManager)
+    public Page<User> findAllByFilter(UserFilter filter, Pageable pageable) {
+        JPAQuery<User> query = new JPAQuery<User>(entityManager)
                 .select(user)
                 .from(user)
-                .where(getByCompleteInfo(filter))
-                .fetch();
+                .where(getByCompleteInfo(filter));
+        long total = query.fetchCount();
+        List<User> users = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        return new PageImpl<>(users, pageable, total);
     }
 
     private static Predicate getByCompleteInfo(UserFilter filter) {
@@ -35,5 +40,9 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
                 .add(filter.getMoney(), user.money::gt)
                 .add(filter.getBirthDate(), user.birthDate::before)
                 .buildAnd();
+    }
+
+    public void softDelete(User user) {
+        user.setIsActive(false);
     }
 }

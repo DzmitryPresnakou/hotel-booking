@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Room</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form th:action="@{/rooms/{roomId}/update(roomId=${room.id})}" enctype="multipart/form-data" method="post"
+      th:object="${room}">
+    <label for="occupancy"><span>Occupancy:</span>
+        <input id="occupancy" type="text" name="occupancy" th:value="*{occupancy}">
+    </label><br>
+    <label for="pricePerDay"><span>Price Per Day:</span>
+        <input id="pricePerDay" type="text" name="pricePerDay" th:value="*{pricePerDay}">
+    </label><br>
+    <div th:if="${room.photo}">
+        <img th:src="@{/api/v1/rooms/{roomId}/avatar(roomId=${room.id})}" alt="Room photo">
+    </div>
+    <label for="photo"><span>Photo:</span>
+        <input id="photo" type="file" name="photo">
+    </label><br>
+    <div>
+        <label for="hotel">Hotel:
+            <select id="hotel" name="hotelId">
+                <option th:each="hotel : ${hotels}"
+                        th:value="${hotel.id}"
+                        th:selected="${hotel.id == room.hotel.id}"
+                        th:text="${hotel.name}">Hotel
+                </option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label for="roomClass">Room class:
+            <select id="roomClass" name="roomClass">
+                <option th:each="roomClass : ${roomClasses}"
+                        th:value="${roomClass.name()}"
+                        th:selected="${roomClass.name() == room.roomClass.name()}"
+                        th:text="${roomClass.name()}">Room class
+                </option>
+            </select>
+        </label>
+    </div>
+    <button type="submit">Update</button>
+</form>
+<form th:action="@{/rooms/{roomId}/delete(roomId=${room.id})}" method="post">
+    <button type="submit">Remove</button>
+</form>
+</body>
+</html>
