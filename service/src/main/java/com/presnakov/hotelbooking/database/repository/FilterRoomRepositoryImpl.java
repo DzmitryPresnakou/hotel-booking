@@ -30,7 +30,7 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .from(order)
                 .rightJoin(order.room, room)
                 .on(getPredicateByCheckInDate(filter), getPredicateByCheckOutDate(filter))
-                .where(getPredicate(filter), order.id.isNull().or(order.status.ne(APPROVED)))
+                .where(getPredicate(filter), order.isNull().or(order.status.ne(APPROVED)))
                 .join(room.hotel, hotel);
         long total = query.fetch().size();
         List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();

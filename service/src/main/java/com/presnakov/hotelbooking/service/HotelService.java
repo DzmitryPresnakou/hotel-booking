@@ -8,6 +8,8 @@ import com.presnakov.hotelbooking.mapper.HotelCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.HotelReadMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -30,6 +32,11 @@ public class HotelService {
         return hotelRepository.findAll().stream()
                 .map(hotelReadMapper::map)
                 .toList();
+    }
+
+    public Page<HotelReadDto> findAll(Pageable pageable) {
+        return hotelRepository.findAll(pageable)
+                .map(hotelReadMapper::map);
     }
 
     public Optional<HotelReadDto> findById(Integer id) {

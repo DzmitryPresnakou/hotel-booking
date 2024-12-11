@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,12 @@ public class RoomService {
     public Page<RoomReadDto> findAll(RoomFilter filter, Pageable pageable) {
         return roomRepository.findAll(filter, pageable)
                 .map(roomReadMapper::map);
+    }
+
+    public List<RoomReadDto> findAll() {
+        return roomRepository.findAll().stream()
+                .map(roomReadMapper::map)
+                .toList();
     }
 
     public Optional<RoomReadDto> findById(Integer id) {

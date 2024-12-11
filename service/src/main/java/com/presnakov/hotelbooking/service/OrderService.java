@@ -22,22 +22,15 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderReadMapper orderReadMapper;
     private final OrderCreateEditMapper orderCreateEditMapper;
-    private final ImageService imageService;
 
-    public Page<OrderReadDto> findAll(Pageable pageable) {
-        return orderRepository.findAll(pageable)
-                .map(orderReadMapper::map);
-    }
-
-    public Page<OrderReadDto> findAllByFilter(OrderFilter filter, Pageable pageable) {
-        return orderRepository.findAllByFilter(filter, pageable)
+    public Page<OrderReadDto> findAll(OrderFilter filter, Pageable pageable) {
+        return orderRepository.findAll(filter, pageable)
                 .map(orderReadMapper::map);
     }
 
     public Optional<OrderReadDto> findById(Integer id) {
         return orderRepository.findById(id)
                 .map(orderReadMapper::map);
-
     }
 
     @Transactional
@@ -52,9 +45,7 @@ public class OrderService {
     @Transactional
     public Optional<OrderReadDto> update(Integer id, OrderCreateEditDto orderCreateEditDto) {
         return orderRepository.findById(id)
-                .map(entity -> {
-                    return orderCreateEditMapper.map(orderCreateEditDto, entity);
-                })
+                .map(entity -> orderCreateEditMapper.map(orderCreateEditDto, entity))
                 .map(orderRepository::saveAndFlush)
                 .map(orderReadMapper::map);
     }
