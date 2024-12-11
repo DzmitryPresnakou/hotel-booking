@@ -40,7 +40,6 @@ public class UserService implements UserDetailsService {
     public Optional<UserReadDto> findById(Integer id) {
         return userRepository.findById(id).filter(User::getIsActive)
                 .map(userReadMapper::map);
-
     }
 
     public Optional<UserReadDto> findByUsername(String username) {

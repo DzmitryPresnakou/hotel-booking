@@ -25,13 +25,13 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
         JPAQuery<User> query = new JPAQuery<User>(entityManager)
                 .select(user)
                 .from(user)
-                .where(getByCompleteInfo(filter));
-        long total = query.fetchCount();
+                .where(getPredicate(filter));
+        long total = query.fetch().size();
         List<User> users = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(users, pageable, total);
     }
 
-    private static Predicate getByCompleteInfo(UserFilter filter) {
+    private static Predicate getPredicate(UserFilter filter) {
         return QPredicate.builder()
                 .add(filter.getFirstname(), user.firstname::containsIgnoreCase)
                 .add(filter.getLastname(), user.lastname::containsIgnoreCase)

@@ -9,5 +9,5 @@ public interface FilterUserRepository {
 
     Page<User> findAllByFilter(UserFilter filter, Pageable pageable);
 
-    public void softDelete(User user);
+    void softDelete(User user);
 }

@@ -6,10 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface FilterRoomRepository {
-
-    Page<Room> findAllByFilter(RoomFilter filter, Pageable pageable);
-
-    Page<Room> findAllByFreeDateRange(RoomFilter filter, Pageable pageable);
-
-    Page<Room> findAllByHotelName(String hotelName, Pageable pageable);
+    Page<Room> findAll(RoomFilter filter, Pageable pageable);
 }

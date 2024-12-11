@@ -29,24 +29,13 @@ public class RoomService {
     private final ImageService imageService;
 
     public Page<RoomReadDto> findAll(RoomFilter filter, Pageable pageable) {
-        return roomRepository.findAllByFilter(filter, pageable)
-                .map(roomReadMapper::map);
-    }
-
-    public Page<RoomReadDto> findAllByFreeDateRange(RoomFilter filter, Pageable pageable) {
-        return roomRepository.findAllByFreeDateRange(filter, pageable)
-                .map(roomReadMapper::map);
-    }
-
-    public Page<RoomReadDto> findAllByHotelName(String hotelName, Pageable pageable) {
-        return roomRepository.findAllByHotelName(hotelName, pageable)
+        return roomRepository.findAll(filter, pageable)
                 .map(roomReadMapper::map);
     }
 
     public Optional<RoomReadDto> findById(Integer id) {
         return roomRepository.findById(id)
                 .map(roomReadMapper::map);
-
     }
 
     public Optional<byte[]> findAvatar(Integer id) {
