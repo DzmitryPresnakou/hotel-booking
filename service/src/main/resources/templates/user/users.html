@@ -1,54 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
     <title th:text="#{users.users}">Users</title>
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
-<form action="/users">
-    <div>
-        <label for="username"><span th:text="#{users.username}">Username:</span>
-            <input id="username" type="text" name="username" th:value="${filter.getUsername}">
-        </label>
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" th:text="#{registration.registration}">Registration</h1>
+        </div>
     </div>
-    <div>
-        <label for="firstname"><span th:text="#{users.firstname}">Firstname:</span>
-            <input id="firstname" type="text" name="firstname" th:value="${filter.getFirstname}">
-        </label>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <form action="/users">
+                <div>
+                    <label for="username"><span th:text="#{users.username}">Username:</span>:
+                        <input id="username" type="text" name="username" th:value="${filter.getUsername}">
+                    </label>
+                </div>
+                <div>
+                    <label for="firstname"><span th:text="#{users.firstname}">Firstname:</span>:
+                        <input id="firstname" type="text" class="form-control" name="firstname"
+                               th:value="${filter.getFirstname}">
+                    </label>
+                </div>
+                <div>
+                    <label for="lastname"><span th:text="#{users.lastname}">Lastname:</span>:
+                        <input id="lastname" type="text" class="form-control" name="lastname"
+                               th:value="${filter.getLastname}">
+                    </label>
+                </div>
+                <div>
+                    <label for="money"><span th:text="#{users.money}">Money:</span>:
+                        <input id="money" type="text" class="form-control" name="money" th:value="${filter.money}">
+                    </label>
+                </div>
+                <div>
+                    <label for="birthDate"><span th:text="#{users.birthDate}">Birthdate:</span>:
+                        <input id="birthDate" type="date" class="form-control" name="birthDate"
+                               th:value="${filter.birthDate}">
+                    </label>
+                </div>
+                <div th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}" th:each="role : ${roles}">
+                    <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role}">
+                    <label th:for="${role}" th:text="${role}">Role name</label>
+                </div>
+                <div>
+                    <label for="page"><span th:text="#{users.page}">Page:</span>:
+                        <input id="page" type="number" name="page" th:value="${users.metadata.page}">
+                    </label>
+                    <label for="size"><span th:text="#{users.size}">Size:</span>:
+                        <input id="size" type="number" name="size" th:value="${users.metadata.size}">
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-outline-info" th:text="#{users.filter}">Filter</button>
+            </form>
+
+                <ul class="list-group shadow" th:each="user : ${users.content}">
+
+<!--                    <a th:href="@{'/users/' + ${user.id}}">-->
+                        <li class="list-group-item" th:if="${user.isActive}">
+
+                            <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                                <div class="media-body order-2 order-lg-1">
+                                    <p class="mt-0 font-weight-bold mb-2" th:text="${user.username}">email:</p>
+                                    <p class="mt-0 font-weight-bold mb-2" th:text="${user.firstname}">first name:</p>
+                                    <p class="mt-0 font-weight-bold mb-2" th:text="${user.lastname}">last name:</p>
+                                    <p class="mt-0 font-weight-bold mb-2" th:text="${user.role}">role:</p>
+
+
+                                    <c:url var="deleteUrl"
+                                           value="${pageContext.request.contextPath}users/delete">
+                                        <c:param name="id" value="${user.id}"/>
+                                    </c:url>
+                                    <a href="${deleteUrl}">
+                                        <button type="button" class="btn btn-danger">delete</button>
+                                    </a>
+                                    <c:url value="${pageContext.request.contextPath}save-user" var="saveURL">
+                                        <c:param name="id" value="${user.id}"/>
+                                    </c:url>
+                                    <a href="${saveURL}">
+                                        <button type="button" class="btn btn-info">edit</button>
+                                    </a>
+
+
+                                </div>
+                            </div>
+                        </li>
+                </ul>
+        </div>
     </div>
-    <div>
-        <label for="lastname"><span th:text="#{users.lastname}">Lastname:</span>
-            <input id="lastname" type="text" name="lastname" th:value="${filter.getLastname}">
-        </label>
-    </div>
-    <div>
-        <label for="money"><span th:text="#{users.money}">Money:</span>
-            <input id="money" type="text" name="money" th:value="${filter.money}">
-        </label>
-    </div>
-    <div>
-        <label for="birthDate"><span th:text="#{users.birthDate}">Birthdate:</span>
-            <input id="birthDate" type="date" name="birthDate" th:value="${filter.birthDate}">
-        </label>
-    </div>
-    <div th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}" th:each="role : ${roles}">
-        <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role}">
-        <label th:for="${role}" th:text="${role}">Role name</label>
-    </div>
-    <div>
-        <label for="page"><span th:text="#{users.page}">Page:</span>
-            <input id="page" type="number" name="page" th:value="${users.metadata.page}">
-        </label>
-        <label for="size"><span th:text="#{users.size}">Size:</span>
-            <input id="size" type="number" name="size" th:value="${users.metadata.size}">
-        </label>
-    </div>
-    <button type="submit" th:text="#{users.filter}">Filter</button>
-</form>
-<div th:each="user : ${users.content}">
-    <a th:href="@{'/users/' + ${user.id}}"
-       th:text="|${user.id}. ${user.getFirstname} ${user.getLastname} - ${user.getUsername}|">User</a>
+</div>
 </div>
 </body>
 </html>

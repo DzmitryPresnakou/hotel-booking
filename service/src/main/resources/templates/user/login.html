@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
     <title th:text="#{login.login}">Login</title>
 </head>
 <body>
 <div th:insert="~{fragment :: locale}"></div>
-<form th:action="@{/login}" method="post">
-    <div style="color: red" th:if="${param.error}">
-        <span th:text="#{login.error}">Bad credentials</span>
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" th:text="#{login.login}">login</h1>
+        </div>
     </div>
-    <label for="username"><span th:text="#{login.username}">Username:</span>
-        <input id="username" type="text" name="username">
-    </label><br>
-    <label for="password"><span th:text="#{login.password}">Password:</span>
-        <input id="password" type="password" name="password">
-    </label><br>
-    <button type="submit"><span th:text="#{login.login}">Login</span></button>
-</form>
-<form action="/users/registration">
-    <button type="submit"><span th:text="#{login.registration}">Registration</span></button>
-</form>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <form th:action="@{/login}" method="post">
+                <label for="username"><span th:text="#{login.username}">Username:</span>:
+                    <input type="text" class="form-control" name="username" id="username">
+                </label><br>
+                <label for="password"><span th:text="#{login.password}">Password:</span>:
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </label><br>
+                <button type="submit" class="btn btn-outline-info"><span th:text="#{login.login}">Login</span></button>
+                <a href="/users/registration">
+                    <button type="button" class="btn btn-outline-info"><span th:text="#{login.registration}">Registration</span>
+                    </button>
+                </a>
+                <div class="errors" th:if="${param.error}">
+                    <span class="text-danger" th:text="#{login.error}">Bad credentials</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

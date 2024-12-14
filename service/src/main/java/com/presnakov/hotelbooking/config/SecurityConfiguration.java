@@ -19,7 +19,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .requestMatchers("/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(POST, "/users").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())

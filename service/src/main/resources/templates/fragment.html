@@ -1,27 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
     <title>Fragments</title>
 </head>
 <body>
 <div th:fragment="header">
-    <span th:text="${#authentication.principal.username}">Username</span>
-    <form th:action="@{/logout}" method="post">
-        <input type="hidden" name="_csrf" value="${_csrf.token}">
-        <button type="submit">Logout</button>
-    </form>
-    <div th:insert="~{fragment :: locale}"></div>
+
+    <div class="container">
+        <nav class="navbar align-content-center navbar-light bg-light">
+            <div class="p-1">
+                <form th:action="@{/logout}" method="post">
+                    <a href="/users">
+                        <button type="button" class="btn btn-light">Users</button>
+                    </a>
+                    <a href="/rooms">
+                        <button type="button" class="btn btn-light">Rooms</button>
+                    </a>
+                    <a href="/hotels">
+                        <button type="button" class="btn btn-light">Hotels</button>
+                    </a>
+                    <a href="/orders">
+                        <button type="button" class="btn btn-light">Orders</button>
+                    </a>
+                    <a href="/profile">
+                        <button type="button" class="btn btn-light">Profile</button>
+                    </a>
+                    <button type="submit" class="btn btn-light">logout</button>
+                </form>
+            </div>
+            <div>
+                <span th:text="${#authentication.principal.username}">Username</span>
+            </div>
+            <div th:insert="~{fragment :: locale}"></div>
+        </nav>
+    </div>
 </div>
 <div th:fragment="locale">
     <form action="">
-        <label>
-            <select name="lang" onchange="this.form.submit()">
-                <option th:text="#{fragment.lang}">Lang</option>
-                <option value="en">EN</option>
-                <option value="ru">RU</option>
-            </select>
-        </label>
+        <button type="submit" class="btn btn-light" name="lang" value="ru">РУС</button>
+        <button type="submit" class="btn btn-light" name="lang" value="en">ENG</button>
     </form>
 </div>
 </body>
