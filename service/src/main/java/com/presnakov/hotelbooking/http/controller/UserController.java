@@ -62,6 +62,13 @@ public class UserController {
         return "user/registration";
     }
 
+    @GetMapping("/save-user")
+    public String create(Model model, @ModelAttribute("user") UserCreateEditDto user) {
+        model.addAttribute("user", user);
+        model.addAttribute("roles", RoleEnum.values());
+        return "user/save-user";
+    }
+
     @PostMapping
     public String create(@ModelAttribute @Validated({Default.class, CreateAction.class}) UserCreateEditDto user,
                          BindingResult bindingResult,
