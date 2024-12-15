@@ -25,32 +25,33 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/users/{userId}/update(userId=${user.id})}" enctype="multipart/form-data"
+
+                    <form class="mb-4" th:action="@{/users/{userId}/update(userId=${user.id})}" enctype="multipart/form-data"
                           method="post"
                           th:object="${user}">
-                        <label for="username"><span th:text="#{user.username}">Username:</span>
+                        <label for="username" class="form-label"><span th:text="#{user.username}">Username:</span>
                             <input id="username" type="text" class="form-control" name="username"
                                    th:value="*{username}">
                         </label><br>
-                        <label for="firstname"><span th:text="#{user.firstname}">Firstname:</span>
+                        <label for="firstname" class="form-label"><span th:text="#{user.firstname}">Firstname:</span>
                             <input id="firstname" type="text" class="form-control" name="firstname"
                                    th:value="*{getFirstname}">
                         </label><br>
-                        <label for="lastname"><span th:text="#{user.lastname}">Lastname:</span>
+                        <label for="lastname" class="form-label"><span th:text="#{user.lastname}">Lastname:</span>
                             <input id="lastname" type="text" class="form-control" name="lastname"
                                    th:value="*{getLastname}">
                         </label><br>
-                        <label for="phone"><span th:text="#{user.phone}">Phone:</span>
+                        <label for="phone" class="form-label"><span th:text="#{user.phone}">Phone:</span>
                             <input id="phone" type="text" class="form-control" name="phone" th:value="*{phone}">
                         </label><br>
-                        <label for="money"><span th:text="#{user.money}">Money:</span>
+                        <label for="money" class="form-label"><span th:text="#{user.money}">Money:</span>
                             <input id="money" type="text" class="form-control" name="money" th:value="*{money}">
                         </label><br>
-                        <label for="birthDate"><span th:text="#{user.birthDate}">BirthDate:</span>
+                        <label for="birthDate" class="form-label"><span th:text="#{user.birthDate}">BirthDate:</span>
                             <input id="birthDate" type="date" class="form-control" name="birthDate"
                                    th:value="*{birthDate}">
                         </label><br>
-                        <label for="photo"><span th:text="#{user.photo}">Photo:</span>
+                        <label for="photo" class="form-label"><span th:text="#{user.photo}">Photo:</span>
                             <input id="photo" type="file" class="form-control" name="photo">
                         </label><br>
                         <div class="form-check"

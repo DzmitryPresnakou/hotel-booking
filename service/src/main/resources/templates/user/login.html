@@ -17,11 +17,11 @@
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <form th:action="@{/login}" method="post">
-                <label for="username"><span th:text="#{login.username}">Username:</span>:
+            <form class="mb-4" th:action="@{/login}" method="post">
+                <label for="username" class="form-label"><span th:text="#{login.username}">Username:</span>:
                     <input type="text" class="form-control" name="username" id="username">
                 </label><br>
-                <label for="password"><span th:text="#{login.password}">Password:</span>:
+                <label for="password" class="form-label"><span th:text="#{login.password}">Password:</span>:
                     <input type="password" class="form-control" name="password" id="password" required>
                 </label><br>
                 <button type="submit" class="btn btn-outline-info"><span th:text="#{login.login}">Login</span></button>

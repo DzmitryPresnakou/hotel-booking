@@ -1,10 +1,12 @@
 package com.presnakov.hotelbooking.http.controller;
 
+import com.presnakov.hotelbooking.database.entity.RoleEnum;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.dto.RoomCreateEditDto;
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.dto.RoomReadDto;
+import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.service.HotelService;
 import com.presnakov.hotelbooking.service.RoomService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
@@ -60,12 +62,12 @@ public class RoomController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/create")
+    @GetMapping("/save-room")
     public String create(Model model, @ModelAttribute("room") RoomCreateEditDto room) {
         model.addAttribute("room", room);
         model.addAttribute("hotels", hotelService.findAll());
         model.addAttribute("roomClasses", RoomClassEnum.values());
-        return "room/create";
+        return "room/save-room";
     }
 
     @PostMapping
@@ -75,7 +77,7 @@ public class RoomController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("room", room);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/rooms/create";
+            return "redirect:/rooms/save-room";
         }
         roomService.create(room);
         return "redirect:/rooms";

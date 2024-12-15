@@ -9,62 +9,99 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
-<form action="/rooms">
-    <div>
-        <label for="occupancy"><span>Occupancy:</span>
-            <input id="occupancy" type="text" name="occupancy" th:value="${filter.occupancy}">
-        </label>
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">Rooms List</h1>
+        </div>
     </div>
-    <div>
-        <label for="pricePerDay"><span>Price Per Day:</span>
-            <input id="pricePerDay" type="text" name="pricePerDay" th:value="${filter.pricePerDay}">
-        </label>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <form class="mb-4" action="/rooms">
+                <label for="occupancy" class="form-label"><span>Occupancy:</span>
+                    <input id="occupancy" type="text" class="form-control" name="occupancy"
+                           th:value="${filter.occupancy}">
+                </label><br>
+                <label for="pricePerDay" class="form-label"><span>Price Per Day:</span>
+                    <input id="pricePerDay" type="text" class="form-control" name="pricePerDay"
+                           th:value="${filter.pricePerDay}">
+                </label><br>
+                <div>
+                    <label for="hotel" class="form-label">Hotel:
+                        <select class="form-select" id="hotel" name="hotelName">
+                            <option th:each="hotel : ${hotels}"
+                                    th:value="${hotel.name}"
+                                    th:selected="${hotel.name == filter.hotelName}"
+                                    th:text="${hotel.name}">Hotel
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label for="roomClass" class="form-label">Room class:
+                        <select class="form-select" id="roomClass" name="roomClass">
+                            <option th:each="roomClass : ${roomClasses}"
+                                    th:value="${roomClass}"
+                                    th:selected="${roomClass == filter.roomClass}"
+                                    th:text="${roomClass}">Room class
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label for="checkInDate" class="form-label">Check In Date:
+                        <input id="checkInDate" type="date" class="form-control" name="checkInDate"
+                               th:value="${filter.checkInDate}">
+                    </label>
+                </div>
+                <div>
+                    <label for="checkOutDate" class="form-label">Check Out Date:
+                        <input id="checkOutDate" type="date" class="form-control" name="checkOutDate"
+                               th:value="${filter.checkOutDate}">
+                    </label>
+                </div>
+                <div>
+                    <label for="page" class="form-label">Page:
+                        <input id="page" type="number" class="form-control" name="page"
+                               th:value="${rooms.metadata.page}">
+                    </label>
+                    <label for="size" class="form-label">Size:
+                        <input id="size" type="number" class="form-control" name="size"
+                               th:value="${rooms.metadata.size}">
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-outline-info">Filter</button>
+            </form>
+            <ul class="list-group shadow" th:each="room : ${rooms.content}">
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center">
+                        <div th:if="${room.photo}" class="mr-3">
+                            <img class="rounded-circle"
+                                 th:src="@{/api/v1/rooms/{roomId}/avatar(roomId=${room.id})}"
+                                 alt="" width="100" height="100"></div>
+                        <div class="media-body">
+                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.id}">Number:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.occupancy}">Occupancy:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.pricePerDay} + '$'">Price per day:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.roomClass}">Room class:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.hotel.name}">Hotel:</p>
+                            <form th:action="@{/rooms/{roomId}/delete(roomId=${room.id})}" method="post">
+                                <a th:href="@{'/rooms/' + ${room.id}}">
+                                    <button type="button" class="btn btn-info">edit</button>
+                                </a>
+                                <button type="submit" class="btn btn-danger">delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="list-group-item">
+                <a href="/rooms/save-room">
+                    <button type="button" class="btn btn-info">Create new room</button>
+                </a>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="hotel">Hotel:
-            <select id="hotel" name="hotelName">
-                <option th:each="hotel : ${hotels}"
-                        th:value="${hotel.name}"
-                        th:selected="${hotel.name == filter.hotelName}"
-                        th:text="${hotel.name}">Hotel
-                </option>
-            </select>
-        </label>
-    </div>
-    <div>
-        <label for="roomClass">Room class:
-            <select id="roomClass" name="roomClass">
-                <option th:each="roomClass : ${roomClasses}"
-                        th:value="${roomClass}"
-                        th:selected="${roomClass == filter.roomClass}"
-                        th:text="${roomClass}">Room class
-                </option>
-            </select>
-        </label>
-    </div>
-    <div>
-        <label for="checkInDate"><span>Check In Date:</span>
-            <input id="checkInDate" type="date" name="checkInDate" th:value="${filter.checkInDate}">
-        </label>
-    </div>
-    <div>
-        <label for="checkOutDate"><span>Check Out Date:</span>
-            <input id="checkOutDate" type="date" name="checkOutDate" th:value="${filter.checkOutDate}">
-        </label>
-    </div>
-    <div>
-        <label for="page"><span>Page:</span>
-            <input id="page" type="number" name="page" th:value="${rooms.metadata.page}">
-        </label>
-        <label for="size"><span>Size:</span>
-            <input id="size" type="number" name="size" th:value="${rooms.metadata.size}">
-        </label>
-    </div>
-    <button type="submit">Filter</button>
-</form>
-<div th:each="room : ${rooms.content}">
-    <a th:href="@{'/rooms/' + ${room.id}}"
-       th:text="|${room.id}. ${room.occupancy} rooms. ${room.pricePerDay}'$'. ${room.roomClass} - ${room.hotel.name}|">Room</a>
 </div>
 </body>
 </html>
