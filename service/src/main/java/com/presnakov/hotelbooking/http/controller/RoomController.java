@@ -1,11 +1,14 @@
 package com.presnakov.hotelbooking.http.controller;
 
 import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import com.presnakov.hotelbooking.dto.PageResponse;
+import com.presnakov.hotelbooking.dto.RoomCreateEditDto;
+import com.presnakov.hotelbooking.dto.RoomFilter;
+import com.presnakov.hotelbooking.dto.RoomReadDto;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
-import com.presnakov.hotelbooking.dto.UserFilter;
-import com.presnakov.hotelbooking.dto.UserReadDto;
-import com.presnakov.hotelbooking.service.UserService;
+import com.presnakov.hotelbooking.service.HotelService;
+import com.presnakov.hotelbooking.service.RoomService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
 import com.presnakov.hotelbooking.validation.group.UpdateAction;
 import jakarta.validation.groups.Default;
@@ -26,76 +29,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Slf4j
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/rooms")
 @RequiredArgsConstructor
-public class UserController {
+public class RoomController {
 
-    private final UserService userService;
+    private final RoomService roomService;
+    private final HotelService hotelService;
 
     @GetMapping
     public String findAll(Model model,
-                          UserFilter filter, Pageable pageable) {
-        Page<UserReadDto> page = userService.findAll(filter, pageable);
-        model.addAttribute("users", PageResponse.of(page));
+                          RoomFilter filter, Pageable pageable) {
+        Page<RoomReadDto> page = roomService.findAll(filter, pageable);
+        model.addAttribute("rooms", PageResponse.of(page));
         model.addAttribute("filter", filter);
-        model.addAttribute("roles", RoleEnum.values());
-        return "user/users";
+        model.addAttribute("hotels", hotelService.findAll());
+        model.addAttribute("roomClasses", RoomClassEnum.values());
+        return "room/rooms";
     }
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model) {
-        return userService.findById(id)
-                .map(user -> {
-                    model.addAttribute("user", user);
-                    model.addAttribute("roles", RoleEnum.values());
-                    return "user/user";
+        return roomService.findById(id)
+                .map(room -> {
+                    model.addAttribute("room", room);
+                    model.addAttribute("hotels", hotelService.findAll());
+                    model.addAttribute("roomClasses", RoomClassEnum.values());
+                    return "room/room";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("user") UserCreateEditDto user) {
-        model.addAttribute("user", user);
-        model.addAttribute("roles", RoleEnum.values());
-        return "user/registration";
-    }
-
-    @GetMapping("/save-user")
-    public String create(Model model, @ModelAttribute("user") UserCreateEditDto user) {
-        model.addAttribute("user", user);
-        model.addAttribute("roles", RoleEnum.values());
-        return "user/save-user";
+    @GetMapping("/save-room")
+    public String create(Model model, @ModelAttribute("room") RoomCreateEditDto room) {
+        model.addAttribute("room", room);
+        model.addAttribute("hotels", hotelService.findAll());
+        model.addAttribute("roomClasses", RoomClassEnum.values());
+        return "room/save-room";
     }
 
     @PostMapping
-    public String create(@ModelAttribute @Validated({Default.class, CreateAction.class}) UserCreateEditDto user,
+    public String create(@ModelAttribute @Validated({Default.class, CreateAction.class}) RoomCreateEditDto room,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("room", room);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/users/registration";
+            return "redirect:/rooms/save-room";
         }
-        userService.create(user);
-        return "redirect:/login";
+        roomService.create(room);
+        return "redirect:/rooms";
     }
-
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
-                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) UserCreateEditDto user) {
-        return userService.update(id, user)
-                .map(it -> "redirect:/users/{id}")
+                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) RoomCreateEditDto room) {
+        return roomService.update(id, room)
+                .map(it -> "redirect:/rooms/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable("id") Integer id) {
-        if (!userService.delete(id)) {
+        if (!roomService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return "redirect:/users";
+        return "redirect:/rooms";
     }
 }

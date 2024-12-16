@@ -1,14 +1,12 @@
 package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.database.entity.User;
-import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.mapper.UserCreateEditMapper;
 import com.presnakov.hotelbooking.mapper.UserReadMapper;
-import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
@@ -25,8 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.presnakov.hotelbooking.database.entity.QUser.user;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -37,28 +33,19 @@ public class UserService implements UserDetailsService {
     private final UserCreateEditMapper userCreateEditMapper;
     private final ImageService imageService;
 
+    public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
+        return userRepository.findAllByFilter(filter, pageable)
+                .map(userReadMapper::map);
+    }
+
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
                 .map(userReadMapper::map)
                 .toList();
     }
 
-    public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
-        Predicate predicate = QPredicate.builder()
-                .add(filter.getFirstname(), user.firstname::containsIgnoreCase)
-                .add(filter.getLastname(), user.lastname::containsIgnoreCase)
-                .add(filter.getUsername(), user.username::containsIgnoreCase)
-                .add(filter.getRole(), user.role::eq)
-                .add(filter.getMoney(), user.money::gt)
-                .add(filter.getBirthDate(), user.birthDate::before)
-                .buildAnd();
-
-        return userRepository.findAll(predicate, pageable)
-                .map(userReadMapper::map);
-    }
-
     public Optional<UserReadDto> findById(Integer id) {
-        return userRepository.findById(id)
+        return userRepository.findById(id).filter(User::getIsActive)
                 .map(userReadMapper::map);
     }
 
@@ -101,7 +88,7 @@ public class UserService implements UserDetailsService {
     public boolean delete(Integer id) {
         return userRepository.findById(id)
                 .map(entity -> {
-                    userRepository.delete(entity);
+                    userRepository.softDelete(entity);
                     userRepository.flush();
                     return true;
                 })

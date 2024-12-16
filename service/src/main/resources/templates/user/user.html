@@ -1,45 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
     <title th:text="#{user.user}">User</title>
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
-<form th:action="@{/users/{userId}/update(userId=${user.id})}" enctype="multipart/form-data" method="post"
-      th:object="${user}">
-    <label for="username"><span th:text="#{user.username}">Username:</span>
-        <input id="username" type="text" name="username" th:value="*{username}">
-    </label><br>
-    <label for="firstname"><span th:text="#{user.firstname}">Firstname:</span>
-        <input id="firstname" type="text" name="firstname" th:value="*{getFirstname}">
-    </label><br>
-    <label for="lastname"><span th:text="#{user.lastname}">Lastname:</span>
-        <input id="lastname" type="text" name="lastname" th:value="*{getLastname}">
-    </label><br>
-    <label for="phone"><span th:text="#{user.phone}">Phone:</span>
-        <input id="phone" type="text" name="phone" th:value="*{phone}">
-    </label><br>
-    <label for="money"><span th:text="#{user.money}">Money:</span>
-        <input id="money" type="text" name="money" th:value="*{money}">
-    </label><br>
-    <label for="birthDate"><span th:text="#{user.birthDate}">BirthDate:</span>
-        <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
-    </label><br>
-    <div th:if="${user.photo}">
-        <img th:src="@{/api/v1/users/{userId}/avatar(userId=${user.id})}" alt="User photo">
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">User</h1>
+        </div>
     </div>
-    <label for="photo"><span th:text="#{user.photo}">Photo:</span>
-        <input id="photo" type="file" name="photo">
-    </label><br>
-    <div th:each="role : ${roles}">
-        <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
-        <label th:for="${role}" th:text="${role}">Role name</label>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 shadow">
+                <div class="cardItem w-100 shadow">
+                    <div th:if="${user.photo}">
+                        <img class="card-img-top gallery-item"
+                             th:src="@{/api/v1/users/{userId}/avatar(userId=${user.id})}" alt="User photo">
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form class="mb-4" th:action="@{/users/{userId}/update(userId=${user.id})}" enctype="multipart/form-data"
+                          method="post"
+                          th:object="${user}">
+                        <label for="username" class="form-label"><span th:text="#{user.username}">Username:</span>
+                            <input id="username" type="text" class="form-control" name="username"
+                                   th:value="*{username}">
+                        </label><br>
+                        <label for="firstname" class="form-label"><span th:text="#{user.firstname}">Firstname:</span>
+                            <input id="firstname" type="text" class="form-control" name="firstname"
+                                   th:value="*{getFirstname}">
+                        </label><br>
+                        <label for="lastname" class="form-label"><span th:text="#{user.lastname}">Lastname:</span>
+                            <input id="lastname" type="text" class="form-control" name="lastname"
+                                   th:value="*{getLastname}">
+                        </label><br>
+                        <label for="phone" class="form-label"><span th:text="#{user.phone}">Phone:</span>
+                            <input id="phone" type="text" class="form-control" name="phone" th:value="*{phone}">
+                        </label><br>
+                        <label for="money" class="form-label"><span th:text="#{user.money}">Money:</span>
+                            <input id="money" type="text" class="form-control" name="money" th:value="*{money}">
+                        </label><br>
+                        <label for="birthDate" class="form-label"><span th:text="#{user.birthDate}">BirthDate:</span>
+                            <input id="birthDate" type="date" class="form-control" name="birthDate"
+                                   th:value="*{birthDate}">
+                        </label><br>
+                        <label for="photo" class="form-label"><span th:text="#{user.photo}">Photo:</span>
+                            <input id="photo" type="file" class="form-control" name="photo">
+                        </label><br>
+                        <div class="form-check"
+                             th:if="${#authentication.principal.authorities[0].authority == 'ADMIN' && #authentication.principal.username != user.username}"
+                             th:each="role : ${roles}">
+                            <input class="form-check-input" th:id="${role}" type="radio" name="role" th:value="${role}"
+                                   th:checked="${role == user.role}">
+                            <label class="form-check-label" th:for="${role}" th:text="${role}">Role name</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-outline-info btn-primary" th:text="#{user.update}">
+                                Update
+                            </button>
+                            <form th:action="@{/users/{userId}/delete(userId=${user.id})}"
+                                  th:if="${#authentication.principal.authorities[0].authority == 'ADMIN' && #authentication.principal.username != user.username}"
+                                  method="post">
+                                <button type="submit" class="btn btn-danger btn-primary" th:text="#{user.remove}">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" th:text="#{user.update}">Update</button>
-</form>
-<form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${authenticatedUserRole == 'ADMIN'}" method="post">
-    <button type="submit" th:text="#{user.remove}">Remove</button>
-</form>
+</div>
 </body>
 </html>

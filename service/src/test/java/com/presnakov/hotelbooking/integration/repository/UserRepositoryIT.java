@@ -6,6 +6,7 @@ import com.presnakov.hotelbooking.integration.IntegrationTestBase;
 import com.presnakov.hotelbooking.database.repository.UserRepository;
 import com.presnakov.hotelbooking.util.CreateDataUtil;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RequiredArgsConstructor
@@ -58,9 +60,9 @@ class UserRepositoryIT extends IntegrationTestBase {
                 "+375291478523", "userphoto001.jpg", LocalDate.of(1995, 2, 5),
                 2500, "12345", RoleEnum.USER));
 
-        userRepository.delete(user);
-
-        assertThat(userRepository.findById(user.getId())).isEmpty();
+        userRepository.softDelete(user);
+        Optional<User> actualResult = userRepository.findById(user.getId());
+        assertThat(actualResult.get().getIsActive()).isEqualTo(false);
     }
 
     @Test

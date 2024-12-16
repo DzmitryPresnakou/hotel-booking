@@ -21,6 +21,7 @@ public class UserReadMapper implements Mapper<User, UserReadDto> {
                 .phone(object.getPhone())
                 .photo(object.getPhoto())
                 .money(object.getMoney())
+                .isActive(object.getIsActive())
                 .birthDate(object.getBirthDate())
                 .build();
     }

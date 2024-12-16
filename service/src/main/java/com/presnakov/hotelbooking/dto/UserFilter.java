@@ -15,4 +15,5 @@ public class UserFilter {
     RoleEnum role;
     Integer money;
     LocalDate birthDate;
+    Boolean isActive;
 }

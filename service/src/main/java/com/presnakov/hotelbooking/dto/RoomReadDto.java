@@ -1,6 +1,5 @@
 package com.presnakov.hotelbooking.dto;
 
-import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
 import lombok.Builder;
 import lombok.Value;
@@ -13,5 +12,5 @@ public class RoomReadDto {
     RoomClassEnum roomClass;
     String photo;
     Integer pricePerDay;
-    Hotel hotel;
+    HotelReadDto hotel;
 }
