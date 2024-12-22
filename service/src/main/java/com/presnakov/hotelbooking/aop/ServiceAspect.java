@@ -15,15 +15,15 @@ public class ServiceAspect {
 
     @Around("CommonPointcuts.isAnyServiceMethod() && target(service)")
     public Object addLogging(ProceedingJoinPoint joinPoint, Object service) throws Throwable {
-        String methodName = joinPoint.getSignature().getName();
+        String methodName = joinPoint.getSignature().toShortString();
         Object[] args = joinPoint.getArgs();
-        log.info("Invoked method {} in class {} with arguments: {}", methodName, service.getClass().getName(), Arrays.toString(args));
+        log.info("Invoked method {} with arguments: {}", methodName, Arrays.toString(args));
         try {
             Object result = joinPoint.proceed();
-            log.info("Invoked method {} in class {} with returning result: {}", methodName, service.getClass().getName(), result);
+            log.info("Invoked method {} with returning result: {}", methodName, result);
             return result;
         } catch (Throwable ex) {
-            log.error("Exception in method {} in class {} with arguments: {}", methodName, service.getClass().getName(), Arrays.toString(args), ex);
+            log.error("Exception in method {} with arguments: {}", methodName, Arrays.toString(args), ex);
             throw ex;
         }
     }

@@ -14,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.APPROVED;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.CLOSED;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.OPEN;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.REJECTED;
 import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
 import static com.presnakov.hotelbooking.database.entity.QOrder.order;
 import static com.presnakov.hotelbooking.database.entity.QRoom.room;
@@ -30,7 +33,7 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .from(order)
                 .rightJoin(order.room, room)
                 .on(getPredicateByCheckInDate(filter), getPredicateByCheckOutDate(filter))
-                .where(getPredicate(filter), order.isNull().or(order.status.ne(APPROVED)))
+                .where(getPredicate(filter), order.isNull().or(order.status.in(APPROVED, REJECTED, OPEN, CLOSED)))
                 .join(room.hotel, hotel);
         long total = query.fetch().size();
         List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
@@ -52,11 +55,14 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
     }
 
     private static Predicate getPredicate(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getHotelName(), hotel.name::eq)
-                .add(filter.getOccupancy(), room.occupancy::eq)
-                .add(filter.getPricePerDay(), room.pricePerDay::eq)
-                .add(filter.getRoomClass(), room.roomClass::eq)
+        Predicate predicate = QPredicate.builder()
+                .add((filter.getHotelName() != null && filter.getHotelName().isEmpty()) ?
+                        null : filter.getHotelName(), hotel.name::eq)
+                .add(filter.getOccupancy(), room.occupancy::goe)
+                .add(filter.getPricePerDay(), room.pricePerDay::loe)
+                .add((filter.getRoomClass() != null && filter.getRoomClass().name().isEmpty()) ?
+                        null : filter.getRoomClass(), room.roomClass::eq)
                 .buildAnd();
+        return predicate;
     }
 }

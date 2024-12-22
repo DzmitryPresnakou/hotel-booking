@@ -17,22 +17,24 @@
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <form class="mb-4" action="/rooms" th:object="${filter}">
+            <form class="mb-4" action="/rooms" th:object="${rooms}">
                 <label for="occupancy" class="form-label"><span>Occupancy:</span>
                     <input id="occupancy" type="number" class="form-control" name="occupancy" min="1"
-                           th:field="*{occupancy}">
+                           th:value="${filter.occupancy}">
                 </label><br>
                 <label for="pricePerDay" class="form-label"><span>Price Per Day:</span>
                     <input id="pricePerDay" type="number" class="form-control" name="pricePerDay" min="1"
-                           th:field="*{pricePerDay}">
+                           th:value="${filter.pricePerDay}">
                 </label><br>
                 <div>
-                    <label for="hotel" class="form-label">Hotel:
-                        <select class="form-select" id="hotel" name="hotelName">
+                    <label for="hotelName" class="form-label">Hotel:
+                        <select class="form-select" id="hotelName" name="hotelName">
+                            <option value="" th:selected="${filter.hotelName == null}">All Hotels
+                            </option>
                             <option th:each="hotel : ${hotels}"
-                                    th:value="${hotel.name}"
+                                    th:text="${hotel.name}"
                                     th:selected="${hotel.name == filter.hotelName}"
-                                    th:text="${hotel.name}">Hotel
+                                    th:value="${hotel.name}">Hotel
                             </option>
                         </select>
                     </label>
@@ -40,11 +42,11 @@
                 <div>
                     <label for="roomClass" class="form-label">Room class:
                         <select class="form-select" id="roomClass" name="roomClass">
-                            <option value="" th:selected="${filter.roomClass == null}">All Types</option>
+                            <option value="" th:selected="${filter.roomClass == null}">All Classes</option>
                             <option th:each="roomClass : ${roomClasses}"
-                                    th:value="${roomClass}"
+                                    th:text="${roomClass}"
                                     th:selected="${roomClass == filter.roomClass}"
-                                    th:text="${roomClass}">
+                                    th:value="${roomClass}">Comfort class
                             </option>
                         </select>
                     </label>
@@ -71,7 +73,7 @@
                                th:value="${rooms.metadata.size}">
                     </label>
                 </div>
-                <button type="submit" class="btn btn-outline-info">Filter</button>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Filter</button>
             </form>
             <ul class="list-group shadow" th:each="room : ${rooms.content}">
                 <li class="list-group-item">
