@@ -65,7 +65,8 @@
                             </label>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-outline-info btn-primary">
+                            <button type="submit" class="btn btn-outline-info btn-primary"
+                                    th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                                 Update
                             </button>
                             <form th:action="@{/rooms/{roomId}/delete(roomId=${room.id})}"
@@ -76,6 +77,10 @@
                                 </button>
                             </form>
                         </div>
+                        <form class="mb-4" th:action="@{/orders}" enctype="multipart/form-data" method="post"
+                              th:object="${order}">
+                            <button type="submit" class="btn btn-outline-info">Order room</button>
+                        </form>
                     </form>
                 </div>
             </div>

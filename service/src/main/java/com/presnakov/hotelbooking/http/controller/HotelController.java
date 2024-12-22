@@ -49,10 +49,10 @@ public class HotelController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/create")
+    @GetMapping("/save-hotel")
     public String create(Model model, @ModelAttribute("hotel") HotelCreateEditDto hotel) {
         model.addAttribute("hotel", hotel);
-        return "hotel/create";
+        return "hotel/save-hotel";
     }
 
     @PostMapping
@@ -62,7 +62,7 @@ public class HotelController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("hotel", hotel);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/hotels/create";
+            return "redirect:/hotels/save-hotel";
         }
         hotelService.create(hotel);
         return "redirect:/hotels";

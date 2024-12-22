@@ -17,14 +17,14 @@
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <form class="mb-4" action="/rooms">
+            <form class="mb-4" action="/rooms" th:object="${filter}">
                 <label for="occupancy" class="form-label"><span>Occupancy:</span>
-                    <input id="occupancy" type="text" class="form-control" name="occupancy"
-                           th:value="${filter.occupancy}">
+                    <input id="occupancy" type="number" class="form-control" name="occupancy" min="1"
+                           th:field="*{occupancy}">
                 </label><br>
                 <label for="pricePerDay" class="form-label"><span>Price Per Day:</span>
-                    <input id="pricePerDay" type="text" class="form-control" name="pricePerDay"
-                           th:value="${filter.pricePerDay}">
+                    <input id="pricePerDay" type="number" class="form-control" name="pricePerDay" min="1"
+                           th:field="*{pricePerDay}">
                 </label><br>
                 <div>
                     <label for="hotel" class="form-label">Hotel:
@@ -40,10 +40,11 @@
                 <div>
                     <label for="roomClass" class="form-label">Room class:
                         <select class="form-select" id="roomClass" name="roomClass">
+                            <option value="" th:selected="${filter.roomClass == null}">All Types</option>
                             <option th:each="roomClass : ${roomClasses}"
                                     th:value="${roomClass}"
                                     th:selected="${roomClass == filter.roomClass}"
-                                    th:text="${roomClass}">Room class
+                                    th:text="${roomClass}">
                             </option>
                         </select>
                     </label>
@@ -80,22 +81,27 @@
                                  th:src="@{/api/v1/rooms/{roomId}/avatar(roomId=${room.id})}"
                                  alt="" width="100" height="100"></div>
                         <div class="media-body">
-                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.id}">Number:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.occupancy}">Occupancy:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.pricePerDay} + '$'">Price per day:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.roomClass}">Room class:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="${room.hotel.name}">Hotel:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Number: ' + ${room.id}">Number:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Occupancy: ' + ${room.occupancy}">
+                                Occupancy:</p>
+                            <p class="mt-0 font-weight-bold mb-2"
+                               th:text="'Price per day: ' + ${room.pricePerDay} + '$'">Price per day:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Room class: ' + ${room.roomClass}">Room
+                                class:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Hotel: ' + ${room.hotel.name}">Hotel:</p>
                             <form th:action="@{/rooms/{roomId}/delete(roomId=${room.id})}" method="post">
                                 <a th:href="@{'/rooms/' + ${room.id}}">
-                                    <button type="button" class="btn btn-info">edit</button>
+                                    <button type="button" class="btn btn-info">View</button>
                                 </a>
-                                <button type="submit" class="btn btn-danger">delete</button>
+                                <button type="submit" class="btn btn-danger"
+                                        th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">delete
+                                </button>
                             </form>
                         </div>
                     </div>
                 </li>
             </ul>
-            <div class="list-group-item">
+            <div class="list-group-item" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                 <a href="/rooms/save-room">
                     <button type="button" class="btn btn-info">Create new room</button>
                 </a>

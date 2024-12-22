@@ -14,16 +14,16 @@
         <nav class="navbar align-content-center navbar-light bg-light">
             <div class="p-1">
                 <form th:action="@{/logout}" method="post">
-                    <a href="/users">
+                    <a href="/users" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                         <button type="button" class="btn btn-light">Users</button>
                     </a>
                     <a href="/rooms">
                         <button type="button" class="btn btn-light">Rooms</button>
                     </a>
-                    <a href="/hotels">
+                    <a href="/hotels" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                         <button type="button" class="btn btn-light">Hotels</button>
                     </a>
-                    <a href="/orders">
+                    <a href="/orders" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                         <button type="button" class="btn btn-light">Orders</button>
                     </a>
                     <a href="/profile">

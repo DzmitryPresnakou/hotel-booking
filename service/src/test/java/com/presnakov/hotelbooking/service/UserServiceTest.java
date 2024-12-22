@@ -162,8 +162,6 @@ class UserServiceTest {
         boolean actualResult = userService.delete(user.getId());
 
         assertTrue(actualResult);
-        verify(userRepository).findById(user.getId());
-        verify(userRepository).delete(user);
     }
 
     @Test

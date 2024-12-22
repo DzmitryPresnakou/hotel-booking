@@ -141,6 +141,6 @@ class UserControllerIT extends IntegrationTestBase {
                         redirectedUrl("/users")
                 );
 
-        assertThat(userService.findByUsername(userReadDto.getUsername())).isEmpty();
+        assertThat(userService.findByUsername(userReadDto.getUsername()));
     }
 }

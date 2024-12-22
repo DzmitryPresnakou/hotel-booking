@@ -1,12 +1,13 @@
 package com.presnakov.hotelbooking.http.controller;
 
-import com.presnakov.hotelbooking.database.entity.RoleEnum;
+import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.database.entity.PaymentStatusEnum;
 import com.presnakov.hotelbooking.database.entity.RoomClassEnum;
+import com.presnakov.hotelbooking.dto.OrderCreateEditDto;
 import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.dto.RoomCreateEditDto;
 import com.presnakov.hotelbooking.dto.RoomFilter;
 import com.presnakov.hotelbooking.dto.RoomReadDto;
-import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.service.HotelService;
 import com.presnakov.hotelbooking.service.RoomService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
@@ -41,10 +42,12 @@ public class RoomController {
 
     @GetMapping
     public String findAll(Model model,
-                          RoomFilter filter, Pageable pageable) {
-        Page<RoomReadDto> page = roomService.findAll(filter, pageable);
-        model.addAttribute("rooms", PageResponse.of(page));
+                          RoomFilter filter, Pageable pageable,
+                          OrderCreateEditDto order) {
+        Page<RoomReadDto> rooms = roomService.findAll(filter, pageable);
+        model.addAttribute("rooms", PageResponse.of(rooms));
         model.addAttribute("filter", filter);
+        model.addAttribute("order", order);
         model.addAttribute("hotels", hotelService.findAll());
         model.addAttribute("roomClasses", RoomClassEnum.values());
         return "room/rooms";
@@ -56,6 +59,8 @@ public class RoomController {
                 .map(room -> {
                     model.addAttribute("room", room);
                     model.addAttribute("hotels", hotelService.findAll());
+                    model.addAttribute("status", OrderStatusEnum.OPEN);
+                    model.addAttribute("paymentStatus", PaymentStatusEnum.APPROVED);
                     model.addAttribute("roomClasses", RoomClassEnum.values());
                     return "room/room";
                 })

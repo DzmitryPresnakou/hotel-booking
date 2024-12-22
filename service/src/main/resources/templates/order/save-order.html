@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
+    <title>NOrder</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">Order</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 shadow">
+                <div class="card-body">
+                    <input id="room" type="hidden" class="form-control" name="room"
+                           th:value="${order.roomId}">
+                    <input id="username" type="hidden" class="form-control" name="username"
+                           th:value="${order.userId}">
+                    <input id="status" type="hidden" class="form-control" name="status"
+                           th:value="${order.status}">
+                    <input id="paymentStatus" type="hidden" class="form-control" name="paymentStatus"
+                           th:value="${order.paymentStatus}">
+                    <input id="checkInDate" type="hidden" class="form-control" name="checkInDate"
+                           th:value="${order.checkInDate}">
+                    <input id="checkOutDate" type="hidden" class="form-control" name="checkOutDate"
+                           th:value="${order.checkOutDate}">
+
+                    <div class="d-flex align-items-center">
+                        <div class="media-body">
+                            <p class="mt-0 font-weight-bold mb-2"
+                               th:text="'Check In Date: ' + ${order.checkInDate}">
+                                Check In Date:</p>
+                            <p class="mt-0 font-weight-bold mb-2"
+                               th:text="'Check Out Date: ' + ${order.checkOutDate}">
+                                Check Out Date:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Status: ' + ${order.status}">Status:</p>
+                            <p class="mt-0 font-weight-bold mb-2"
+                               th:text="'Payment Status: ' + ${order.paymentStatus}">
+                                Payment Status:</p>
+                        </div>
+                    </div>
+                    <form th:action="@{/orders}" method="post">
+                        <button type="submit" class="btn btn-danger btn-primary">
+                            Order
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

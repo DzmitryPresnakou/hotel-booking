@@ -5,32 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
-    <title th:text="#{users.users}">Users</title>
+    <title>Hotels</title>
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <div class="container py-5">
     <div class="row text-center mb-5">
         <div class="col-lg-7 mx-auto">
-            <h1 class="display-4" th:text="#{users.users}">Users List</h1>
+            <h1 class="display-4">Hotels List</h1>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <ul class="list-group shadow" th:each="user : ${users.content}">
-                <li class="list-group-item" th:if="${user.isActive}">
+            <ul class="list-group shadow" th:each="hotel : ${hotels.content}">
+                <li class="list-group-item">
                     <div class="d-flex align-items-center">
-                        <div th:if="${user.photo}" class="mr-3">
+                        <div th:if="${hotel.photo}" class="mr-3">
                             <img class="rounded-circle"
-                                 th:src="@{/api/v1/users/{userId}/avatar(userId=${user.id})}"
+                                 th:src="@{/api/v1/hotels/{hotelId}/avatar(hotelId=${hotel.id})}"
                                  alt="User photo" width="100" height="100"></div>
                         <div class="media-body">
-                            <p class="mt-0 font-weight-bold mb-2" th:text="'Email: ' + ${user.username}">Email:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="'First name: ' + ${user.firstname}">First name:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="'Last name: ' + ${user.lastname}">Last name:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="'Role: ' + ${user.role}">Role:</p>
-                            <form th:action="@{/users/{userId}/delete(userId=${user.id})}" method="post">
-                                <a th:href="@{'/users/' + ${user.id}}">
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Name: ' + ${hotel.name}">Name:</p>
+                            <form th:action="@{/hotels/{hotelId}/delete(hotelId=${hotel.id})}" method="post">
+                                <a th:href="@{'/hotels/' + ${hotel.id}}">
                                     <button type="button" class="btn btn-info">edit</button>
                                 </a>
                                 <button type="submit" class="btn btn-danger">delete</button>
@@ -40,8 +37,8 @@
                 </li>
             </ul>
             <div class="list-group-item">
-                <a href="/users/save-user">
-                    <button type="button" class="btn btn-info">Create new user</button>
+                <a href="/hotels/save-hotel">
+                    <button type="button" class="btn btn-info">Create a new hotel</button>
                 </a>
             </div>
         </div>

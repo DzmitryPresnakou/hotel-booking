@@ -64,13 +64,13 @@ public class OrderController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/create")
+    @GetMapping("/save-order")
     public String create(Model model, @ModelAttribute("order") OrderCreateEditDto order) {
         model.addAttribute("order", order);
         model.addAttribute("hotels", hotelService.findAll());
         model.addAttribute("users", userService.findAll());
         model.addAttribute("rooms", roomService.findAll());
-        return "order/create";
+        return "order/save-order";
     }
 
     @PostMapping
@@ -80,7 +80,7 @@ public class OrderController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("order", order);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/orders/create";
+            return "redirect:/orders/save-order";
         }
         orderService.create(order);
         return "redirect:/orders";

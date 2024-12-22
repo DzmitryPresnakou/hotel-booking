@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -110,6 +111,6 @@ class UserRestControllerIT extends IntegrationTestBase {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpectAll(
                         status().is2xxSuccessful());
-        assertThat(userService.findByUsername(userReadDto.getUsername())).isEmpty();
+        assertFalse(userService.findByUsername(userReadDto.getUsername()).get().getIsActive());
     }
 }
