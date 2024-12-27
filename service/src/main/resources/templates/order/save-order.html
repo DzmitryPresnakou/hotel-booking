@@ -19,37 +19,49 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="col-xl-4 col-md-6 col-sm-12 mb-3 shadow">
-                <div class="card-body">
-                    <input id="room" type="hidden" class="form-control" name="room"
-                           th:value="${order.roomId}">
-                    <input id="username" type="hidden" class="form-control" name="username"
-                           th:value="${order.userId}">
-                    <input id="status" type="hidden" class="form-control" name="status"
-                           th:value="${order.status}">
-                    <input id="paymentStatus" type="hidden" class="form-control" name="paymentStatus"
-                           th:value="${order.paymentStatus}">
-                    <input id="checkInDate" type="hidden" class="form-control" name="checkInDate"
-                           th:value="${order.checkInDate}">
-                    <input id="checkOutDate" type="hidden" class="form-control" name="checkOutDate"
-                           th:value="${order.checkOutDate}">
 
-                    <div class="d-flex align-items-center">
-                        <div class="media-body">
-                            <p class="mt-0 font-weight-bold mb-2"
-                               th:text="'Check In Date: ' + ${order.checkInDate}">
-                                Check In Date:</p>
-                            <p class="mt-0 font-weight-bold mb-2"
-                               th:text="'Check Out Date: ' + ${order.checkOutDate}">
-                                Check Out Date:</p>
-                            <p class="mt-0 font-weight-bold mb-2" th:text="'Status: ' + ${order.status}">Status:</p>
-                            <p class="mt-0 font-weight-bold mb-2"
-                               th:text="'Payment Status: ' + ${order.paymentStatus}">
-                                Payment Status:</p>
+                <div class="card-body">
+                    <form th:action="@{/orders}" method="post" th:object="${order}">
+                        <input id="room" type="hidden" class="form-control" name="roomId"
+                               th:value="${room.get().id}">
+                        <input id="username" type="hidden" class="form-control" name="userId"
+                               th:value="${userId}">
+                        <input id="status" type="hidden" class="form-control" name="status"
+                               th:value="${status}">
+                        <input id="paymentStatus" type="hidden" class="form-control" name="paymentStatus"
+                               th:value="${paymentStatus}">
+                        <input id="checkInDate" type="hidden" class="form-control" name="checkInDate"
+                               th:value="${checkIn}">
+                        <input id="checkOutDate" type="hidden" class="form-control" name="checkOutDate"
+                               th:value="${checkOut}">
+
+                        <div class="d-flex align-items-center">
+                            <div class="media-body">
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Hotel: ' + ${room.get().hotel.name}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Price per day: ' + ${room.get().pricePerDay} + '$'">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Check In Date: ' + ${checkIn}">
+                                    Check In Date:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Check Out Date: ' + ${checkOut}">
+                                    Check Out Date:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Beds in room: ' + ${room.get().occupancy}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Days: ' + ${daysBetween}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Total price: ' + ${room.get().pricePerDay * daysBetween} + '$'">
+                                    Beds in room:</p>
+                            </div>
                         </div>
-                    </div>
-                    <form th:action="@{/orders}" method="post">
                         <button type="submit" class="btn btn-danger btn-primary">
-                            Order
+                            Book
                         </button>
                     </form>
 

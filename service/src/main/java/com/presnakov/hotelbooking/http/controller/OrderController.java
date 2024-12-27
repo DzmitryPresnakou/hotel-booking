@@ -1,9 +1,12 @@
 package com.presnakov.hotelbooking.http.controller;
 
+import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
+import com.presnakov.hotelbooking.database.entity.PaymentStatusEnum;
 import com.presnakov.hotelbooking.dto.OrderCreateEditDto;
 import com.presnakov.hotelbooking.dto.OrderFilter;
 import com.presnakov.hotelbooking.dto.OrderReadDto;
 import com.presnakov.hotelbooking.dto.PageResponse;
+import com.presnakov.hotelbooking.dto.UserReadDto;
 import com.presnakov.hotelbooking.service.HotelService;
 import com.presnakov.hotelbooking.service.OrderService;
 import com.presnakov.hotelbooking.service.RoomService;
@@ -25,8 +28,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -65,11 +74,20 @@ public class OrderController {
     }
 
     @GetMapping("/save-order")
-    public String create(Model model, @ModelAttribute("order") OrderCreateEditDto order) {
+    public String create(@RequestParam("roomId") Integer roomId,
+                         @RequestParam("checkIn") LocalDate checkIn,
+                         @RequestParam("checkOut") LocalDate checkOut,
+                         Model model, Principal principal, @ModelAttribute("order") OrderCreateEditDto order) {
+        Optional<UserReadDto> maybeUser = userService.findByUsername(principal.getName());
+        Integer daysBetween = Math.toIntExact(ChronoUnit.DAYS.between(checkIn, checkOut) + 1);
         model.addAttribute("order", order);
-        model.addAttribute("hotels", hotelService.findAll());
-        model.addAttribute("users", userService.findAll());
-        model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("room", roomService.findById(roomId));
+        maybeUser.ifPresent(userReadDto -> model.addAttribute("userId", userReadDto.getId()));
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
+        model.addAttribute("daysBetween", daysBetween);
+        model.addAttribute("status", OrderStatusEnum.OPEN);
+        model.addAttribute("paymentStatus", PaymentStatusEnum.APPROVED);
         return "order/save-order";
     }
 
