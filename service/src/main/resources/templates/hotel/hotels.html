@@ -20,8 +20,8 @@
             <ul class="list-group shadow" th:each="hotel : ${hotels.content}">
                 <li class="list-group-item">
                     <div class="d-flex align-items-center">
-                        <div th:if="${hotel.photo}" class="mr-3">
-                            <img class="rounded-circle"
+                        <div th:if="${hotel.photo}" class="mr-3 p-3">
+                            <img class="img-thumbnail square-img"
                                  th:src="@{/api/v1/hotels/{hotelId}/avatar(hotelId=${hotel.id})}"
                                  alt="User photo" width="100" height="100"></div>
                         <div class="media-body">
@@ -38,7 +38,7 @@
             </ul>
             <div class="list-group-item">
                 <a href="/hotels/save-hotel">
-                    <button type="button" class="btn btn-info">Create a new hotel</button>
+                    <button type="button" class="btn btn-info mt-3 w-100">Create a new hotel</button>
                 </a>
             </div>
         </div>

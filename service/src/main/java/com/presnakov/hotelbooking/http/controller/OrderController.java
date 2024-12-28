@@ -78,6 +78,7 @@ public class OrderController {
                          @RequestParam("checkIn") LocalDate checkIn,
                          @RequestParam("checkOut") LocalDate checkOut,
                          Model model, Principal principal, @ModelAttribute("order") OrderCreateEditDto order) {
+        checkIn = checkIn != null ? checkIn : LocalDate.now();
         Optional<UserReadDto> maybeUser = userService.findByUsername(principal.getName());
         Integer daysBetween = Math.toIntExact(ChronoUnit.DAYS.between(checkIn, checkOut) + 1);
         model.addAttribute("order", order);

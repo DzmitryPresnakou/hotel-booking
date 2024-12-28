@@ -39,8 +39,11 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
 
     private static Predicate getPredicate(OrderFilter filter) {
         return QPredicate.builder()
-                .add(filter.getHotelName(), order.room.hotel.name::eq)
-                .add(filter.getUsername(), order.user.username::eq)
+                .add((filter.getHotelName() != null && filter.getHotelName().isEmpty()) ?
+                        null : filter.getHotelName(), order.room.hotel.name::eq)
+                .add((filter.getUsername() != null && filter.getUsername().isEmpty()) ?
+                        null :
+                        filter.getUsername(), order.user.username::eq)
                 .add(filter.getCheckOutDate(), order.checkInDate::after)
                 .add(filter.getCheckInDate(), order.checkOutDate::before)
                 .buildAnd();

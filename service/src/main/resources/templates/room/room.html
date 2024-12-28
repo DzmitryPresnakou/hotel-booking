@@ -34,13 +34,16 @@
                         <label for="occupancy" class="form-label"><span>Occupancy:</span>
                             <input id="occupancy" type="text" class="form-control" name="occupancy"
                                    th:value="*{occupancy}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('occupancy')}" th:errors="*{occupancy}"></p>
                         </label><br>
                         <label for="pricePerDay" class="form-label"><span>Price Per Day:</span>
                             <input id="pricePerDay" type="text" class="form-control" name="pricePerDay"
                                    th:value="*{pricePerDay}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></p>
                         </label><br>
                         <label for="photo" class="form-label"><span>Photo:</span>
                             <input id="photo" type="file" class="form-control" name="photo">
+                            <p class="text-danger" th:if="${#fields.hasErrors('photo')}" th:errors="*{photo}"></p>
                         </label><br>
                         <div>
                             <label for="hotel" class="form-label">Hotel:
@@ -51,6 +54,7 @@
                                             th:text="${hotel.name}">Hotel
                                     </option>
                                 </select>
+                                <p class="text-danger" th:if="${#fields.hasErrors('hotel')}" th:errors="*{hotel.id}"></p>
                             </label>
                         </div>
                         <div>
@@ -60,6 +64,7 @@
                                             th:value="${roomClass.name()}"
                                             th:selected="${roomClass.name() == room.roomClass.name()}"
                                             th:text="${roomClass.name()}">Room class
+                                        <p class="text-danger" th:if="${#fields.hasErrors('roomClass')}" th:errors="*{roomClass.name()}"></p>
                                     </option>
                                 </select>
                             </label>

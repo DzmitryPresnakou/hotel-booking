@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
     <title th:text="#{users.users}">Users</title>
 </head>
@@ -20,10 +21,10 @@
             <ul class="list-group shadow" th:each="user : ${users.content}">
                 <li class="list-group-item" th:if="${user.isActive}">
                     <div class="d-flex align-items-center">
-                        <div th:if="${user.photo}" class="mr-3">
-                            <img class="rounded-circle"
+                        <div th:if="${user.photo}" class="mr-3 p-3">
+                            <img class="img-thumbnail square-img"
                                  th:src="@{/api/v1/users/{userId}/avatar(userId=${user.id})}"
-                                 alt="User photo" width="100" height="100"></div>
+                                 alt="User"></div>
                         <div class="media-body">
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Email: ' + ${user.username}">Email:</p>
                             <p class="mt-0 font-weight-bold mb-2" th:text="'First name: ' + ${user.firstname}">First name:</p>
@@ -41,7 +42,7 @@
             </ul>
             <div class="list-group-item">
                 <a href="/users/save-user">
-                    <button type="button" class="btn btn-info">Create new user</button>
+                    <button type="button" class="btn btn-info mt-3 w-100">Create new user</button>
                 </a>
             </div>
         </div>

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
     <title th:text="#{user.user}">User</title>
 </head>
@@ -32,27 +33,34 @@
                         <label for="username" class="form-label"><span th:text="#{user.username}">Username:</span>
                             <input id="username" type="text" class="form-control" name="username"
                                    th:value="*{username}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
                         </label><br>
                         <label for="firstname" class="form-label"><span th:text="#{user.firstname}">Firstname:</span>
                             <input id="firstname" type="text" class="form-control" name="firstname"
                                    th:value="*{getFirstname}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{getFirstname}"></p>
                         </label><br>
                         <label for="lastname" class="form-label"><span th:text="#{user.lastname}">Lastname:</span>
                             <input id="lastname" type="text" class="form-control" name="lastname"
                                    th:value="*{getLastname}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{getLastname}"></p>
                         </label><br>
                         <label for="phone" class="form-label"><span th:text="#{user.phone}">Phone:</span>
                             <input id="phone" type="text" class="form-control" name="phone" th:value="*{phone}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
                         </label><br>
                         <label for="money" class="form-label"><span th:text="#{user.money}">Money:</span>
                             <input id="money" type="text" class="form-control" name="money" th:value="*{money}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('money')}" th:errors="*{money}"></p>
                         </label><br>
                         <label for="birthDate" class="form-label"><span th:text="#{user.birthDate}">BirthDate:</span>
                             <input id="birthDate" type="date" class="form-control" name="birthDate"
                                    th:value="*{birthDate}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
                         </label><br>
                         <label for="photo" class="form-label"><span th:text="#{user.photo}">Photo:</span>
                             <input id="photo" type="file" class="form-control" name="photo">
+                            <p class="text-danger" th:if="${#fields.hasErrors('photo')}" th:errors="*{photo}"></p>
                         </label><br>
                         <div class="form-check"
                              th:if="${#authentication.principal.authorities[0].authority == 'ADMIN' && #authentication.principal.username != user.username}"

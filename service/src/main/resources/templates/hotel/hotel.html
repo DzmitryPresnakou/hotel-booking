@@ -33,9 +33,11 @@
                         <label for="name" class="form-label"><span>Name:</span>
                             <input id="name" type="text" class="form-control" name="name"
                                    th:value="*{name}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                         </label><br>
                         <label for="photo" class="form-label"><span>Photo:</span>
                             <input id="photo" type="file" class="form-control" name="photo">
+                            <p class="text-danger" th:if="${#fields.hasErrors('photo')}" th:errors="*{photo}"></p>
                         </label><br>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-outline-info btn-primary">

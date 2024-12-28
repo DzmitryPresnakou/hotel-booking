@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
     <title>Rooms</title>
 </head>
@@ -78,11 +79,12 @@
             <ul class="list-group shadow" th:each="room : ${rooms.content}">
                 <li class="list-group-item">
                     <div class="d-flex align-items-center">
-                        <div th:if="${room.photo}" class="mr-3">
-                            <img class="rounded-circle"
+                        <div th:if="${room.photo}" class="mr-3 p-3">
+                            <img class="img-thumbnail square-img"
                                  th:src="@{/api/v1/rooms/{roomId}/avatar(roomId=${room.id})}"
-                                 alt="" width="100" height="100"></div>
-                        <div class="media-body">
+                                 alt="Room">
+                        </div>
+                        <div class="media-body p-3">
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Number: ' + ${room.id}">Number:</p>
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Occupancy: ' + ${room.occupancy}">
                                 Occupancy:</p>
@@ -96,7 +98,8 @@
                                    th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                                     <button type="button" class="btn btn-info">Edit</button>
                                 </a>
-                                <a th:href="@{/orders/save-order(roomId=${room.id}, checkIn=${filter.checkInDate}, checkOut=${filter.checkOutDate})}">
+                                <a th:href="@{/orders/save-order(roomId=${room.id}, checkIn=${filter.checkInDate}, checkOut=${filter.checkOutDate})}"
+                                   th:if="${filter.checkInDate != null && filter.checkOutDate != null}">
                                     <button type="button" class="btn btn-info">Book</button>
                                 </a>
                                 <button type="submit" class="btn btn-danger"
@@ -109,7 +112,7 @@
             </ul>
             <div class="list-group-item" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                 <a href="/rooms/save-room">
-                    <button type="button" class="btn btn-info">Create new room</button>
+                    <button type="button" class="btn btn-info mt-3 w-100">Create new room</button>
                 </a>
             </div>
         </div>
