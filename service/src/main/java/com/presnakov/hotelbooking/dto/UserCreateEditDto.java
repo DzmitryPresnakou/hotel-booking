@@ -22,13 +22,11 @@ import java.time.LocalDate;
 @Value
 @Builder
 @FieldNameConstants
-@UserInfo(groups = UpdateAction.class)
+@UserInfo
 public class UserCreateEditDto {
-    @NotBlank(message = "First name is required")
     @Size(min = 3, max = 64, message = "The first name should be between 3 and 64 characters")
     String firstname;
 
-    @NotBlank(message = "Last name is required")
     @Size(min = 3, max = 64, message = "The last name should be between 3 and 64 characters")
     String lastname;
 

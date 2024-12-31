@@ -80,6 +80,9 @@
                             </form>
                         </div>
                     </form>
+                    <div th:if="${errors}">
+                        <p class="text-danger" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+                    </div>
                 </div>
             </div>
         </div>

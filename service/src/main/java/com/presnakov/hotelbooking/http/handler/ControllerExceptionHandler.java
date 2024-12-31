@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice(basePackages = "com.presnakov.hotelbooking.http.controller")
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler /*extends ResponseEntityExceptionHandler*/ {
 
     @ExceptionHandler(Exception.class)
     public String handleGenericException(Exception ex, Model model) {
