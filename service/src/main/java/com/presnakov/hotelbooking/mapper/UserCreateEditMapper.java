@@ -1,7 +1,7 @@
 package com.presnakov.hotelbooking.mapper;
 
-import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.database.entity.User;
+import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -35,10 +35,12 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         user.setFirstname(object.getFirstname());
         user.setLastname(object.getLastname());
         user.setUsername(object.getUsername());
-        user.setRole(object.getRole());
         user.setPhone(object.getPhone());
         user.setMoney(object.getMoney());
         user.setBirthDate(object.getBirthDate());
+
+        Optional.ofNullable(object.getRole())
+                .ifPresent(user::setRole);
 
         Optional.ofNullable(object.getRawPassword())
                 .filter(StringUtils::hasText)

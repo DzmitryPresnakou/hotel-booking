@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
+    <title>Hotel</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">Hotel</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 shadow">
+                <div class="cardItem w-100 shadow">
+                    <div th:if="${hotel.photo}">
+                        <img class="card-img-top gallery-item"
+                             th:src="@{/api/v1/hotels/{hotelId}/avatar(hotelId=${hotel.id})}" alt="Hotel photo">
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form class="mb-4" th:action="@{/hotels/{hotelId}/update(hotelId=${hotel.id})}"
+                          enctype="multipart/form-data"
+                          method="post"
+                          th:object="${hotel}">
+                        <label for="name" class="form-label"><span>Name:</span>
+                            <input id="name" type="text" class="form-control" name="name"
+                                   th:value="*{name}">
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        </label><br>
+                        <label for="photo" class="form-label"><span>Photo:</span>
+                            <input id="photo" type="file" class="form-control" name="photo">
+                            <p class="text-danger" th:if="${#fields.hasErrors('photo')}" th:errors="*{photo}"></p>
+                        </label><br>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-outline-info btn-primary">
+                                Update
+                            </button>
+                            <form th:action="@{/hotels/{hotelId}/delete(hotelId=${hotel.id})}"
+                                  th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}"
+                                  method="post">
+                                <button type="submit" class="btn btn-danger btn-primary">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+                    </form>
+                    <div th:if="${errors}">
+                        <p class="text-danger" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

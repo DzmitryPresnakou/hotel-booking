@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
+    <title>NOrder</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">Order</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 shadow">
+
+                <div class="card-body">
+                    <form th:action="@{/orders}" method="post" th:object="${order}">
+                        <input id="room" type="hidden" class="form-control" name="roomId"
+                               th:value="${room.get().id}">
+                        <input id="username" type="hidden" class="form-control" name="userId"
+                               th:value="${userId}">
+                        <input id="status" type="hidden" class="form-control" name="status"
+                               th:value="${status}">
+                        <input id="paymentStatus" type="hidden" class="form-control" name="paymentStatus"
+                               th:value="${paymentStatus}">
+                        <input id="checkInDate" type="hidden" class="form-control" name="checkInDate"
+                               th:value="${checkIn}">
+                        <input id="checkOutDate" type="hidden" class="form-control" name="checkOutDate"
+                               th:value="${checkOut}">
+
+                        <div class="d-flex align-items-center">
+                            <div class="media-body">
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Hotel: ' + ${room.get().hotel.name}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Price per day: ' + ${room.get().pricePerDay} + '$'">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Check In Date: ' + ${checkIn}">
+                                    Check In Date:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Check Out Date: ' + ${checkOut}">
+                                    Check Out Date:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Beds in room: ' + ${room.get().occupancy}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Days: ' + ${daysBetween}">
+                                    Beds in room:</p>
+                                <p class="mt-0 font-weight-bold mb-2"
+                                   th:text="'Total price: ' + ${room.get().pricePerDay * daysBetween} + '$'">
+                                    Beds in room:</p>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-danger btn-primary">
+                            Book
+                        </button>
+                        <a th:href="@{/rooms}">
+                            <button type="button" class="btn btn-light">Cancel</button>
+                        </a>
+                    </form>
+                    <div th:if="${errors}">
+                        <p class="text-danger" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

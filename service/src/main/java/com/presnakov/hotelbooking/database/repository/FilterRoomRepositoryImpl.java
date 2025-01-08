@@ -1,15 +1,24 @@
 package com.presnakov.hotelbooking.database.repository;
 
+import com.presnakov.hotelbooking.database.entity.Room;
 import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.RoomFilter;
-import com.presnakov.hotelbooking.database.entity.Room;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.APPROVED;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.CLOSED;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.OPEN;
+import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.REJECTED;
 import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
 import static com.presnakov.hotelbooking.database.entity.QOrder.order;
 import static com.presnakov.hotelbooking.database.entity.QRoom.room;
@@ -20,58 +29,47 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
     private final EntityManager entityManager;
 
     @Override
-    public List<Room> findAllByFilter(RoomFilter filter) {
-        return new JPAQuery<Room>(entityManager)
+    public Page<Room> findAll(RoomFilter filter, Pageable pageable) {
+        BooleanExpression checkInCondition = getByCheckInDate(filter);
+        BooleanExpression checkOutCondition = getByCheckOutDate(filter);
+
+        BooleanExpression dateCondition = checkInCondition.or(checkOutCondition);
+        JPAQuery<Room> query = new JPAQuery<>(entityManager)
                 .select(room)
                 .from(order)
                 .rightJoin(order.room, room)
-                .on(getByCheckInDate(filter), getByCheckOutDate(filter))
-                .join(room.hotel, hotel)
-                .where(getByCompleteInfo(filter), order.id.isNull())
-                .fetch();
+                .where(getPredicate(filter),
+                        order.isNull().or((filter.getCheckInDate() != null) ?
+                                dateCondition : order.status.in(OPEN, CLOSED, APPROVED, REJECTED)));
+        long total = query.fetch().size();
+        List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        return new PageImpl<>(rooms, pageable, total);
     }
 
-    @Override
-    public List<Room> findAllByFreeDateRange(RoomFilter filter) {
-        return new JPAQuery<Room>(entityManager)
-                .select(room)
-                .from(order)
-                .rightJoin(order.room, room)
-                .on(getByCheckInDate(filter), getByCheckOutDate(filter))
-                .where(order.id.isNull())
-                .fetch();
+    private static BooleanExpression getByCheckInDate(RoomFilter filter) {
+        BooleanExpression checkInAfter = (filter.getCheckInDate() != null) ?
+                order.checkInDate.after(filter.getCheckInDate()) : Expressions.asBoolean(false).isTrue();
+        BooleanExpression checkInAfterEnd = (filter.getCheckOutDate() != null) ?
+                order.checkInDate.after(filter.getCheckOutDate()) : Expressions.asBoolean(false).isTrue();
+        return checkInAfter.and(checkInAfterEnd);
     }
 
-    @Override
-    public List<Room> findAllByHotelName(String hotelName) {
-        return new JPAQuery<Room>(entityManager)
-                .select(room)
-                .from(room)
-                .join(room.hotel, hotel)
-                .where(hotel.name.eq(hotelName))
-                .fetch();
+    private static BooleanExpression getByCheckOutDate(RoomFilter filter) {
+        BooleanExpression checkOutBefore = (filter.getCheckInDate() != null) ?
+                order.checkOutDate.before(filter.getCheckInDate()) : Expressions.asBoolean(false).isTrue();
+        BooleanExpression checkOutBeforeEnd = (filter.getCheckOutDate() != null) ?
+                order.checkOutDate.before(filter.getCheckOutDate()) : Expressions.asBoolean(false).isTrue();
+        return checkOutBefore.and(checkOutBeforeEnd);
     }
 
-    private static Predicate getByCheckInDate(RoomFilter filter) {
+    private static Predicate getPredicate(RoomFilter filter) {
         return QPredicate.builder()
-                .add(filter.getCheckInDate(), order.checkInDate::after)
-                .add(filter.getCheckOutDate(), order.checkInDate::before)
-                .buildAnd();
-    }
-
-    private static Predicate getByCheckOutDate(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getCheckInDate(), order.checkOutDate::after)
-                .add(filter.getCheckOutDate(), order.checkOutDate::before)
-                .buildOr();
-    }
-
-    private static Predicate getByCompleteInfo(RoomFilter filter) {
-        return QPredicate.builder()
-                .add(filter.getHotelName(), hotel.name::eq)
-                .add(filter.getOccupancy(), room.occupancy::eq)
-                .add(filter.getPricePerDay(), room.pricePerDay::eq)
-                .add(filter.getRoomClass(), room.roomClass::eq)
+                .add((filter.getHotelName() != null && filter.getHotelName().isEmpty()) ?
+                        null : filter.getHotelName(), hotel.name::eq)
+                .add(filter.getOccupancy(), room.occupancy::goe)
+                .add(filter.getPricePerDay(), room.pricePerDay::loe)
+                .add((filter.getRoomClass() != null && filter.getRoomClass().name().isEmpty()) ?
+                        null : filter.getRoomClass(), room.roomClass::eq)
                 .buildAnd();
     }
 }

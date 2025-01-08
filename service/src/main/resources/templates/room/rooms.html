@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <script src="/js/bootstrap.min.js"></script>
+    <title>Rooms</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4">Rooms List</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <form class="mb-4" action="/rooms" th:object="${rooms}">
+                <label for="occupancy" class="form-label"><span>Occupancy:</span>
+                    <input id="occupancy" type="number" class="form-control" name="occupancy" min="1"
+                           th:value="${filter.occupancy}">
+                </label><br>
+                <label for="pricePerDay" class="form-label"><span>Price Per Day:</span>
+                    <input id="pricePerDay" type="number" class="form-control" name="pricePerDay" min="1"
+                           th:value="${filter.pricePerDay}">
+                </label><br>
+                <div>
+                    <label for="hotelName" class="form-label">Hotel:
+                        <select class="form-select" id="hotelName" name="hotelName">
+                            <option value="" th:selected="${filter.hotelName == null}">All Hotels
+                            </option>
+                            <option th:each="hotel : ${hotels}"
+                                    th:text="${hotel.name}"
+                                    th:selected="${hotel.name == filter.hotelName}"
+                                    th:value="${hotel.name}">Hotel
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label for="roomClass" class="form-label">Room class:
+                        <select class="form-select" id="roomClass" name="roomClass">
+                            <option value="" th:selected="${filter.roomClass == null}">All Classes</option>
+                            <option th:each="roomClass : ${roomClasses}"
+                                    th:text="${roomClass}"
+                                    th:selected="${roomClass == filter.roomClass}"
+                                    th:value="${roomClass}">Comfort class
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label for="checkInDate" class="form-label">Check In Date:
+                        <input id="checkInDate" type="date" class="form-control" name="checkInDate"
+                               th:value="${filter.checkInDate}">
+                    </label>
+                </div>
+                <div>
+                    <label for="checkOutDate" class="form-label">Check Out Date:
+                        <input id="checkOutDate" type="date" class="form-control" name="checkOutDate"
+                               th:value="${filter.checkOutDate}">
+                    </label>
+                </div>
+                <div>
+                    <label for="page" class="form-label">Page:
+                        <input id="page" type="number" class="form-control" name="page"
+                               th:value="${rooms.metadata.page}">
+                    </label>
+                    <label for="size" class="form-label">Size:
+                        <input id="size" type="number" class="form-control" name="size"
+                               th:value="${rooms.metadata.size}">
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Filter</button>
+            </form>
+            <ul class="list-group shadow" th:each="room : ${rooms.content}">
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center">
+                        <div th:if="${room.photo}" class="mr-3 p-3">
+                            <img class="img-thumbnail square-img"
+                                 th:src="@{/api/v1/rooms/{roomId}/avatar(roomId=${room.id})}"
+                                 alt="Room">
+                        </div>
+                        <div class="media-body p-3">
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Number: ' + ${room.id}">Number:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Occupancy: ' + ${room.occupancy}">
+                                Occupancy:</p>
+                            <p class="mt-0 font-weight-bold mb-2"
+                               th:text="'Price per day: ' + ${room.pricePerDay} + '$'">Price per day:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Room class: ' + ${room.roomClass}">Room
+                                class:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Hotel: ' + ${room.hotel.name}">Hotel:</p>
+                            <form th:action="@{/rooms/{roomId}/delete(roomId=${room.id})}" method="post">
+                                <a th:href="@{'/rooms/' + ${room.id}}"
+                                   th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
+                                    <button type="button" class="btn btn-info">Edit</button>
+                                </a>
+                                <a th:href="@{/orders/save-order(roomId=${room.id}, checkIn=${filter.checkInDate}, checkOut=${filter.checkOutDate})}"
+                                   th:if="${filter.checkInDate != null && filter.checkOutDate != null}">
+                                    <button type="button" class="btn btn-info">Book</button>
+                                </a>
+                                <button type="submit" class="btn btn-danger"
+                                        th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="list-group-item" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
+                <a href="/rooms/save-room">
+                    <button type="button" class="btn btn-info mt-3 w-100">Create new room</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

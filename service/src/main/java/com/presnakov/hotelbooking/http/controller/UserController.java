@@ -14,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,7 +35,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public String findAll(Model model, UserFilter filter, Pageable pageable) {
+    public String findAll(Model model,
+                          UserFilter filter, Pageable pageable) {
         Page<UserReadDto> page = userService.findAll(filter, pageable);
         model.addAttribute("users", PageResponse.of(page));
         model.addAttribute("filter", filter);
@@ -47,17 +45,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model,
-                           @AuthenticationPrincipal UserDetails userDetails) {
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(GrantedAuthority::getAuthority)
-                .orElse("USER");
+    public String findById(@PathVariable("id") Integer id, Model model) {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("roles", RoleEnum.values());
-                    model.addAttribute("authenticatedUserRole", role);
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -68,6 +60,13 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roles", RoleEnum.values());
         return "user/registration";
+    }
+
+    @GetMapping("/save-user")
+    public String create(Model model, @ModelAttribute("user") UserCreateEditDto user) {
+        model.addAttribute("user", user);
+        model.addAttribute("roles", RoleEnum.values());
+        return "user/save-user";
     }
 
     @PostMapping
@@ -86,10 +85,19 @@ public class UserController {
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
-                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) UserCreateEditDto user) {
-        return userService.update(id, user)
-                .map(it -> "redirect:/users/{id}")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) UserCreateEditDto user,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/users/{id}";
+        }
+        userService.create(user);
+        return "redirect:/users/{id}";
+//        return userService.update(id, user)
+//                .map(it -> "redirect:/users/{id}")
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/delete")

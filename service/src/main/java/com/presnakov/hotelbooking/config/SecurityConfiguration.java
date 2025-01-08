@@ -19,10 +19,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .requestMatchers("/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/orders/save-order", "/images/**", "/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(POST, "/users").permitAll()
+                        .requestMatchers(POST, "/rooms").permitAll()
+                        .requestMatchers(POST, "/orders").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers("/admin/**", "/users", "/orders", "/rooms").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -30,7 +32,7 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID"))
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/users"))
+                        .defaultSuccessUrl("/rooms"))
                 .build();
     }
 

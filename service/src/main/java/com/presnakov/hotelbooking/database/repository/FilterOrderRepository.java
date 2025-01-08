@@ -1,15 +1,11 @@
 package com.presnakov.hotelbooking.database.repository;
 
 import com.presnakov.hotelbooking.database.entity.Order;
-
-import java.time.LocalDate;
-import java.util.List;
+import com.presnakov.hotelbooking.dto.OrderFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FilterOrderRepository {
 
-    List<Order> findOrdersByDateRange(LocalDate startRange, LocalDate endRange);
-
-    List<Order> findOrdersByUsername(String username);
-
-    List<Order> findOrdersByHotelName(String name);
+    Page<Order> findAll(OrderFilter filter, Pageable pageable);
 }
