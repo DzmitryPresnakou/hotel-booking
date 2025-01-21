@@ -6,9 +6,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Optional;
 
-public interface HotelRepository extends
-        JpaRepository<Hotel, Integer>,
-        QuerydslPredicateExecutor<Hotel> {
+public interface HotelRepository extends JpaRepository<Hotel, Integer>, QuerydslPredicateExecutor<Hotel> {
 
     Optional<Hotel> findByName(String name);
 }

@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldNameConstants
 public class HotelCreateEditDto {
     @NotBlank
-    @Size(min = 3, max = 128)
+    @Size(min = 3, max = 128, message = "name must be between 3 and 128 symbols")
     String name;
 
     MultipartFile photo;

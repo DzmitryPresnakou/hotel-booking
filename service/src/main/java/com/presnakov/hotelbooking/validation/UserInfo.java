@@ -16,7 +16,7 @@ public @interface UserInfo {
 
     String message() default "Firstname or lastname should be filled in";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

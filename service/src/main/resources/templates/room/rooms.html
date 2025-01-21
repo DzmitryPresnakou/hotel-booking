@@ -6,6 +6,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/wrongDateBlocker.js"></script>
     <title>Rooms</title>
 </head>
 <body>
@@ -99,7 +100,7 @@
                                     <button type="button" class="btn btn-info">Edit</button>
                                 </a>
                                 <a th:href="@{/orders/save-order(roomId=${room.id}, checkIn=${filter.checkInDate}, checkOut=${filter.checkOutDate})}"
-                                   th:if="${filter.checkInDate != null && filter.checkOutDate != null}">
+                                   th:if="${filter.checkInDate != null && filter.checkOutDate != null && filter.checkInDate.isBefore(filter.checkOutDate)}">
                                     <button type="button" class="btn btn-info">Book</button>
                                 </a>
                                 <button type="submit" class="btn btn-danger"

@@ -6,10 +6,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Optional;
 
-public interface UserRepository extends
-        JpaRepository<User, Integer>,
-        FilterUserRepository,
-        QuerydslPredicateExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Integer>, FilterUserRepository, QuerydslPredicateExecutor<User> {
 
     Optional<User> findByUsername(String username);
 }

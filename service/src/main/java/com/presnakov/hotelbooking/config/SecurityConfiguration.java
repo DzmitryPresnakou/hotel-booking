@@ -24,7 +24,7 @@ public class SecurityConfiguration {
                         .requestMatchers(POST, "/rooms").permitAll()
                         .requestMatchers(POST, "/orders").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
-                        .requestMatchers("/admin/**", "/users", "/orders", "/rooms").hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers("/admin/**", "/users", "/orders", "/rooms", "/actuator/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

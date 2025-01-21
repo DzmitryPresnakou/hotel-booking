@@ -5,7 +5,6 @@ import com.presnakov.hotelbooking.validation.UniqueEmail;
 import com.presnakov.hotelbooking.validation.UserInfo;
 import com.presnakov.hotelbooking.validation.ValidPhoto;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
-import com.presnakov.hotelbooking.validation.group.UpdateAction;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
