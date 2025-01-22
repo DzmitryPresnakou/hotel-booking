@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface FilterRoomRepository {
     Page<Room> findAll(RoomFilter filter, Pageable pageable);
+
+    void softDelete(Room room);
 }

@@ -51,4 +51,7 @@ public class Order implements BaseEntity<Integer> {
 
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
+
+    @Builder.Default
+    private Boolean isActive = true;
 }

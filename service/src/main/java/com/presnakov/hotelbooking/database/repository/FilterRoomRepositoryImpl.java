@@ -17,7 +17,6 @@ import java.util.List;
 
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.APPROVED;
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.CLOSED;
-import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.OPEN;
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.REJECTED;
 import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
 import static com.presnakov.hotelbooking.database.entity.QOrder.order;
@@ -40,7 +39,7 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .rightJoin(order.room, room)
                 .where(getPredicate(filter),
                         order.isNull().or((filter.getCheckInDate() != null) ?
-                                dateCondition : order.status.in(OPEN, CLOSED, APPROVED, REJECTED)));
+                                dateCondition : order.status.in(CLOSED, APPROVED, REJECTED)));
         long total = query.fetch().size();
         List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(rooms, pageable, total);
@@ -71,5 +70,9 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .add((filter.getRoomClass() != null && filter.getRoomClass().name().isEmpty()) ?
                         null : filter.getRoomClass(), room.roomClass::eq)
                 .buildAnd();
+    }
+
+    public void softDelete(Room room) {
+        room.setIsActive(false);
     }
 }

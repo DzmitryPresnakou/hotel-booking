@@ -87,7 +87,7 @@ public class OrderController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("daysBetween", daysBetween);
-        model.addAttribute("status", OrderStatusEnum.OPEN);
+        model.addAttribute("status", OrderStatusEnum.APPROVED);
         model.addAttribute("paymentStatus", PaymentStatusEnum.APPROVED);
         return "order/save-order";
     }

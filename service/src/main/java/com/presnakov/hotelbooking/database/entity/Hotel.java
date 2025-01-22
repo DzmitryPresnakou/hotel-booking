@@ -36,6 +36,9 @@ public class Hotel implements BaseEntity<Integer> {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private Set<Room> rooms = new HashSet<>();
 
+    @Builder.Default
+    private Boolean isActive = true;
+
     public void addRoom(Room room) {
         rooms.add(room);
         room.setHotel(this);

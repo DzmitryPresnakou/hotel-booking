@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface FilterOrderRepository {
 
     Page<Order> findAll(OrderFilter filter, Pageable pageable);
+
+    void softDelete(Order order);
 }

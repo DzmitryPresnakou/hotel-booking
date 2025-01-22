@@ -42,4 +42,7 @@ public class Room implements BaseEntity<Integer> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+
+    @Builder.Default
+    private Boolean isActive = true;
 }

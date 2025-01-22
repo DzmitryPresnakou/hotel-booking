@@ -28,6 +28,7 @@ public class RoomCreateEditDto {
     @NotNull
     RoomClassEnum roomClass;
 
+    @ValidPhoto(groups = CreateAction.class)
     MultipartFile photo;
 
     @NotNull(message = "Daily cost is required", groups = CreateAction.class)
@@ -36,6 +37,5 @@ public class RoomCreateEditDto {
     Integer pricePerDay;
 
     @NotNull(message = "Photo is required", groups = CreateAction.class)
-    @ValidPhoto(groups = CreateAction.class)
     Integer hotelId;
 }

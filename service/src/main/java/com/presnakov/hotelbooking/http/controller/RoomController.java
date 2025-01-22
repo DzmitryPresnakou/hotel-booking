@@ -59,7 +59,7 @@ public class RoomController {
                 .map(room -> {
                     model.addAttribute("room", room);
                     model.addAttribute("hotels", hotelService.findAll());
-                    model.addAttribute("status", OrderStatusEnum.OPEN);
+                    model.addAttribute("status", OrderStatusEnum.APPROVED);
                     model.addAttribute("paymentStatus", PaymentStatusEnum.APPROVED);
                     model.addAttribute("roomClasses", RoomClassEnum.values());
                     return "room/room";
