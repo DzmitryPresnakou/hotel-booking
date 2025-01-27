@@ -82,7 +82,6 @@ public class UserController {
         return "redirect:/login";
     }
 
-
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
                          @ModelAttribute @Validated({Default.class, UpdateAction.class}) UserCreateEditDto user,
@@ -93,11 +92,9 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/users/{id}";
         }
-        userService.create(user);
-        return "redirect:/users/{id}";
-//        return userService.update(id, user)
-//                .map(it -> "redirect:/users/{id}")
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return userService.update(id, user)
+                .map(it -> "redirect:/users/{id}")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/delete")

@@ -12,7 +12,6 @@ import com.presnakov.hotelbooking.service.OrderService;
 import com.presnakov.hotelbooking.service.RoomService;
 import com.presnakov.hotelbooking.service.UserService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
-import com.presnakov.hotelbooking.validation.group.UpdateAction;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,19 +59,6 @@ public class OrderController {
         return "order/orders";
     }
 
-    @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model) {
-        return orderService.findById(id)
-                .map(order -> {
-                    model.addAttribute("order", order);
-                    model.addAttribute("hotels", hotelService.findAll());
-                    model.addAttribute("users", userService.findAll());
-                    model.addAttribute("rooms", roomService.findAll());
-                    return "order/order";
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
     @GetMapping("/save-order")
     public String create(@RequestParam("roomId") Integer roomId,
                          @RequestParam("checkIn") LocalDate checkIn,
@@ -103,14 +89,6 @@ public class OrderController {
         }
         orderService.create(order);
         return "redirect:/orders";
-    }
-
-    @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Integer id,
-                         @ModelAttribute @Validated({Default.class, UpdateAction.class}) OrderCreateEditDto order) {
-        return orderService.update(id, order)
-                .map(it -> "redirect:/orders/{id}")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/delete")

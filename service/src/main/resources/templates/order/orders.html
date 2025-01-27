@@ -6,6 +6,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/wrongDateBlocker.js"></script>
     <title>Orders</title>
 </head>
 <body>
@@ -76,8 +77,10 @@
                                 Username:</p>
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Hotel: ' + ${order.room.hotel.name}">
                                 Hotel:</p>
+                            <p class="mt-0 font-weight-bold mb-2" th:text="'Room: ' + ${order.room.id}">
+                                Occupancy:</p>
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Occupancy: ' + ${order.room.occupancy}">
-                                Hotel:</p>
+                                Occupancy:</p>
                             <p class="mt-0 font-weight-bold mb-2"
                                th:text="'Price per day: ' + ${order.room.pricePerDay} + '$'">Price per day:</p>
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Check In Date: ' + ${order.checkInDate}">
@@ -88,9 +91,6 @@
                             <p class="mt-0 font-weight-bold mb-2" th:text="'Payment Status: ' + ${order.paymentStatus}">
                                 Payment Status:</p>
                             <form th:action="@{/orders/{orderId}/delete(orderId=${order.id})}" method="post">
-                                <a th:href="@{'/orders/' + ${order.id}}">
-                                    <button type="button" class="btn btn-info">edit</button>
-                                </a>
                                 <button type="submit" class="btn btn-danger">delete</button>
                             </form>
                         </div>

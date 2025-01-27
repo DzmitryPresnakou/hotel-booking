@@ -4,7 +4,6 @@ import com.presnakov.hotelbooking.dto.HotelCreateEditDto;
 import com.presnakov.hotelbooking.dto.HotelReadDto;
 import com.presnakov.hotelbooking.dto.PageResponse;
 import com.presnakov.hotelbooking.service.HotelService;
-import com.presnakov.hotelbooking.service.RoomService;
 import com.presnakov.hotelbooking.validation.group.CreateAction;
 import com.presnakov.hotelbooking.validation.group.UpdateAction;
 import jakarta.validation.groups.Default;

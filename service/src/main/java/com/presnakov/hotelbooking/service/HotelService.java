@@ -82,16 +82,17 @@ public class HotelService {
                 .map(hotelReadMapper::map);
     }
 
-
     @Transactional
     public boolean delete(Integer id) {
         return hotelRepository.findById(id)
                 .map(entity -> {
                     hotelRepository.softDelete(entity);
+                    roomRepository.findByHotelId(id)
+                            .forEach(roomRepository::softDelete);
+                    roomRepository.flush();
                     hotelRepository.flush();
                     return true;
-                })
-                .orElse(false);
+                }).orElse(false);
     }
 
     @SneakyThrows

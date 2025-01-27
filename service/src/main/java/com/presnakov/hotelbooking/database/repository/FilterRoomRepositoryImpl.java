@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.APPROVED;
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.CLOSED;
@@ -39,9 +38,10 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
                 .select(room)
                 .from(order)
                 .rightJoin(order.room, room)
-                .where(getPredicate(filter), room.isActive.isTrue(),
+                .where(getPredicate(filter),
+                        room.isActive.isTrue(),
                         order.isNull().or((filter.getCheckInDate() != null) ?
-                                dateCondition : order.status.in(CLOSED, APPROVED, REJECTED).and(order.isActive.isTrue())));
+                                dateCondition : order.status.in(CLOSED, APPROVED, REJECTED)));
         long total = query.fetch().size();
         List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(rooms, pageable, total);
@@ -79,12 +79,12 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
     }
 
     @Override
-    public Optional<Room> findByHotelId(Integer hotelId) {
-        JPAQuery<Room> query = new JPAQuery<Room>(entityManager)
+    public List<Room> findByHotelId(Integer hotelId) {
+        return new JPAQuery<>(entityManager)
                 .select(room)
                 .from(room)
-                .where(room.id.like(String.valueOf(hotelId)));
-        return Optional.empty();
+                .where(room.hotel.id.eq(hotelId))
+                .fetch();
     }
 
 
@@ -97,5 +97,4 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
         List<Hotel> hotels = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(hotels, pageable, total);
     }
-
 }
