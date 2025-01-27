@@ -33,7 +33,7 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
                 .join(order.user, user)
                 .join(order.room, room)
                 .join(room.hotel, hotel)
-                .where(getPredicate(filter));
+                .where(getPredicate(filter), order.isActive.isTrue());
         long total = query.fetch().size();
         List<Order> orders = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         orders.stream()
@@ -49,8 +49,8 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
                 .add((filter.getUsername() != null && filter.getUsername().isEmpty()) ?
                         null :
                         filter.getUsername(), order.user.username::eq)
-                .add(filter.getCheckOutDate(), order.checkInDate::after)
-                .add(filter.getCheckInDate(), order.checkOutDate::before)
+                .add(filter.getCheckInDate(), order.checkInDate::after)
+                .add(filter.getCheckOutDate(), order.checkOutDate::before)
                 .buildAnd();
     }
 

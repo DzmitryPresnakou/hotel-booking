@@ -19,13 +19,16 @@ public class RoomReadMapper implements Mapper<Room, RoomReadDto> {
         HotelReadDto hotel = Optional.ofNullable(object.getHotel())
                 .map(hotelReadMapper::map)
                 .orElse(null);
-        return  RoomReadDto.builder()
+        return RoomReadDto.builder()
                 .id(object.getId())
                 .occupancy(object.getOccupancy())
                 .roomClass(object.getRoomClass())
                 .photo(object.getPhoto())
                 .pricePerDay(object.getPricePerDay())
                 .hotel(hotel)
+                .isActive(hotel != null ?
+                        hotel.getIsActive() :
+                        false)
                 .build();
     }
 }

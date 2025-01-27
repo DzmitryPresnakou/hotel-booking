@@ -5,8 +5,12 @@ import com.presnakov.hotelbooking.dto.RoomFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface FilterRoomRepository {
     Page<Room> findAll(RoomFilter filter, Pageable pageable);
 
     void softDelete(Room room);
+
+    Optional<Room> findByHotelId(Integer id);
 }

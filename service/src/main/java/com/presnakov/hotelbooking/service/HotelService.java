@@ -2,6 +2,7 @@ package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.database.repository.HotelRepository;
+import com.presnakov.hotelbooking.database.repository.RoomRepository;
 import com.presnakov.hotelbooking.dto.HotelCreateEditDto;
 import com.presnakov.hotelbooking.dto.HotelReadDto;
 import com.presnakov.hotelbooking.mapper.HotelCreateEditMapper;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class HotelService {
 
     private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
     private final HotelReadMapper hotelReadMapper;
     private final HotelCreateEditMapper hotelCreateEditMapper;
     private final ImageService imageService;
@@ -85,7 +87,7 @@ public class HotelService {
     public boolean delete(Integer id) {
         return hotelRepository.findById(id)
                 .map(entity -> {
-                    hotelRepository.delete(entity);
+                    hotelRepository.softDelete(entity);
                     hotelRepository.flush();
                     return true;
                 })

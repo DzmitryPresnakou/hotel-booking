@@ -5,9 +5,6 @@ import lombok.Value;
 
 @Value
 @Builder
-public class HotelReadDto {
-    Integer id;
+public class HotelFilter {
     String name;
-    String photo;
-    Boolean isActive;
 }

@@ -25,7 +25,7 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
         JPAQuery<User> query = new JPAQuery<User>(entityManager)
                 .select(user)
                 .from(user)
-                .where(getPredicate(filter));
+                .where(getPredicate(filter), user.isActive.isTrue());
         long total = query.fetch().size();
         List<User> users = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(users, pageable, total);

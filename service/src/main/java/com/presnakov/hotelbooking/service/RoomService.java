@@ -79,7 +79,7 @@ public class RoomService {
     public boolean delete(Integer id) {
         return roomRepository.findById(id)
                 .map(entity -> {
-                    roomRepository.delete(entity);
+                    roomRepository.softDelete(entity);
                     roomRepository.flush();
                     return true;
                 })

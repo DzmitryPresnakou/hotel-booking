@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class HotelReadMapper implements Mapper<Hotel, HotelReadDto> {
     @Override
-    public HotelReadDto map(Hotel object) {
+    public HotelReadDto map(Hotel hotel) {
         return HotelReadDto.builder()
-                .id(object.getId())
-                .name(object.getName())
-                .photo(object.getPhoto())
+                .id(hotel.getId())
+                .name(hotel.getName())
+                .photo(hotel.getPhoto())
+                .isActive(hotel.getIsActive())
                 .build();
     }
 }

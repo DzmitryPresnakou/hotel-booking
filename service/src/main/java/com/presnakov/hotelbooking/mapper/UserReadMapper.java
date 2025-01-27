@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 public class UserReadMapper implements Mapper<User, UserReadDto> {
 
     @Override
-    public UserReadDto map(User object) {
+    public UserReadDto map(User user) {
         return UserReadDto.builder()
-                .id(object.getId())
-                .firstname(object.getFirstname())
-                .lastname(object.getLastname())
-                .username(object.getUsername())
-                .rawPassword(object.getPassword())
-                .role(object.getRole())
-                .phone(object.getPhone())
-                .photo(object.getPhoto())
-                .money(object.getMoney())
-                .isActive(object.getIsActive())
-                .birthDate(object.getBirthDate())
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .username(user.getUsername())
+                .rawPassword(user.getPassword())
+                .role(user.getRole())
+                .phone(user.getPhone())
+                .photo(user.getPhoto())
+                .money(user.getMoney())
+                .isActive(user.getIsActive())
+                .birthDate(user.getBirthDate())
                 .build();
     }
 }

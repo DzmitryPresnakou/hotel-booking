@@ -1,5 +1,6 @@
 package com.presnakov.hotelbooking.database.repository;
 
+import com.presnakov.hotelbooking.database.entity.Hotel;
 import com.presnakov.hotelbooking.database.entity.Room;
 import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.RoomFilter;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.APPROVED;
 import static com.presnakov.hotelbooking.database.entity.OrderStatusEnum.CLOSED;
@@ -31,15 +33,15 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
     public Page<Room> findAll(RoomFilter filter, Pageable pageable) {
         BooleanExpression checkInCondition = getByCheckInDate(filter);
         BooleanExpression checkOutCondition = getByCheckOutDate(filter);
-
         BooleanExpression dateCondition = checkInCondition.or(checkOutCondition);
+
         JPAQuery<Room> query = new JPAQuery<>(entityManager)
                 .select(room)
                 .from(order)
                 .rightJoin(order.room, room)
-                .where(getPredicate(filter),
+                .where(getPredicate(filter), room.isActive.isTrue(),
                         order.isNull().or((filter.getCheckInDate() != null) ?
-                                dateCondition : order.status.in(CLOSED, APPROVED, REJECTED)));
+                                dateCondition : order.status.in(CLOSED, APPROVED, REJECTED).and(order.isActive.isTrue())));
         long total = query.fetch().size();
         List<Room> rooms = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(rooms, pageable, total);
@@ -75,4 +77,25 @@ public class FilterRoomRepositoryImpl implements FilterRoomRepository {
     public void softDelete(Room room) {
         room.setIsActive(false);
     }
+
+    @Override
+    public Optional<Room> findByHotelId(Integer hotelId) {
+        JPAQuery<Room> query = new JPAQuery<Room>(entityManager)
+                .select(room)
+                .from(room)
+                .where(room.id.like(String.valueOf(hotelId)));
+        return Optional.empty();
+    }
+
+
+    public Page<Hotel> findAll(Pageable pageable) {
+        JPAQuery<Hotel> query = new JPAQuery<Hotel>(entityManager)
+                .select(hotel)
+                .from(hotel)
+                .where(hotel.isActive.isTrue());
+        long total = query.fetch().size();
+        List<Hotel> hotels = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        return new PageImpl<>(hotels, pageable, total);
+    }
+
 }

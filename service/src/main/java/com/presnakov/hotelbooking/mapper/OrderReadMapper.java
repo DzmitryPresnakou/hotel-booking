@@ -17,21 +17,24 @@ public class OrderReadMapper implements Mapper<Order, OrderReadDto> {
     private final RoomReadMapper roomReadMapper;
 
     @Override
-    public OrderReadDto map(Order object) {
-        UserReadDto user = Optional.ofNullable(object.getUser())
+    public OrderReadDto map(Order order) {
+        UserReadDto user = Optional.ofNullable(order.getUser())
                 .map(userReadMapper::map)
                 .orElse(null);
-        RoomReadDto room = Optional.ofNullable(object.getRoom())
+        RoomReadDto room = Optional.ofNullable(order.getRoom())
                 .map(roomReadMapper::map)
                 .orElse(null);
         return OrderReadDto.builder()
-                .id(object.getId())
+                .id(order.getId())
                 .user(user)
                 .room(room)
-                .status(object.getStatus())
-                .paymentStatus(object.getPaymentStatus())
-                .checkInDate(object.getCheckInDate())
-                .checkOutDate(object.getCheckOutDate())
+                .status(order.getStatus())
+                .paymentStatus(order.getPaymentStatus())
+                .checkInDate(order.getCheckInDate())
+                .checkOutDate(order.getCheckOutDate())
+                .isActive(user != null && room != null ?
+                        user.getIsActive() :
+                        false)
                 .build();
     }
 }

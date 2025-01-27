@@ -54,8 +54,8 @@ public class OrderService {
     public boolean delete(Integer id) {
         return orderRepository.findById(id)
                 .map(entity -> {
-                    userRepository.softDelete(entity);
-                    userRepository.flush();
+                    orderRepository.softDelete(entity);
+                    orderRepository.flush();
                     return true;
                 })
                 .orElse(false);

@@ -17,4 +17,5 @@ public class OrderReadDto {
     PaymentStatusEnum paymentStatus;
     LocalDate checkInDate;
     LocalDate checkOutDate;
+    Boolean isActive;
 }

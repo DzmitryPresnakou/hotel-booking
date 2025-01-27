@@ -13,4 +13,5 @@ public class RoomReadDto {
     String photo;
     Integer pricePerDay;
     HotelReadDto hotel;
+    Boolean isActive;
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static com.presnakov.hotelbooking.database.entity.RoleEnum.ADMIN;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
@@ -20,11 +21,11 @@ public class SecurityConfiguration {
         return http
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .requestMatchers("/css/**", "/js/**", "/orders/save-order", "/images/**", "/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers(POST, "/users").permitAll()
-                        .requestMatchers(POST, "/rooms").permitAll()
-                        .requestMatchers(POST, "/orders").permitAll()
+//                        .requestMatchers(POST, "/users").permitAll()
+//                        .requestMatchers(POST, "/rooms").permitAll()
+//                        .requestMatchers(POST, "/orders").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
-                        .requestMatchers("/admin/**", "/users", "/orders", "/rooms", "/actuator/**").hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers("/admin/**", "/users", "/actuator/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
