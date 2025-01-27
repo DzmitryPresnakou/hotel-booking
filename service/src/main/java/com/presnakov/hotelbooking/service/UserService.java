@@ -2,6 +2,7 @@ package com.presnakov.hotelbooking.service;
 
 import com.presnakov.hotelbooking.database.entity.User;
 import com.presnakov.hotelbooking.database.repository.UserRepository;
+import com.presnakov.hotelbooking.dto.CustomUserDetails;
 import com.presnakov.hotelbooking.dto.UserCreateEditDto;
 import com.presnakov.hotelbooking.dto.UserFilter;
 import com.presnakov.hotelbooking.dto.UserReadDto;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,11 +105,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
-                        user.getPassword(),
-                        Collections.singleton(user.getRole())
-                ))
+                .map(CustomUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
     }
 }

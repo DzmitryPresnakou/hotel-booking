@@ -24,10 +24,10 @@
                     <a href="/hotels" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
                         <button type="button" class="btn btn-light">Hotels</button>
                     </a>
-                    <a href="/orders" th:if="${#authentication.principal.authorities[0].authority == 'ADMIN'}">
+                    <a href="/orders">
                         <button type="button" class="btn btn-light">Orders</button>
                     </a>
-                    <a href="/profile">
+                    <a th:href="@{'/users/' + ${#authentication.principal.id}}">
                         <button type="button" class="btn btn-light">Profile</button>
                     </a>
                     <button type="submit" class="btn btn-light">logout</button>
