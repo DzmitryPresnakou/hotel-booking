@@ -1,7 +1,6 @@
 package com.presnakov.hotelbooking.database.repository;
 
 import com.presnakov.hotelbooking.database.entity.Order;
-import com.presnakov.hotelbooking.database.entity.OrderStatusEnum;
 import com.presnakov.hotelbooking.database.querydsl.QPredicate;
 import com.presnakov.hotelbooking.dto.OrderFilter;
 import com.querydsl.core.types.Predicate;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.presnakov.hotelbooking.database.entity.QHotel.hotel;
@@ -37,13 +35,6 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
 
         long total = query.fetch().size();
         List<Order> orders = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-
-//        orders.stream()
-//                .filter(order -> order.getCheckOutDate().isBefore(LocalDate.now()))
-//                .forEach(order -> {
-//                    order.setStatus(OrderStatusEnum.CLOSED);
-//                    orderRepository.save(order);
-//                });
 
         return new PageImpl<>(orders, pageable, total);
     }
