@@ -34,11 +34,17 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
                 .join(order.room, room)
                 .join(room.hotel, hotel)
                 .where(getPredicate(filter), order.isActive.isTrue());
+
         long total = query.fetch().size();
         List<Order> orders = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-        orders.stream()
-                .filter(order -> order.getCheckOutDate().isBefore(LocalDate.now()))
-                .forEach(order -> order.setStatus(OrderStatusEnum.CLOSED));
+
+//        orders.stream()
+//                .filter(order -> order.getCheckOutDate().isBefore(LocalDate.now()))
+//                .forEach(order -> {
+//                    order.setStatus(OrderStatusEnum.CLOSED);
+//                    orderRepository.save(order);
+//                });
+
         return new PageImpl<>(orders, pageable, total);
     }
 
